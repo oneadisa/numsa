@@ -1,6 +1,6 @@
 site:
   name: NUMSA 
-  site: 'https://astrowind.vercel.app'
+  site: 'https://numsa.netlify.app'
   base: '/'
   trailingSlash: false
 
@@ -11,14 +11,14 @@ metadata:
   title:
     default: NUMSA 
     template: '%s — NUMSA '
-  description: "\U0001F680 Suitable for Startups, Small Business, Sass Websites, Professional Portfolios, Marketing Websites, Landing Pages & Blogs."
+  description: "\U0001F680 The Official Website of Nile University Medical Students Association."
   robots:
     index: true
     follow: true
   openGraph:
     site_name: NUMSA 
     images:
-      - url: '~/assets/images/default.png'
+      - url: '~/assets/images/hero.png'
         width: 1200
         height: 628
     type: website
