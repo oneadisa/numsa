@@ -1,6 +1,6 @@
 {
   "name": "@onwidget/astrowind",
-  "description": "AstroWind: A free template using Astro 4.0 and Tailwind CSS. Astro starter theme.",
+  "description": "NUMSA : A free template using Astro 4.0 and Tailwind CSS. Astro starter theme.",
   "version": "1.0.0-beta.18",
   "private": true,
   "scripts": {

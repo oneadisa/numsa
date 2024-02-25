@@ -179,6 +179,7 @@ export interface CallToAction extends HTMLAttributes<a> {
   variant?: 'primary' | 'secondary' | 'tertiary' | 'link';
   text?: string;
   icon?: string;
+  href?: string;
   classes?: Record<string, string>;
   type?: 'button' | 'submit' | 'reset';
 }
