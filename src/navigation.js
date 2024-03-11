@@ -2,27 +2,7 @@ import { getPermalink, getBlogPermalink, getAsset } from './utils/permalinks';
 
 export const headerData = {
   links: [
-    // {
-    //   text: 'Homes',
-    //   links: [
-    //     {
-    //       text: 'SaaS',
-    //       href: getPermalink('/homes/saas'),
-    //     },
-    //     {
-    //       text: 'Startup',
-    //       href: getPermalink('/homes/startup'),
-    //     },
-    //     {
-    //       text: 'Mobile App',
-    //       href: getPermalink('/homes/mobile-app'),
-    //     },
-    //     {
-    //       text: 'Personal',
-    //       href: getPermalink('/homes/personal'),
-    //     },
-    //   ],
-    // },
+   
     // {
     //   text: 'Pages',
     //   links: [
@@ -115,15 +95,36 @@ export const headerData = {
           href: getPermalink('/about'),
         },
         {
+          text: 'Offices',
+          links: [
+            {
+              text: 'Executive Council',
+              href: getPermalink('/offices/executive-council'),
+            },
+            {
+              text: 'The House',
+              href: getPermalink('/offices/the-house'),
+            },
+            // {
+            //   text: 'Mobile App',
+            //   href: getPermalink('/homes/mobile-app'),
+            // },
+            // {
+            //   text: 'Personal',
+            //   href: getPermalink('/homes/personal'),
+            // },
+          ],
+        },
+        {
           text: 'Activities',
           href: getPermalink('/activities'),
         },
     {
-      text: 'Social Media',
-      href: getPermalink('/socials'),
+      text: 'Magazine',
+      href: getPermalink('/magazine'),
     },
   ],
-  actions: [{ text: 'Socials', href: '#', target: '_blank' }],
+  actions: [{ text: 'Follow Us', href: '#', target: '_blank' }],
 };
 
 export const footerData = {

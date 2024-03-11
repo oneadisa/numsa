@@ -1,0 +1,76 @@
+---
+import Layout from '~/layouts/PageLayout.astro';
+import Hero from '~/components/widgets/Hero.astro';
+import CallToAction from '~/components/widgets/CallToAction.astro';
+import segz from '~/assets/images/segun_hero.JPG'
+
+const metadata = {
+  title: 'NUMSA Magazine: COMING SOON',
+};
+---
+
+<Layout metadata={metadata}>
+  <!-- Hero2 Widget ******************* -->
+  
+  <Hero
+    tagline="NUMSA MAGAZINE"
+    title="A Glimpse Into Life as a Medical Student"
+    actions={[
+      { variant: 'primary', text: 'Notify Me', href: '#', icon: 'tabler:square-rounded-arrow-right' },
+      { text: 'Learn more', href: '#' },
+    ]}
+    image={{
+      src: segz,
+      alt: 'NUMSA Magazine DEMO',
+    }}
+  >
+    <Fragment slot="subtitle">
+      <span class="text-gray-700 text-left">
+        NUMSA Magazine, the official publication of Nile University Medical Students Association (NUMSA) in Nigeria,
+        offers a glimpse into the world of healthcare and academic excellence. It showcases the achievements and
+        dedication of future healthcare professionals, emphasizing knowledge, outreach, and collaboration. NUMSA
+        Magazine reflects our commitment to enhancing healthcare and shaping the future of medicine, uniting medical
+        students in learning, service, and making a difference in Nigeria's healthcare landscape.
+      </span>
+      <br />
+      <br />
+      <span class="text-gray-700 text-left"
+        >After a due selection process amongst the editorial team, the NUMSA magazine has been approved to bear the
+        name, “The Medical Mindscape” and the selected theme for the year 2023 is “Obesity and Mental Health: The
+        connection between body and mind. ” with the subthemes: emotional eating, stress and depression, and how they
+        interact with body weight also, Body Image and Self-Esteem, eating disorders, Bullying and Stigmatization.
+      </span>
+      <br />
+      <br />
+
+      <span class="text-gray-700 text-left"
+        >However, the theme and sub themes serve to explore and reveal the complex interplay between the intricate
+        relationship linking obesity and mental health. Also, emotional eating, stress, and depression can contribute to
+        weight gain, while body image and self-esteem concerns eating disorders and the harmful effects of bullying and
+        stigmatization which further compounds this connection between the theme and subtheme. Understanding these
+        dynamics is essential for promoting holistic well-being.
+      </span>
+      <br />
+      <br />
+
+      <span class="text-gray-700 text-left"
+        >Get Notified when we lauch this Year's Edition!
+      </span>
+      <br />
+      <br />
+    </Fragment>
+  </Hero>
+
+  <!-- <CallToAction
+    title="Coming soon"
+    subtitle="We are working on the content of these demo pages. You will see them very soon. Stay tuned Stay tuned!"
+    actions={[
+      {
+        variant: 'primary',
+        text: 'Download Template',
+        href: 'https://github.com/onwidget/astrowind',
+        icon: 'tabler:download',
+      },
+    ]}
+  /> -->
+</Layout>

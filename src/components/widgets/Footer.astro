@@ -2,6 +2,8 @@
 import { Icon } from 'astro-icon/components';
 import { SITE } from '~/utils/config';
 import { getHomePermalink } from '~/utils/permalinks';
+import Image from '~/components/common/Image.astro';
+import appleTouchIcon from '~/assets/favicons/apple-touch-icon.png';
 
 interface Link {
   text?: string;
@@ -32,7 +34,19 @@ const { socialLinks = [], secondaryLinks = [], links = [], footNote = '', theme 
     <div class="grid grid-cols-12 gap-4 gap-y-8 sm:gap-8 py-8 md:py-12">
       <div class="col-span-12 lg:col-span-4">
         <div class="mb-2">
-          <a class="inline-block font-bold text-xl" href={getHomePermalink()}>{SITE?.name}</a>
+          <a class="inline-block font-bold text-xl" href={getHomePermalink()}>
+            <Image
+              src={appleTouchIcon}
+              class="lg:max-w-[45px] mx-auto sm:rounded-md inline mr-1"
+              widths={[20, 45]}
+              sizes="(max-width: 45px) 20px, 45px"
+              alt=""
+              width={45}
+              height={45}
+              loading="eager"
+              decoding="async"
+            /> {SITE?.name}</a
+          >
         </div>
         <div class="text-sm text-muted">
           {

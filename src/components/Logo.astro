@@ -1,8 +1,21 @@
 ---
-import { SITE } from '~/utils/config';
+// import { SITE } from '~/utils/config';
+import Image from '~/components/common/Image.astro';
+import appleTouchIcon from '~/assets/favicons/apple-touch-icon.png';
 ---
 
-<span class="self-center ml-2 rtl:ml-0 rtl:mr-2 text-2xl md:text-xl font-bold text-gray-900 whitespace-nowrap dark:text-white">
+<span class="self-center ml-2 rtl:ml-0 rtl:mr-2 text-2xl md:text-xl font-bold text-gray-900  dark:text-white">
   <!-- 🚀 {SITE?.name} -->
+  <Image
+            src={appleTouchIcon}
+            class=" lg:max-w-[45px] mx-auto sm:rounded-md inline mr-1"
+            widths={[20, 45]}
+            sizes="(max-width: 45px) 20px, 45px"
+            alt=''
+            width={45}
+            height={45}
+            loading="eager"
+            decoding="async"
+          />
   NUMSA
 </span>

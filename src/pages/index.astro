@@ -11,6 +11,8 @@ import BlogLatestPosts from '~/components/widgets/BlogLatestPosts.astro';
 import FAQs from '~/components/widgets/FAQs.astro';
 import Stats from '~/components/widgets/Stats.astro';
 import CallToAction from '~/components/widgets/CallToAction.astro';
+import chew from '~/assets/images/CHEW.jpeg';
+import ihc from '~/assets/images/ihc.jpeg'
 
 const metadata = {
   title: 'NUMSA - Official Website',
@@ -32,21 +34,22 @@ const metadata = {
       },
       { text: 'Our People', href: '#' },
     ]}
-    image={{ src: '~/assets/images/hero.png', alt: 'NUMSA  Hero Image' }}
+    image={{ src: '~/assets/images/numsa_logo.png', alt: 'NUMSA  Hero Image' }}
   >
     <Fragment slot="title">
-      Nile University <span class="hidden xl:inline">Medical Students Association</span>
+      Nile University Medical Students Association
+      <!-- <span class="hidden xl:inline">Medical Students Association</span> -->
       <span class="text-accent dark:text-white highlight"></span> - NUMSA
     </Fragment>
 
     <Fragment slot="subtitle">
       <span class="hidden sm:inline">
-        <span class="font-semibold">NUMSA </span> is the outstanding, foremost and impactful Association of Nile University
-        Medical Students Association</span
+        <span class="font-semibold">NUMSA </span> NUMSA, the official representative body of medical students at Nile University
+        of Nigeria, transcends tribal, religious, linguistic, and national boundaries. </span
       >
-      <span class="block mb-1 sm:hidden font-bold text-blue-600">NUMSA : In a League Of Its Own.</span>
-       We pride ourselves on social responsibility, impact and being rolemodels for the betterment of our school
-       and society at large.
+      <span class="block mb-1 sm:hidden font-bold text-blue-800">NUMSA : In a League Of Its Own.</span>
+      We pride ourselves on social responsibility, impact and being rolemodels for the betterment of our school and society
+      at large.
     </Fragment>
   </Hero>
 
@@ -58,80 +61,73 @@ const metadata = {
 
   <Features
     id="features"
-    tagline="Who are we?"
-    title="Get To Know About NUMSA"
-    subtitle="One of the most professional and responsible associations in Nigeria. Most awarded in 2023."
+    tagline="Our Objectives"
+    title="NUMSA"
+    subtitle="The association serves to represent all medical students and their interests guided by the rules of morality and discipline set by our prestigious college in order to enable medical students translate their noble initiatives to reality."
     items={[
       {
-        title: 'Social Integration',
-        description:
-          'A seamless integration between two great frameworks that offer high productivity, performance and versatility.',
+        title: 'Excellence',
+        description: 'To ensure Nile University produces world-class medical doctors.',
         icon: 'tabler:brand-tailwind',
       },
       {
-        title: 'Ready To Serve',
-        description:
-          'We are ready to be of use in our society.',
+        title: 'Collaboration',
+        description: 'To encourage cooperation between NUMSA, its affiliates and the authority of Nile University.',
         icon: 'tabler:components',
       },
       {
-        title: 'Best Practices',
-        description:
-          'Venenatis tincidunt eros pretium viverra lacinia convallis, turpis orci condimentum fusce.',
+        title: 'Research',
+        description: 'To encourage research among students towards advancement in health.',
         icon: 'tabler:list-check',
       },
       {
-        title: 'Excellence',
+        title: 'Values',
         description:
-          'Augue malesuada natoque in ad erat aliquam facilisi, lacus rhoncus mattis nostra et a. Mauris.',
+          'To instill discipline, integrity and professionalism within the students of Nile university of Nigeria.',
         icon: 'tabler:rocket',
       },
       {
-        title: 'Cooperation',
-        description:
-          "Accumsan torquent vitae convallis duis cras risus pretium nulla mi litora sociosqu, facilisi bibendum eget faucibus metus felis egestas auctor malesuada.",
+        title: 'Giving',
+        description: 'To contribute towards the improvement of health of the community via participation in community projects and organization of charity functions.',
         icon: 'tabler:arrows-right-left',
       },
       {
-        title: 'Open to new ideas and contributions',
+        title: 'Talent',
         description:
-          'Lorem ipsum dolor sit amet consectetur adipiscing elit, augue malesuada natoque in ad erat aliquam facilisi, lacus rhoncus mattis nostra et a. Mauris.',
+          'To Provide, supervise or manage educational, cultural, sporting, welfare, recreational or commercial facilities or activities intended for the benefit directly or indirectly, of medical students.',
         icon: 'tabler:bulb',
       },
     ]}
   />
 
   <!-- Content Widget **************** -->
-
+  <!-- title="NUMSA's EFFECT: Fun Meets Impact!" -->
   <Content
     isReversed
-    tagline="What we've been up to"
-    title="NUMSA 's Blueprint: Fun Meets Impact!"
+    tagline="LATEST NUMSA EVENTS"
     items={[
       {
-        title: 'Built on top of Astro 4.0',
-        description:
-          'Excepteur ad cupidatat do elit laborum amet cillum reprehenderit consequat quis.',
+        title: 'Free vaccinations',
+        description: 'Routine vaccinations under NIP were given by Nile Students.',
       },
       {
-        title: 'Styled using Tailwind CSS',
-        description:
-          'Ut aute ipsum occaecat nisi culpa Lorem id occaecat cupidatat id id magna laboris ad duis.',
+        title: 'Free Maternal and Child Health Services',
+        description: 'WIth a focus on prevention, new mothers were brought awareness on hot to properly breastfeed.',
       },
       {
-        title: 'Cross-browser compatibility',
+        title: 'Clothing Drive',
         description:
-          'In dolore velit aliquip labore mollit minim tempor veniam eu veniam ad in sint aliquip mollit mollit.',
+          'Easy and weather-appropriate clothes were donated by students.',
       },
     ]}
     image={{
-      src: 'https://images.unsplash.com/photo-1519389950473-47ba0277781c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80',
-      alt: 'Colorful Image',
+      src: chew,
+      alt: 'CHEW',
     }}
   >
     <Fragment slot="content">
-      <h3 class="text-2xl font-bold tracking-tight dark:text-white sm:text-3xl mb-2">Kuchingoro Outreach</h3>
-      Ad nisi laborum aute cupidatat magna deserunt eu id laboris id.
+      <h3 class="text-2xl font-bold tracking-tight dark:text-white sm:text-3xl mb-2">Visit To Kuchingoro PHC</h3>
+      A chance to reach out to the community.
     </Fragment>
 
     <Fragment slot="bg">
@@ -145,31 +141,32 @@ const metadata = {
     isAfterContent
     items={[
       {
-        title: 'in culpa qui officia',
-        description: `Tailor the template effortlessly to match your brand's identity and requirements, making your website distinct and saving you time.`,
+        title: 'Cross Border Collaboration',
+        description: `The conference facilitated meaningful discussions and collaborations among healthcare professionals from various countries, fostering partnerships to address global health challenges collectively.`,
       },
       {
-        title: 'Officia irure in non voluptate adipisicing sit amet',
+        title: 'Networking Opportunities',
         description:
-          'Explore various layout options to find the structure that best presents your content, enhancing user engagement and navigation.',
+          'The conference provided invaluable networking opportunities, allowing delegates to connect with peers, exchange ideas, and forge new collaborations aimed at advancing global health agendas.',
       },
       {
-        title: 'Minim id consequat adipisicing',
+        title: 'Cutting-Edge Research Presentations',
         description:
-          "Ensure your website's optimal performance on various devices and screen sizes, providing a consistent and enjoyable user experience.",
+          "Attendees were treated to a wealth of cutting-edge research presentations, showcasing the latest advancements in medical science and innovative approaches to healthcare delivery.",
       },
       {
-        title: 'Et fugiat ad nisi amet magna',
+        title: 'Keynote Addresses by Experts',
         description:
-          'Seamlessly incorporate images, videos, and multimedia elements that enhance your content and engage visitors effectively.',
+          ' Renowned experts delivered inspiring keynote addresses, sharing their insights and expertise on pressing health issues, sparking dialogue and inspiring action among attendees.',
       },
     ]}
     image={{
-      src: 'https://images.unsplash.com/photo-1600132806370-bf17e65e942f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2194&q=80',
-      alt: 'Blueprint Image',
+      src: ihc,
+      alt: 'ihc',
     }}
   >
-    <Fragment slot="content">Ensure your online presence truly represents you.</Fragment>
+    <Fragment slot="content"><h3 class="text-2xl font-bold tracking-tight dark:text-white sm:text-3xl mb-2">International Health Week</h3>
+      A convergence of the Nigerian Medical Professionals.</Fragment>
 
     <Fragment slot="bg">
       <div class="absolute inset-0 bg-blue-50 dark:bg-transparent"></div>
@@ -178,7 +175,7 @@ const metadata = {
 
   <!-- Content Widget **************** -->
 
-  <Content
+  <!-- <Content
     isReversed
     isAfterContent
     items={[
@@ -212,7 +209,7 @@ const metadata = {
     <Fragment slot="bg">
       <div class="absolute inset-0 bg-blue-50 dark:bg-transparent"></div>
     </Fragment>
-  </Content>
+  </Content> -->
 
   <!-- Steps Widget ****************** -->
 
@@ -249,7 +246,7 @@ const metadata = {
   /> -->
 
   <!-- Features2 Widget ************** -->
-<!-- 
+  <!-- 
   <Features2
     title="Most used widgets"
     subtitle="Provides frequently used components for building websites using Tailwind CSS"
@@ -314,51 +311,52 @@ const metadata = {
 
   <!-- HighlightedPosts Widget ******* -->
 
-  <BlogLatestPosts
+  <!-- <BlogLatestPosts
     title="Find out more content in Magazine"
     information={`The blog is used to display NUMSA stories.
                         Each new article will be an important step that you will need to know to know as a medical student.
                         Medical School is a very interesting!
                 `}
-  />
+  /> -->
 
   <!-- FAQs Widget ******************* -->
+  <!-- title="Frequently Asked Questions" -->
 
   <FAQs
-    title="Frequently Asked Questions"
-    subtitle="Dive into the following questions to gain insights into the powerful features that NUMSA  offers and how it can elevate your web development journey."
+    
+    subtitle="Quick Facts To Get You Up To Speed about Our Organisation."
     tagline="FAQs"
     classes={{ container: 'max-w-6xl' }}
     items={[
       {
-        title: 'Why NUMSA ?',
+        title: 'What is  NUMSA?',
         description:
-          "Michael Knight a young loner on a crusade to champion the cause of the innocent. The helpless. The powerless in a world of criminals who operate above the law. Here he comes Here comes Speed Racer. He's a demon on wheels.",
+          "NUMSA stands for 'Nile University Medical Students Association' and is the Medical Student Association Of Nile University.",
       },
       {
-        title: 'What do I need to start?',
+        title: 'How Do I Become A Member Of NUMSA?',
         description:
-          'Space, the final frontier. These are the voyages of the Starship Enterprise. Its five-year mission: to explore strange new worlds. Many say exploration is part of our destiny, but it’s actually our duty to future generations.',
+          'You must be a student of Nile University and A Member of The Nile University College of Health Sciences.',
       },
       {
-        title: 'How to join?',
+        title: 'What Are The Benefits Of Being a Member Of NUMSA?',
         description:
-          "Well, the way they make shows is, they make one show. That show's called a pilot. Then they show that show to the people who make shows, and on the strength of that one show they decide if they're going to make more shows.",
+          "Access to networking opportunities,academic support, leadership development and advocacy programs.",
       },
       {
-        title: "What's something that you don't understand?",
+        title: "How Can I Get Involved As A Student?",
         description:
-          "A flower in my garden, a mystery in my panties. Heart attack never stopped old Big Bear. I didn't even know we were calling him Big Bear.",
+          "Attend meetings, participate in events, and volunteer for various committees or initiatives.",
       },
       {
-        title: 'What is something that you would like to try again?',
+        title: 'How Does NUMSA Support Student Well-Being And Mental Health?',
         description:
-          "A business big enough that it could be listed on the NASDAQ goes belly up. Disappears! It ceases to exist without me. No, you clearly don't know who you're talking to, so let me clue you in.",
+          "We offer our members resources, workshops and in-person support groups focused on stress management, resilience, and menta health awareness.",
       },
       {
-        title: 'If you could only ask one question to each person you meet, what would that question be?',
+        title: 'How Does NUMSA Advocate For My Interests?',
         description:
-          "This is not about revenge. This is about justice. A lot of things can change in twelve years, Admiral. Well, that's certainly good to know. About four years. I got tired of hearing how young I looked.",
+          "The House, EXCOS and various Committees at all levels of pre-clinical and clinical studies focus on improving student Welfare and championing representation-based initiatives.",
       },
     ]}
   />

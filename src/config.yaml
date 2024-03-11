@@ -18,7 +18,7 @@ metadata:
   openGraph:
     site_name: NUMSA 
     images:
-      - url: '~/assets/images/hero.png'
+      - url: '~/assets/images/numsa_logo.png'
         width: 1200
         height: 628
     type: website
