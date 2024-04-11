@@ -4,15 +4,18 @@ import Layout from '~/layouts/PageLayout.astro';
 import Hero from '~/components/widgets/Hero.astro';
 import Note from '~/components/widgets/Note.astro';
 import Features from '~/components/widgets/Features.astro';
-import Features2 from '~/components/widgets/Features2.astro';
-import Steps from '~/components/widgets/Steps.astro';
+// import Features2 from '~/components/widgets/Features2.astro';
+// import Steps from '~/components/widgets/Steps.astro';
 import Content from '~/components/widgets/Content.astro';
-import BlogLatestPosts from '~/components/widgets/BlogLatestPosts.astro';
+// import BlogLatestPosts from '~/components/widgets/BlogLatestPosts.astro';
 import FAQs from '~/components/widgets/FAQs.astro';
-import Stats from '~/components/widgets/Stats.astro';
-import CallToAction from '~/components/widgets/CallToAction.astro';
-import chew from '~/assets/images/CHEW.jpeg';
-import ihc from '~/assets/images/ihc.jpeg'
+// import Stats from '~/components/widgets/Stats.astro';
+// import CallToAction from '~/components/widgets/CallToAction.astro';
+import chew from '../../public/assets/images/unicef.jpg';
+import panel from '../../public/assets/images/panel.jpg'
+import CarouselSlide from '~/components/ui/Carousel';
+
+import ConfettiButton from '~/components/ui/ConfettiButton.astro';
 
 const metadata = {
   title: 'NUMSA - Official Website',
@@ -32,9 +35,9 @@ const metadata = {
         // target: '_blank',
         // icon: 'tabler:download',
       },
-      { text: 'Our People', href: '#' },
+      { text: 'The EXCOS', href: '/2024/excos' },
     ]}
-    image={{ src: '~/assets/images/numsa_logo.png', alt: 'NUMSA  Hero Image' }}
+    image={{ src: '/assets/images/numsa_logo.png', alt: 'NUMSA  Hero Image' }}
   >
     <Fragment slot="title">
       Nile University Medical Students Association
@@ -52,6 +55,10 @@ const metadata = {
       at large.
     </Fragment>
   </Hero>
+  <!-- <ConfettiButton/> -->
+  <div class="">
+  <CarouselSlide client:only="react"/>
+</div>
 
   <!-- Note Widget ******************* -->
 
@@ -102,76 +109,82 @@ const metadata = {
 
   <!-- Content Widget **************** -->
   <!-- title="NUMSA's EFFECT: Fun Meets Impact!" -->
-  <Content
-    isReversed
-    tagline="LATEST NUMSA EVENTS"
-    items={[
-      {
-        title: 'Free vaccinations',
-        description: 'Routine vaccinations under NIP were given by Nile Students.',
-      },
-      {
-        title: 'Free Maternal and Child Health Services',
-        description: 'WIth a focus on prevention, new mothers were brought awareness on hot to properly breastfeed.',
-      },
-      {
-        title: 'Clothing Drive',
-        description:
-          'Easy and weather-appropriate clothes were donated by students.',
-      },
-    ]}
-    image={{
-      src: chew,
-      alt: 'CHEW',
-    }}
-  >
-    <Fragment slot="content">
-      <h3 class="text-2xl font-bold tracking-tight dark:text-white sm:text-3xl mb-2">Visit To Kuchingoro PHC</h3>
-      A chance to reach out to the community.
-    </Fragment>
+  <!-- tagline="LATEST NUMSA EVENTS" -->
 
-    <Fragment slot="bg">
-      <div class="absolute inset-0 bg-blue-50 dark:bg-transparent"></div>
-    </Fragment>
-  </Content>
+
+  
+  <Content
+  tagline="LATEST NUMSA EVENTS"
+  
+  items={[
+    {
+      title: 'Cross Border Collaboration',
+      description: `The conference facilitated meaningful discussions and collaborations among healthcare professionals from various countries, fostering partnerships to address global health challenges collectively.`,
+    },
+    {
+      title: 'Networking Opportunities',
+      description:
+        'The conference provided invaluable networking opportunities, allowing delegates to connect with peers, exchange ideas, and forge new collaborations aimed at advancing global health agendas.',
+    },
+    {
+      title: 'Panel Discussions',
+      description:
+        "Attendees were treated to a wealth of cutting-edge research presentations, showcasing the latest advancements in medical science and innovative approaches to healthcare delivery.",
+    },
+    {
+      title: 'Keynote Addresses by Consultants',
+      description:
+        ' Renowned experts delivered inspiring keynote addresses, sharing their insights and expertise on pressing health issues, sparking dialogue and inspiring action among attendees.',
+    },
+  ]}
+  image={{
+    src: panel,
+    alt: 'panel',
+  }}
+>
+  <Fragment slot="content"><h3 class="text-2xl font-bold tracking-tight dark:text-white sm:text-3xl mb-2">NUMSA Inaugural Launch</h3>
+    A convergence of the Nigerian Medical Professionals.</Fragment>
+
+  <Fragment slot="bg">
+    <div class="absolute inset-0 bg-blue-50 dark:bg-transparent"></div>
+  </Fragment>
+</Content>
 
   <!-- Content Widget **************** -->
 
   <Content
+    isReversed
     isAfterContent
     items={[
       {
-        title: 'Cross Border Collaboration',
-        description: `The conference facilitated meaningful discussions and collaborations among healthcare professionals from various countries, fostering partnerships to address global health challenges collectively.`,
+        title: 'Free vaccinations',
+        description: 'Routine vaccinations under NIP were taken by Nile Students.',
       },
       {
-        title: 'Networking Opportunities',
-        description:
-          'The conference provided invaluable networking opportunities, allowing delegates to connect with peers, exchange ideas, and forge new collaborations aimed at advancing global health agendas.',
+        title: 'Socialisation with Other Representatives Of Medical Schools',
+        description: 'WIth a focus on prevention, all stakeholders were brought awareness on how to properly assess health.',
       },
       {
-        title: 'Cutting-Edge Research Presentations',
+        title: 'Seminars and Meetings',
         description:
-          "Attendees were treated to a wealth of cutting-edge research presentations, showcasing the latest advancements in medical science and innovative approaches to healthcare delivery.",
-      },
-      {
-        title: 'Keynote Addresses by Experts',
-        description:
-          ' Renowned experts delivered inspiring keynote addresses, sharing their insights and expertise on pressing health issues, sparking dialogue and inspiring action among attendees.',
+          'Easy and occcasion-appropriate lectures were given to students and professionals.',
       },
     ]}
     image={{
-      src: ihc,
-      alt: 'ihc',
+      src: chew,
+      alt: 'UNICEF',
     }}
   >
-    <Fragment slot="content"><h3 class="text-2xl font-bold tracking-tight dark:text-white sm:text-3xl mb-2">International Health Week</h3>
-      A convergence of the Nigerian Medical Professionals.</Fragment>
+    <Fragment slot="content">
+      <h3 class="text-2xl font-bold tracking-tight dark:text-white sm:text-3xl mb-2">World Health Day</h3>
+      A chance to commemorate the advancements made towards the SDG30.
+    </Fragment>
 
     <Fragment slot="bg">
       <div class="absolute inset-0 bg-blue-50 dark:bg-transparent"></div>
     </Fragment>
   </Content>
+
 
   <!-- Content Widget **************** -->
 

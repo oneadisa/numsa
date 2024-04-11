@@ -63,6 +63,52 @@ const postCollection = defineCollection({
   }),
 });
 
+const excos = defineCollection({
+  type: "data",
+  schema: z.object({
+    name: z.string().max(50, {
+      message: "You must keep the name to 50 characters or less",
+    }),
+    serial: z.number(),
+    position: z.string(),
+    level: z.number().optional(),
+    image: z.string().default('/assets/images/default_pic.jpg'),
+    bio: z.string().optional(),
+    // category: z.enum([
+    //   "Automotive",
+    //   "Home & Garden",
+    //   "Fashion",
+    //   "Electronics",
+    //   "Toys",
+    // ]),
+  }),
+});
+
+const senators = defineCollection({
+  type: "data",
+  schema: z.object({
+    name: z.string().max(50, {
+      message: "You must keep the name to 50 characters or less",
+    }),
+    serial: z.number(),
+    position: z.string().optional(),
+    level: z.number().optional(),
+    image: z.string().default('/assets/images/default_pic.jpg'),
+    bio: z.string().optional(),
+    // category: z.enum([
+    //   "Automotive",
+    //   "Home & Garden",
+    //   "Fashion",
+    //   "Electronics",
+    //   "Toys",
+    // ]),
+  }),
+});
+
 export const collections = {
   post: postCollection,
+  excos,
+  senators
 };
+
+

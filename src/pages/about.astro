@@ -5,51 +5,68 @@ import Hero from '~/components/widgets/Hero.astro';
 import Stats from '~/components/widgets/Stats.astro';
 import Steps2 from '~/components/widgets/Steps2.astro';
 import Layout from '~/layouts/PageLayout.astro';
-import segz from '~/assets/images/ado.png';
+import segz from '../../public/assets/images/ado.png';
+import Image from '~/components/common/Image.astro';
 const metadata = {
   title: 'About us',
 };
-import couch from '~/assets/images/hero_students_blue.png';
+import foodCourt from '../../public/assets/images/hero_images/IMG_2058.jpg';
+import couch from '../../public/assets/images/hero_students_blue.png';
+import garden from '../../public/assets/images/hero_images/IMG_2047.jpg';
 ---
 
 <Layout metadata={metadata}>
   <!-- Hero Widget ******************* -->
 
+  <!-- image={{
+    src: segz,
+    alt: 'Ado',
+  }} -->
   <Hero
-    tagline="About us"
-    image={{
-      src: segz,
-      alt: 'Ado',
-    }}
+    tagline="ABOUT US"
+   
   >
+
+  <Image
+  src={garden}
+  class="max-w-full mx-auto mb-12 sm:rounded-md bg-gray-400 dark:bg-slate-700"
+  // widths={[400, 900]}
+  // sizes="(max-width: 900px) 350px, 900px"
+  alt={''}
+  width={950}
+  height={500}
+  loading="eager"
+  decoding="async"
+/>
+
     <Fragment slot="title">
       GET TO KNOW <br />
       <span class="text-accent dark:text-white highlight">NUMSA</span>
     </Fragment>
 
-    <Fragment slot="subtitle"  >
-     <span class="text-gray-700 text-left"> NUMSA, the official representative body of medical students at Nile University of Nigeria, transcends tribal,
+    <Fragment slot="subtitle"  class="mx-auto px-6 sm:px-6 max-w-3xl prose prose-lg lg:prose-xl dark:prose-invert dark:prose-headings:text-slate-300 prose-md prose-headings:font-heading prose-headings:leading-tighter prose-headings:tracking-tighter prose-headings:font-bold prose-a:text-primary dark:prose-a:text-blue-400 prose-img:rounded-md prose-img:shadow-lg mt-8 prose-headings:scroll-mt-[80px]" >
+     <span > NUMSA, the official representative body of medical students at Nile University of Nigeria, transcends tribal,
       religious, linguistic, and national boundaries. Bearing the full name "NILE UNIVERSITY MEDICAL STUDENTS’
       ASSOCIATION" (NUMSA), its primary mission is to enhance the overall well-being and development of its student
       body. This encompasses academic growth and the acquisition of skills essential for thriving in the 21st century.
       NUMSA serves as a foundational stepping stone towards realizing the inherent greatness within both current and
       future students. </span> <br /> <br/> 
-      <span class="text-gray-700 text-left">The association serves to represent all medical students and our interests guided
+      <span >The association serves to represent all medical students and our interests guided
       by the rules of morality and discipline set by our prestigious college in order to enable medical students translate
       our noble initiatives to reality. </span> <br /> <br />
 
-      <span class="text-gray-700 text-left">Comprising more than 600 medical students from diverse backgrounds, NUMSA
+      <span >Comprising more than 600 medical students from diverse backgrounds, NUMSA
       stands as one of Nigeria's premier medical colleges, ranked among the top 45 institutions of its kind across the nation
       and the Federal Capital Territory. The organization boasts a well-structured framework, featuring over 28 dedicated
       service offices, all committed to catering to the needs of medical students at Nile University. </span> <br/> <br /> 
       
-      <span class="text-gray-700 text-left">The driving
+      <span >The driving
       force behind NUMSA is its fervent commitment to empowering the next generation of healthcare professionals. Through
       the provision of knowledge, skills, and resources, the organization fosters collaboration, advances medical education,
       extends humanitarian aid, and strives to improve healthcare access for all, thereby leaving a lasting positive impact
       on global well being.</span> <br/> <br />
       
-      <span class="text-gray-700 text-left">NUMSA is affiliated with organizations, such as: Nigerian Medical Association (NMA), Nigerian
+      <span >NUMSA is affiliated with organizations, such as: Nigerian Medical Association (NMA), Nigerian
       Medical Students’ Association (NiMSA), International Federation of Medical Students’ Association (IFMSA), Federation
       of African Medical Students’ Association (FAMSA),… and other Students’ Organizations. </span>
     </Fragment>
@@ -63,7 +80,7 @@ import couch from '~/assets/images/hero_students_blue.png';
       { title: 'Students', amount: '618' },
       { title: 'Offices', amount: '22' },
       { title: 'Committees', amount: '17' },
-      { title: 'Awards', amount: '7' },
+      { title: 'Patrons', amount: '11' },
     ]}
   />
 
@@ -71,29 +88,33 @@ import couch from '~/assets/images/hero_students_blue.png';
 
   <Features3
     title="Our Students"
-    subtitle="Etiam scelerisque, enim eget vestibulum luctus, nibh mauris blandit nulla, nec vestibulum risus justo ut enim. Praesent lacinia diam et ante imperdiet euismod."
+    subtitle="In our members, you will find the following:"
     columns={3}
     isBeforeContent={true}
     items={[
-      // {
-      //   title: 'Educational',
-      //   description:
-      //     'Morbi faucibus luctus quam, sit amet aliquet felis tempor id. Cras augue massa, ornare quis dignissim a, molestie vel nulla.',
-      //   icon: 'tabler:template',
-      // },
-      // {
-      //   title: 'Interior Design',
-      //   description:
-      //     'Vivamus porttitor, tortor convallis aliquam pretium, turpis enim consectetur elit, vitae egestas purus erat ac nunc nulla.',
-      //   icon: 'tabler:template',
-      // },
-      // {
-      //   title: 'Photography',
-      //   description:
-      //     'Duis sed lectus in nisl vehicula porttitor eget quis odio. Aliquam erat volutpat. Nulla eleifend nulla id sem fermentum.',
-      //   icon: 'tabler:template',
-      // },
+      {
+        title: 'Empathy',
+        description:
+          'Our Medical students possess the ability to understand and share the feelings of their peers and patients.',
+        icon: 'tabler:template',
+      },
+      {
+        title: 'Resilience',
+        description:
+          'Medical school is challenging, and resilience is essential for coping with the rigorous demands of medical education and training.',
+        icon: 'tabler:template',
+      },
+      {
+        title: 'Problem-solving skills',
+        description:
+          'Medical students must be adept at analyzing complex situations and finding effective solutions, both in clinical settings and during their studies.',
+        icon: 'tabler:template',
+      },
     ]}
+     image={{
+      src: couch,
+      alt: 'foodCourt',
+    }}
   />
 
   <!-- Features3 Widget ************** -->
@@ -102,24 +123,24 @@ import couch from '~/assets/images/hero_students_blue.png';
     columns={3}
     isAfterContent={true}
     items={[
-      // {
-      //   title: 'E-commerce',
-      //   description:
-      //     'Rutrum non odio at vehicula. Proin ipsum justo, dignissim in vehicula sit amet, dignissim id quam. Sed ac tincidunt sapien.',
-      //   icon: 'tabler:template',
-      // },
-      // {
-      //   title: 'Blog',
-      //   description:
-      //     'Nullam efficitur volutpat sem sed fringilla. Suspendisse et enim eu orci volutpat laoreet ac vitae libero.',
-      //   icon: 'tabler:template',
-      // },
-      // {
-      //   title: 'Business',
-      //   description:
-      //     'Morbi et elit finibus, facilisis justo ut, pharetra ipsum. Donec efficitur, ipsum quis congue luctus, mauris magna.',
-      //   icon: 'tabler:template',
-      // },
+      {
+        title: 'Communication skills',
+        description:
+          'Effective communication is vital in healthcare, and medical students work on honing their ability to convey information clearly and empathetically to patients, families, and colleagues.',
+        icon: 'tabler:template',
+      },
+      {
+        title: 'Teamwork',
+        description:
+          'Collaborating with fellow students, residents, and healthcare professionals is crucial in providing comprehensive patient care, making teamwork a valuable skill for medical students.',
+        icon: 'tabler:template',
+      },
+      {
+        title: 'Integrity',
+        description:
+          ' Medical students are expected to adhere to high ethical standards, maintaining honesty, trustworthiness, and professionalism in all aspects of their practice.',
+        icon: 'tabler:template',
+      },
       // {
       //   title: 'Branding',
       //   description:
@@ -140,7 +161,7 @@ import couch from '~/assets/images/hero_students_blue.png';
       // },
     ]}
     image={{
-      src: couch,
+      src: foodCourt,
       alt: 'couch',
     }}
   />
@@ -149,7 +170,7 @@ import couch from '~/assets/images/hero_students_blue.png';
 
   <Steps2
     title="Our values"
-    subtitle="We prioritize professionalism, advocacy, education, and community engagement, fostering a supportive environment for students while promoting high standards of medical practice. They advocate for diversity, inclusivity, and global health initiatives, working to address health disparities and promote ethical practice. Through leadership development and a focus on student well-being, these associations empower future healthcare leaders to navigate complex challenges and advocate for positive change in healthcare systems worldwide."
+    subtitle="We foster within our members professionalism, advocacy, education, and community engagement, fostering a supportive environment for students while promoting high standards of medical practice. They advocate for diversity, inclusivity, and global health initiatives, working to address health disparities and promote ethical practice. Through leadership development and a focus on student well-being, these associations empower future healthcare leaders to navigate complex challenges and advocate for positive change in healthcare systems worldwide."
     items={[
       {
         title: 'Leadership Development',
@@ -162,7 +183,7 @@ import couch from '~/assets/images/hero_students_blue.png';
           'Advocating for the interests and rights of medical students, as well as promoting health-related policies and initiatives at local, national, and international levels.',
       },
       {
-        title: 'Diversity and Inclusion',
+        title: 'Inclusion',
         description:
           'Celebrating diversity and promoting inclusivity within the medical profession, addressing issues related to gender, race, ethnicity, sexual orientation, and socioeconomic background.',
       },
@@ -177,8 +198,8 @@ import couch from '~/assets/images/hero_students_blue.png';
     subtitle="Our dedication to leadership development has empowered countless students to become future leaders in healthcare, while our commitment to student well-being has fostered supportive communities and promoted mental health awareness."
     isReversed={true}
     callToAction={{
-      text: 'Get Involved!',
-      href: '#',
+      text: 'Back Home!',
+      href: '/',
     }}
     items={[
       {

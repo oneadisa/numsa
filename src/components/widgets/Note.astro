@@ -6,6 +6,42 @@ import { Icon } from 'astro-icon/components';
   <div class="max-w-6xl mx-auto px-4 sm:px-6 py-4 text-md text-center font-medium">
     <span class="font-bold">
       <Icon name="tabler:info-square" class="w-5 h-5 inline-block align-text-bottom" />Upcoming Events:</span
-    > International Health Conference. More Information Below
+    >Register to be in the loop. More Information Below
   </div>
 </section>
+
+<script>
+  // Import npm modules.
+  import confetti from 'canvas-confetti';
+
+  var end = Date.now() + (30 * 1000);
+
+// go NUMSA!
+var colors = ['#172665', '#ffffff'];
+
+function frame() {
+  confetti({
+    particleCount: 2,
+    angle: 60,
+    spread: 55,
+    origin: { x: 0 },
+    colors: colors
+  });
+  confetti({
+    particleCount: 2,
+    angle: 120,
+    spread: 55,
+    origin: { x: 1 },
+    colors: colors
+  });
+
+  if (Date.now() < end) {
+    requestAnimationFrame(frame);
+  }
+};
+
+  window.onload = function() {
+    frame()
+};
+
+</script>

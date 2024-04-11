@@ -1,0 +1,49 @@
+---
+
+import Layout from '../../../layouts/PageLayout.astro';
+import OfficesList from '../../../components/numsa/list.astro';
+import Headline from '../../../components/blog/Headline.astro';
+import { getCollection } from 'astro:content';
+
+import { blogListRobots } from '../../../utils/blog';
+import {formatNumsaPosts} from '../../../utils/numsa'
+
+export const prerender = true;
+
+const posts = await getCollection('senators');
+
+// console.log(`These are the original posts: ${posts}`)
+
+const formattedPosts = formatNumsaPosts(posts);
+// console.log(formattedPosts)
+
+// console.log(`These are the serially arranged posts: ${JSON.stringify(formattedPosts)}`)
+
+
+
+
+// const allCategories = await findCategories();
+// const allTags = await findTags();
+
+const metadata = {
+  title: `NUMSA HOUSE OF REPS`,
+  robots: {
+    index: blogListRobots?.index,
+    follow: blogListRobots?.follow,
+  },
+  openGraph: {
+    type: 'numsa',
+  },
+};
+---
+
+<Layout metadata={metadata}>
+  <section class="px-6 sm:px-6 py-12 sm:py-16 lg:py-20 mx-auto max-w-4xl">
+    <Headline
+      subtitle="The 2024 Executive Council Of NUMSA."
+    >
+      The HOUSE MEMBERS
+    </Headline>
+    <OfficesList posts={formattedPosts} excos={false} />
+  </section>
+</Layout>

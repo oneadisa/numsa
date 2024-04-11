@@ -1,7 +1,12 @@
 const defaultTheme = require('tailwindcss/defaultTheme');
 
 module.exports = {
-  content: ['./src/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue}'],
+  content: [
+    './src/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue}',
+    './src/**/*.{html,js,ts,jsx,tsx}',
+    "./index.html",
+    "./node_modules/tw-elements-react/dist/js/**/*.js"
+  ],
   theme: {
     extend: {
       colors: {
@@ -18,6 +23,8 @@ module.exports = {
       },
     },
   },
-  plugins: [require('@tailwindcss/typography')],
+  plugins: [require('@tailwindcss/typography', 
+  "tw-elements-react/dist/plugin.cjs"
+  )],
   darkMode: 'class',
 };

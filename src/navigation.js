@@ -99,11 +99,11 @@ export const headerData = {
           links: [
             {
               text: 'Executive Council',
-              href: getPermalink('/offices/executive-council'),
+              href: getPermalink('/2024/excos'),
             },
             {
               text: 'The House',
-              href: getPermalink('/offices/the-house'),
+              href: getPermalink('/2024/house'),
             },
             // {
             //   text: 'Mobile App',
@@ -115,28 +115,28 @@ export const headerData = {
             // },
           ],
         },
-        {
-          text: 'Activities',
-          href: getPermalink('/activities'),
-        },
+        // {
+        //   text: 'Activities',
+        //   href: getPermalink('#'),
+        // },
     {
       text: 'Magazine',
       href: getPermalink('/magazine'),
     },
   ],
-  actions: [{ text: 'Follow Us', href: '#', target: '_blank' }],
+  actions: [{ text: 'Follow Us', href: 'https://www.instagram.com/nileunimsa', target: '_blank' }],
 };
 
 export const footerData = {
   links: [
     {
-      title: 'Activities',
+      title: 'About Us',
       links: [
-        { text: 'International Health Conference', href: '#' },
-        { text: 'Sports Week', href: '#' },
-        { text: 'Team', href: '#' },
+        { text: 'Our Students', href: '/about' },
+        { text: 'Sports Week', href: '/about' },
+        // { text: 'Team', href: '#' },
         // { text: 'Enterprise', href: '#' },
-        { text: 'Our stories', href: '#' },
+        { text: 'Our stories', href: '/magazine' },
         // { text: 'Pricing', href: '#' },
         // { text: 'Resources', href: '#' },
       ],
@@ -144,18 +144,18 @@ export const footerData = {
     {
       title: 'Offices',
       links: [
-        { text: 'President', href: '#' },
-        { text: 'Vice President: Internal', href: '#' },
-        { text: 'Vice President: External', href: '#' },
+        { text: 'President', href: '/2024/excos/president' },
+        { text: 'Vice President: Internal', href: '/2024/excos/vp-internal' },
+        { text: 'Speaker Of The House', href: '/2024/house/speaker' },
         // { text: 'Electron', href: '#' },
         // { text: 'NUMSA  Desktop', href: '#' },
       ],
     },
     {
-      title: 'Outreaches',
+      title: 'Activities',
       links: [
-        { text: 'Kubwa Ophanage', href: '#' },
-        { text: 'Family Care Retirement Center', href: '#' },
+        { text: 'NUMSA Inaugural Launch', href: '#' },
+        { text: 'World Health Day', href: '#' },
         // { text: 'Professional Services', href: '#' },
         // { text: 'Skills', href: '#' },
         // { text: 'Status', href: '#' },
@@ -175,12 +175,12 @@ export const footerData = {
     // },
   ],
   secondaryLinks: [
-    { text: 'Terms', href: getPermalink('/terms') },
-    { text: 'Privacy Policy', href: getPermalink('/privacy') },
+    { text: 'Terms', href: getPermalink('#') },
+    { text: 'Privacy Policy', href: getPermalink('#') },
   ],
   socialLinks: [
     { ariaLabel: 'Our X', icon: 'tabler:brand-x', href: '#' },
-    { ariaLabel: 'Our Instagram', icon: 'tabler:brand-instagram', href: '#' },
+    { ariaLabel: 'Our Instagram', icon: 'tabler:brand-instagram', href: 'https://www.instagram.com/nileunimsa' },
     { ariaLabel: 'Our Facebook', icon: 'tabler:brand-facebook', href: '#' },
     // { ariaLabel: 'RSS', icon: 'tabler:rss', href: getAsset('/rss.xml') },
     // { ariaLabel: 'Github', icon: 'tabler:brand-github', href: 'https://github.com/onwidget/astrowind' },

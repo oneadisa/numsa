@@ -1,31 +1,47 @@
 ---
 import Layout from '~/layouts/PageLayout.astro';
 import Hero from '~/components/widgets/Hero.astro';
-import CallToAction from '~/components/widgets/CallToAction.astro';
-import segz from '~/assets/images/segun_hero.JPG'
-
+// import CallToAction from '~/components/widgets/CallToAction.astro';
+import magazine from '../../public/assets/images/MEDICAL MINDSCAPE.png'
+import Image from '~/components/common/Image.astro';
 const metadata = {
-  title: 'NUMSA Magazine: COMING SOON',
+  title: 'NUMSA Magazine',
 };
+
+
 ---
 
 <Layout metadata={metadata}>
   <!-- Hero2 Widget ******************* -->
   
   <Hero
-    tagline="NUMSA MAGAZINE"
-    title="A Glimpse Into Life as a Medical Student"
+    tagline="MEDICAL MINDSCAPE"
+    title="Obesity and Mental Health: Connection Between Body and Mind"
     actions={[
       { variant: 'primary', text: 'Notify Me', href: '#', icon: 'tabler:square-rounded-arrow-right' },
       { text: 'Learn more', href: '#' },
     ]}
-    image={{
-      src: segz,
-      alt: 'NUMSA Magazine DEMO',
-    }}
+   
   >
-    <Fragment slot="subtitle">
-      <span class="text-gray-700 text-left">
+  <Image
+  src={magazine}
+  class="max-w-full mx-auto mb-12 sm:rounded-md bg-gray-400 dark:bg-slate-700"
+  // widths={[400, 900]}
+  // sizes="(max-width: 900px) 350px, 900px"
+  alt={''}
+  width={350}
+  height={500}
+  loading="eager"
+  decoding="async"
+/>
+
+  <!-- image={{
+    src: magazine,
+    alt: 'NUMSA Magazine DEMO',
+  }} -->
+  
+    <Fragment slot="subtitle" class="mx-auto px-6 sm:px-6 max-w-3xl prose prose-lg lg:prose-xl dark:prose-invert dark:prose-headings:text-slate-300 prose-md prose-headings:font-heading prose-headings:leading-tighter prose-headings:tracking-tighter prose-headings:font-bold prose-a:text-primary dark:prose-a:text-blue-400 prose-img:rounded-md prose-img:shadow-lg mt-8 prose-headings:scroll-mt-[80px]" >
+      <span>
         NUMSA Magazine, the official publication of Nile University Medical Students Association (NUMSA) in Nigeria,
         offers a glimpse into the world of healthcare and academic excellence. It showcases the achievements and
         dedication of future healthcare professionals, emphasizing knowledge, outreach, and collaboration. NUMSA
@@ -34,7 +50,7 @@ const metadata = {
       </span>
       <br />
       <br />
-      <span class="text-gray-700 text-left"
+      <span 
         >After a due selection process amongst the editorial team, the NUMSA magazine has been approved to bear the
         name, “The Medical Mindscape” and the selected theme for the year 2023 is “Obesity and Mental Health: The
         connection between body and mind. ” with the subthemes: emotional eating, stress and depression, and how they
@@ -43,7 +59,7 @@ const metadata = {
       <br />
       <br />
 
-      <span class="text-gray-700 text-left"
+      <span
         >However, the theme and sub themes serve to explore and reveal the complex interplay between the intricate
         relationship linking obesity and mental health. Also, emotional eating, stress, and depression can contribute to
         weight gain, while body image and self-esteem concerns eating disorders and the harmful effects of bullying and
@@ -53,7 +69,7 @@ const metadata = {
       <br />
       <br />
 
-      <span class="text-gray-700 text-left"
+      <span class="mx-auto px-6 sm:px-6 max-w-3xl prose prose-lg lg:prose-xl dark:prose-invert dark:prose-headings:text-slate-300 prose-md prose-headings:font-heading prose-headings:leading-tighter prose-headings:tracking-tighter prose-headings:font-bold prose-a:text-primary dark:prose-a:text-blue-400 prose-img:rounded-md prose-img:shadow-lg mt-8 prose-headings:scroll-mt-[80px]"
         >Get Notified when we lauch this Year's Edition!
       </span>
       <br />
@@ -61,6 +77,7 @@ const metadata = {
     </Fragment>
   </Hero>
 
+ 
   <!-- <CallToAction
     title="Coming soon"
     subtitle="We are working on the content of these demo pages. You will see them very soon. Stay tuned Stay tuned!"
