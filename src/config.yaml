@@ -11,14 +11,14 @@ metadata:
   title:
     default: NUMSA 
     template: '%s — NUMSA '
-  description: "\U0001F680 The Official Website of Nile University Medical Students Association."
+  description: "\U0001FA7A The Official Website of Nile University Medical Students Association."
   robots:
     index: true
     follow: true
   openGraph:
     site_name: NUMSA 
     images:
-      - url: '~/assets/images/numsa_logo.png'
+      - url: '../public/assets/images/numsa_logo.png'
         width: 1200
         height: 628
     type: website
