@@ -25,7 +25,7 @@ export interface Post {
 }
 
 export interface Props {
-  excos: boolean;
+  excos: string;
   post: Post;
 }
 
@@ -34,7 +34,19 @@ const image = (await findImage(post.data.image)) as ImageMetadata | undefined;
 
 let link
 // const link = APP_BLOG?.post?.isEnabled ? getPermalink(post.permalink, 'post') : '';
-excos ? link = `/2024/excos/${post.id}` : link = `/2024/house/${post.id}`
+// excos ? link = `/2024/excos/${post.id}` : link = `/2024/house/${post.id}`
+
+switch (excos) {
+  case 'excos':
+    link = `/2024/excos/${post.id}`;
+    break;
+  case 'house':
+    link = `/2024/house/${post.id}`;
+    break;
+  case 'jc':
+    link = `/2024/jc/${post.id}`;
+    break;
+}
 ---
 
 <article class={`max-w-md mx-auto md:max-w-none grid gap-6 md:gap-8 ${image ? 'md:grid-cols-2' : ''}`}>

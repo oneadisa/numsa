@@ -105,10 +105,10 @@ export const headerData = {
               text: 'The House',
               href: getPermalink('/2024/house'),
             },
-            // {
-            //   text: 'Mobile App',
-            //   href: getPermalink('/homes/mobile-app'),
-            // },
+            {
+              text: 'Judicial Committee',
+              href: getPermalink('/2024/jc'),
+            },
             // {
             //   text: 'Personal',
             //   href: getPermalink('/homes/personal'),
@@ -122,6 +122,10 @@ export const headerData = {
     {
       text: 'Magazine',
       href: getPermalink('/magazine'),
+    },
+    {
+      text: 'Advocacy Campaigns',
+      href: getPermalink('/advocacy-campaigns'),
     },
   ],
   actions: [{ text: 'Follow Us', href: 'https://www.instagram.com/nileunimsa', target: '_blank' }],
@@ -145,8 +149,10 @@ export const footerData = {
       title: 'Offices',
       links: [
         { text: 'President', href: '/2024/excos/president' },
-        { text: 'Vice President: Internal', href: '/2024/excos/vp-internal' },
         { text: 'Speaker Of The House', href: '/2024/house/speaker' },
+        { text: 'Secretary General', href: '/2024/excos/sec-gen' },
+        { text: 'Vice President: Internal', href: '/2024/excos/vp-internal' },
+        
         // { text: 'Electron', href: '#' },
         // { text: 'NUMSA  Desktop', href: '#' },
       ],
