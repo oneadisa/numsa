@@ -84,13 +84,21 @@ switch (excos) {
       </h2>
       <div class="mb-1">
         <span class="text-base">
+          {
+            post.data.level && (
+              <>
+              
           <Icon name="tabler:clock" class="w-3.5 h-3.5 inline-block -mt-0.5 dark:text-gray-400" />
           <time datetime={String(post.data.level)} class="inline-block">{post.data.level}</time>
+          {' '}
+                ·{' '}
+          </>
+            )
+          }
           {
             post.data.name && (
               <>
-                {' '}
-                ·{' '}
+              
                 <Icon name="tabler:user" class="w-3.5 h-3.5 inline-block -mt-0.5 dark:text-gray-400" />
                 <span>{post.data.name}</span>
               </>

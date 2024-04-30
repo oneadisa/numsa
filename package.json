@@ -24,6 +24,7 @@
     "astro": "^4.4.4",
     "astro-icon": "^1.1.0",
     "canvas-confetti": "^1.9.2",
+    "framer-motion": "^11.1.7",
     "limax": "4.1.0",
     "lodash.merge": "^4.6.2",
     "react": "^18.2.0",

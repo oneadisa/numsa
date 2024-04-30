@@ -69,8 +69,8 @@ const { data } = post;
           <Image
             src={post.data.image}
             class="max-w-full mx-auto mb-12 sm:rounded-md bg-gray-400 dark:bg-slate-700"
-            // widths={[400, 900]}
-            // sizes="(max-width: 900px) 350px, 900px"
+            widths={[400, 900]}
+            sizes="(max-width: 900px) 350px, 900px"
             alt={post?.data.position || ''}
             width={350}
             height={500}
@@ -84,19 +84,60 @@ const { data } = post;
         )
       }
     </header>
-    <h3
-        class="px-4 sm:px-6 max-w-3xl mx-auto text-2xl md:text-3xl  leading-tighter tracking-tighter pb-2 font-heading"
-      >
-        About Me
-      </h3>
+    
+      
+        <h3 class="px-4 sm:px-6 max-w-3xl mx-auto text-2xl md:text-3xl  leading-tighter tracking-tighter pb-2 font-heading">
+          About
+        </h3>
+      
+    
+
     <div
       class="mx-auto px-6 sm:px-6 max-w-3xl prose prose-lg lg:prose-xl dark:prose-invert dark:prose-headings:text-slate-300 prose-md prose-headings:font-heading prose-headings:leading-tighter prose-headings:tracking-tighter prose-headings:font-bold prose-a:text-primary dark:prose-a:text-blue-400 prose-img:rounded-md prose-img:shadow-lg mt-8 prose-headings:scroll-mt-[80px]"
     >
-      {data ? <Fragment set:html={post.data.bio || ''} /> : <Content /> }
-    </div>
-    <div class="mx-auto px-6 sm:px-6 max-w-3xl mt-8 flex justify-between flex-col sm:flex-row">
-      <!-- <PostTags tags={post.tags} class="mr-5 rtl:mr-0 rtl:ml-5" /> -->
-      <!-- <SocialShare url={url} text={post.data.position} class="mt-5 sm:mt-1 align-middle text-gray-500 dark:text-slate-600" /> -->
+      {post.data.position === "House Members" ? 
+      <div>
+        <h2 class="mb-2 text-lg font-semibold text-gray-900 dark:text-white">600 Level</h2>
+        <ul class="max-w-md space-y-1 text-gray-500 list-disc list-inside dark:text-gray-400">
+          <li>Abraham Pere</li>
+          <li>Ummi Zahra</li>
+          <li> Naja’atu Bawa</li>
+          <li>Maimunah Haruna</li>
+        </ul>
+        <h2 class="mb-2 text-lg font-semibold text-gray-900 dark:text-white">500 Level</h2>
+        <ul class="max-w-md space-y-1 text-gray-500 list-disc list-inside dark:text-gray-400">
+          <li>Lawal Sakinatu</li>
+          <li>Osaze-Ogedegbe Adaora</li>
+          <li>Hyeladzira Mshelbara</li>
+          <li>Eniola Oladele</li>
+        </ul>
+        <h2 class="mb-2 text-lg font-semibold text-gray-900 dark:text-white">400 Level</h2>
+        <ul class="max-w-md space-y-1 text-gray-500 list-disc list-inside dark:text-gray-400">
+          <li>Mohammed-Neizifi Yusuf</li>
+          <li>Kolade Suliyat</li>
+          <li>Fareedat Opeifa</li>
+        </ul>
+        <h2 class="mb-2 text-lg font-semibold text-gray-900 dark:text-white">300 Level</h2>
+        <ul class="max-w-md space-y-1 text-gray-500 list-disc list-inside dark:text-gray-400">
+          <li>Simisola Okunrinboye</li>
+          <li>Fatima Murtala</li>
+          <li>Salama Sanda</li>
+          <li>Idah Mercy Ene</li>
+        </ul>
+        <h2 class="mb-2 text-lg font-semibold text-gray-900 dark:text-white">200 Level</h2>
+        <ul class="max-w-md space-y-1 text-gray-500 list-disc list-inside dark:text-gray-400">
+          <li>David Ejenavi</li>
+          <li>Musbaudeen Idris Girei</li>
+          <li>Chigbo Oluchi Joy Chisom</li>
+          <li>Matilukuro Omobolaji Theressa</li>
+          <li>Ikenna Ugwu</li>
+        </ul>
+        
+      </div> : <Fragment set:html={post.data.bio || ''} />  }
+      <div class="mx-auto px-6 sm:px-6 max-w-3xl mt-8 flex justify-between flex-col sm:flex-row">
+        <!-- <PostTags tags={post.tags} class="mr-5 rtl:mr-0 rtl:ml-5" /> -->
+        <!-- <SocialShare url={url} text={post.data.position} class="mt-5 sm:mt-1 align-middle text-gray-500 dark:text-slate-600" /> -->
+      </div>
     </div>
   </article>
 </section>

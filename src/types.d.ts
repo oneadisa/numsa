@@ -10,7 +10,7 @@ export interface Post {
 
   /**  */
   permalink: string;
-
+ 
   /**  */
   publishDate: Date;
   /**  */

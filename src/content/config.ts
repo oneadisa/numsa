@@ -126,11 +126,27 @@ const jc = defineCollection({
   }),
 });
 
+const campaignCollection = defineCollection({
+  // type: "content",
+  schema: z.object({
+    layout: z.string().optional(),
+    date: z.string().optional(),
+    mainImage: z.string().optional(),
+    otherImages: z.array(z.string()).optional(),
+    title: z.string(),
+    serial: z.number().optional(),
+    caption: z.string().optional(),
+  }),
+});
+
+
+
 export const collections = {
   post: postCollection,
   excos,
   senators,
-  jc
+  jc,
+  'campaign': campaignCollection
 };
 
 

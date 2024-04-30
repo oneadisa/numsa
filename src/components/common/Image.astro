@@ -16,9 +16,9 @@ type ImageType = {
 
 const props = Astro.props;
 
-if (props.alt === undefined || props.alt === null) {
-  throw new Error();
-}
+// if (props.alt === undefined || props.alt === null) {
+//   throw new Error();
+// }
 
 if (typeof props.width === 'string') {
   props.width = parseInt(props.width);

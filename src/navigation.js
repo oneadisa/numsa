@@ -125,7 +125,24 @@ export const headerData = {
     },
     {
       text: 'Advocacy Campaigns',
-      href: getPermalink('/advocacy-campaigns'),
+      links: [
+        {
+          text: 'Cmpaigns',
+          href: getPermalink('/advocacy-campaigns'),
+        },
+        {
+          text: 'Outreaches',
+          href: getPermalink('/outreaches'),
+        },
+        {
+          text: 'Zoom Conferences',
+          href: getPermalink('/zoom-conferences'),
+        },
+        // {
+        //   text: 'Personal',
+        //   href: getPermalink('/homes/personal'),
+        // },
+      ],
     },
   ],
   actions: [{ text: 'Follow Us', href: 'https://www.instagram.com/nileunimsa', target: '_blank' }],

@@ -30,3 +30,17 @@ export function formatNumsaPosts(posts, { sortByRank = true, limit = undefined }
   return posts;
 }
 
+export function formatCampaignPosts(posts, { sortByRank = true, limit = undefined } = {}) {
+  // sortByRank or randomize
+  if (sortByRank) {
+    posts.sort((a, b) => b.data.serial - a.data.serial);
+  } else {
+    posts.sort(() => Math.random() - 0.5);
+  }
+
+  // limit if number is passed
+  if (typeof limit === 'number') {
+    return posts.slice(0, limit);
+  }
+  return posts;
+}
