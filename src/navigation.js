@@ -127,7 +127,7 @@ export const headerData = {
       text: 'Advocacy Campaigns',
       links: [
         {
-          text: 'Cmpaigns',
+          text: 'Campaigns',
           href: getPermalink('/advocacy-campaigns'),
         },
         {
