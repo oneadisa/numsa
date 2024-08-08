@@ -2,46 +2,91 @@
 import Layout from '~/layouts/PageLayout.astro';
 import Hero from '~/components/widgets/Hero.astro';
 // import CallToAction from '~/components/widgets/CallToAction.astro';
-import magazine from '../../public/assets/images/MEDICAL MINDSCAPE.png'
+import magazine from '../../public/assets/images/MEDICAL MINDSCAPE.png';
 import Image from '~/components/common/Image.astro';
 const metadata = {
   title: 'NUMSA Magazine',
 };
-
-
 ---
 
 <Layout metadata={metadata}>
   <!-- Hero2 Widget ******************* -->
-  
+  <!-- title="Obesity and Mental Health: Connection Between Body and Mind" -->
+  <!-- actions={[
+    { variant: 'primary', text: 'Notify Me', href: '#', icon: 'tabler:square-rounded-arrow-right' },
+    { text: 'Learn more', href: '#' },
+  ]} -->
   <Hero
     tagline="MEDICAL MINDSCAPE"
-    title="Obesity and Mental Health: Connection Between Body and Mind"
-    actions={[
-      { variant: 'primary', text: 'Notify Me', href: '#', icon: 'tabler:square-rounded-arrow-right' },
-      { text: 'Learn more', href: '#' },
-    ]}
-   
+    
+    
   >
-  <Image
-  src={magazine}
-  class="max-w-full mx-auto mb-12 sm:rounded-md bg-gray-400 dark:bg-slate-700"
-  // widths={[400, 900]}
-  // sizes="(max-width: 900px) 350px, 900px"
-  alt={''}
-  width={350}
-  height={500}
-  loading="eager"
-  decoding="async"
-/>
+    <Image
+      src={magazine}
+      class="max-w-full mx-auto mb-12 sm:rounded-md bg-gray-400 dark:bg-slate-700"
+      widths={[400, 900]}
+      sizes="(max-width: 900px) 350px, 900px"
+      alt={''}
+      width={350}
+      height={500}
+      loading="eager"
+      decoding="async"
+    />
 
-  <!-- image={{
+    <!-- image={{
     src: magazine,
     alt: 'NUMSA Magazine DEMO',
   }} -->
-  
-    <Fragment slot="subtitle" class="mx-auto px-6 sm:px-6 max-w-3xl prose prose-lg lg:prose-xl dark:prose-invert dark:prose-headings:text-slate-300 prose-md prose-headings:font-heading prose-headings:leading-tighter prose-headings:tracking-tighter prose-headings:font-bold prose-a:text-primary dark:prose-a:text-blue-400 prose-img:rounded-md prose-img:shadow-lg mt-8 prose-headings:scroll-mt-[80px]" >
+
+    <Fragment
+      slot="content"
+      class="mx-auto px-6 sm:px-6 max-w-3xl prose prose-lg lg:prose-xl dark:prose-invert dark:prose-headings:text-slate-300 prose-md prose-headings:font-heading prose-headings:leading-tighter prose-headings:tracking-tighter prose-headings:font-bold prose-a:text-primary dark:prose-a:text-blue-400 prose-img:rounded-md prose-img:shadow-lg mt-8 prose-headings:scroll-mt-[80px]"
+    >
       <span>
+        In this edition, we delve into the intricate connection between body and mind, exploring the overarching theme
+        for the year 2023 – “Obesity and Mental Health.” We aim to unravel the complexities surrounding emotional
+        eating, stress, depression, body image, self-esteem, eating disorders, bullying, and stigmatization, and to
+        understand how these elements interplay in shaping our holistic well-being.
+      </span>
+      <br />
+      <br />
+      <span>
+        The Medical Mindscape stands as a testament to the relentless pursuit of healthcare excellence and academic
+        prowess exhibited by the future healthcare professionals within NUMSA. As an association, NUMSA unites over 600
+        medical students from diverse backgrounds and is ranked among the top 45 medical institutions in Nigeria and the
+        Federal Capital Territory. It serves as a pillar of academic and ethical standards.
+      </span>
+      <br />
+      <br />
+      <span>
+        At its core, NUMSA is committed to producing world-class medical doctors and fostering research, cooperation,
+        discipline, integrity, and professionalism among its student body. We take pride in nurturing well-rounded
+        individuals who contribute not only to the academic landscape but also to the cultural and social fabric of
+        society. This edition reflects NUMSA's mission – a mission that extends beyond our institution to reach out
+        globally.
+      </span>
+      <br />
+      <br />
+      <span>
+        Affiliated with esteemed organizations such as the Nigerian Medical Association (NMA), Nigerian Medical
+        Students’ Association (NiMSA), International Federation of Medical Students’ Association (IFMSA), Federation of
+        African Medical Students’ Association (FAMSA), and others, NUMSA is a beacon of collaboration and progress in
+        the medical community.
+      </span>
+      <br />
+      <br />
+      <span>
+        As you flip through the pages of The Medical Mindscape, I invite you to join us in exploring the profound impact
+        of our theme and subthemes on the healthcare landscape. Together, let's unravel the complexities, enhance our
+        understanding, and strive for a healthier, more connected future.
+      </span>
+      <br />
+      <br />
+      <span class="text-center mx-auto"> Happy reading! </span>
+      <br />
+      <br />
+
+      <!-- <span>
         NUMSA Magazine, the official publication of Nile University Medical Students Association (NUMSA) in Nigeria,
         offers a glimpse into the world of healthcare and academic excellence. It showcases the achievements and
         dedication of future healthcare professionals, emphasizing knowledge, outreach, and collaboration. NUMSA
@@ -73,11 +118,10 @@ const metadata = {
         >Get Notified when we lauch this Year's Edition!
       </span>
       <br />
-      <br />
+      <br /> -->
     </Fragment>
   </Hero>
 
- 
   <!-- <CallToAction
     title="Coming soon"
     subtitle="We are working on the content of these demo pages. You will see them very soon. Stay tuned Stay tuned!"
