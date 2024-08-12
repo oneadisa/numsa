@@ -64,7 +64,7 @@ const postCollection = defineCollection({
 });
 
 const excos = defineCollection({
-  // type: "data",
+  type: "data",
   schema: z.object({
     name: z.string().max(50, {
       message: "You must keep the name to 50 characters or less",
