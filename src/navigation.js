@@ -124,10 +124,14 @@ export const headerData = {
       href: getPermalink('/magazine'),
     },
     {
-      text: 'Advocacy Campaigns',
+      text: 'Activities',
       links: [
         {
-          text: 'Campaigns',
+          text: 'Inaugural Launch',
+          href: getPermalink('/inaugural-launch'),
+        },
+        {
+          text: 'Advocacy Campaigns',
           href: getPermalink('/advocacy-campaigns'),
         },
         {

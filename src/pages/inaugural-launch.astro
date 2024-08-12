@@ -1,0 +1,337 @@
+---
+import CallToAction from '../components/widgets/CallToAction.astro';
+import Content from '../components/widgets/Content.astro';
+import Features2 from '../components/widgets/Features2.astro';
+import Hero from '../components/widgets/Hero.astro';
+import Testimonials from '../components/widgets/Testimonials.astro';
+import Layout from '../layouts/PageLayout.astro';
+import Image from '../components/common/Image.astro';
+
+const metadata = {
+  title: 'Inaugural Launch',
+};
+
+import header from '../../public/assets/images/launch/header.jpg';
+---
+
+<!-- subtitle="Explore our meticulously crafted templates tailored to various industries and purposes. From captivating presentations to functional website designs, we offer the tools you need to succeed."
+    actions={[{ variant: 'primary', target: '_blank', text: 'Start exploring', href: '/' }]}
+    image={{
+      src: 'https://images.unsplash.com/photo-1519389950473-47ba0277781c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80',
+      alt: 'AstroWind Hero Image',
+    }} --><!-- title="NUMSA Launches Its Association and Unveils Inaugural Magazine Edition" -->
+<Layout metadata={metadata}>
+  <!-- Hero Widget ******************* -->
+
+  <Hero tagline="numsa">
+    <Fragment slot="title">
+      <span class="text-3xl tracking-tight text-center"
+        >NUMSA Launches Its Association and Unveils Inaugural Magazine Edition</span
+      >
+      <!-- <span class="text-primary text-3xl tracking-tight dark:text-white"></span> -->
+    </Fragment>
+
+    <Image
+      class="mx-auto rounded-md w-full mb-8"
+      widths={[200, 400, 600, 900]}
+      sizes="(max-width: 767px) 200px, (max-width: 1023px) 400px, (max-width: 2039px) 600px, 900px"
+      loading="eager"
+      width={900}
+      height={350}
+      src={header}
+    />
+
+    <Fragment
+      slot="content"
+      class="mx-auto px-6 sm:px-6 max-w-3xl prose prose-lg lg:prose-xl dark:prose-invert dark:prose-headings:text-slate-300 prose-md prose-headings:font-heading prose-headings:leading-tighter prose-headings:tracking-tighter prose-headings:font-bold prose-a:text-primary dark:prose-a:text-blue-400 prose-img:rounded-md prose-img:shadow-lg mt-8 prose-headings:scroll-mt-[80px]"
+    >
+      <span>
+        On <span class="text-primary font-bold dark:text-white">March 28th</span>, under the leadership of Emmanuel
+        Oranwusi, President of the Nile University Medical Students' Association (NUMSA), the association successfully
+        launched its first magazine, <span class="text-primary font-bold dark:text-white"
+          >"The Medical Mindscapes."</span
+        > The event, themed <span class="text-primary font-bold dark:text-white">"Medicine and The Medic"</span> paid tribute
+        to the field of medicine and the challenges faced by medical students.
+      </span>
+      <br />
+      <br />
+      <span
+        >The grand event featured a keynote address by <span class="text-primary font-bold dark:text-white"
+          >Dr. Ugochukwu Charles Ugwuanyi</span
+        >, Chairman of the Nigerian Medical Association (FCT) and a distinguished neurosurgeon. His presentation
+        encouraged students to reflect on their goals and the efforts required to achieve them. The event also included
+        a panel discussion led by <span class="text-primary font-bold dark:text-white">Dr. Nubwa Medugu</span>, Head of
+        the Department of Microbiology, Basic Clinical Sciences, and a consultant microbiologist. The discussion,
+        focusing on tuberculosis, involved contributions from her former students and provided valuable insights into
+        this pressing socio-medical issue.
+      </span>
+      <br />
+      <br />
+
+      <span
+        >The event was both enlightening and engaging, leaving NUMSA members inspired and enthusiastic about the future
+        of their association. As they continue to work towards elevating NUMSA to greater heights, they anticipate more
+        achievements to come.
+      </span>
+      <br />
+      <br />
+
+      <span
+        >The driving force behind NUMSA is its fervent commitment to empowering the next generation of healthcare
+        professionals. Through the provision of knowledge, skills, and resources, the organization fosters
+        collaboration, advances medical education, extends humanitarian aid, and strives to improve healthcare access
+        for all, thereby leaving a lasting positive impact on global well being.</span
+      >
+      <br />
+      <br />
+
+      <span
+        >The launch event also commemorated four World Health Days: -
+        <br />
+        <a class="text-primary font-bold dark:text-white" href="/advocacy-campaigns/world_tuberculosis_day"
+          >World Tuberculosis Day</a
+        >: Featured a panel discussion led by Dr. Nubwa Medugu, with participation from Emmanuel Oranwusi, Irene Ewe,
+        Ashraf Salihu, Safiya Sadiq Saleh, Abdul-Azeez Ibrahim O., and Maryam Jibrin Wunti.
+        <br />
+        <a class="text-primary font-bold dark:text-white" href="/advocacy-campaigns/world_water_day">World Water Day</a
+        >: Highlighted by a presentation from Sefulah.
+        <br />
+        <a class="text-primary font-bold dark:text-white" href="/advocacy-campaigns/international_womens_day"
+          >World International Women’s Day</a
+        >: Marked by a presentation from Maymunah Haruna.
+      </span>
+
+      <br />
+      <br />
+
+      <span>
+        The launch event underscored the promise of a vibrant and supportive association for medical students at Nile
+        University.
+      </span>
+    </Fragment>
+  </Hero>
+
+  <!-- Content Widget **************** -->
+
+  <Content
+    tagline="Highlights"
+    id="about"
+    columns={3}
+    image={{
+      src: '/assets/images/launch/ugwuanyi.jpg',
+      alt: 'Dr. Ugochukwu Charles Ugwuanyi',
+      loading: 'eager',
+    }}
+  >
+    <Fragment slot="content">
+      <h2 class="text-xl font-bold tracking-tight dark:text-white sm:text-xl mb-2">Dr. Ugochukwu Charles Ugwuanyi</h2>
+      <p>Chairman of the Nigerian Medical Association(FCT) and esteemed Neurosurgeon.</p>
+      <br />
+      <p class="dark:text-white">
+        Delivers an insightful keynote address on the theme "Medicine and The Medic." He explores the evolution of
+        medicine from its prehistoric origins through its rich history, offering practical advice on how to study the
+        discipline effectively and maintain the rigorous discipline required to excel.
+      </p>
+      <br />
+      <p class="dark:text-white">
+        Dr. Ugwuanyi also highlights the qualities necessary to become a successful doctor, candidly discussing the
+        various challenges medical students face and sharing valuable strategies to overcome these hurdles in their
+        journey toward excellence.
+      </p>
+    </Fragment>
+
+    <Fragment slot="bg">
+      <div class="absolute inset-0 bg-white dark:bg-transparent"></div>
+    </Fragment>
+  </Content>
+
+  <!-- Content Widget **************** -->
+
+  <Content
+    isReversed
+    id="about"
+    columns={3}
+    image={{
+      src: '/assets/images/launch/nubwa.jpg',
+      alt: 'Dr. Nubwa Medugu',
+      loading: 'eager',
+    }}
+  >
+    <Fragment slot="content">
+      <h2 class="text-xl font-bold tracking-tight dark:text-white sm:text-xl mb-2">Dr. Nubwa Medugu</h2>
+      <p>Head of the Department of Microbiology and Consultant Microbiologist.</p>
+      <br />
+      <p class="dark:text-white">
+        Expertly addresses critical questions during the panel discussion on tuberculosis. She discusses the
+        effectiveness of current TB treatment methods in Nigeria, the common challenges in TB diagnosis, and the impact
+        of the COVID-19 pandemic on TB diagnosis and treatment.
+      </p>
+      <br />
+      <p class="dark:text-white">
+        Dr. Medugu also delves into the challenges posed by drug-resistant TB on Nigeria’s control efforts and
+        highlights innovative technologies and approaches being used to tackle TB in the country.
+      </p>
+      <br />
+      <p class="dark:text-white">
+        She also discusses the impact of the COVID-19 pandemic on TB diagnosis and treatment.
+      </p>
+    </Fragment>
+
+    <Fragment slot="bg">
+      <div class="absolute inset-0 bg-blue-50 dark:bg-transparent"></div>
+    </Fragment>
+  </Content>
+
+  <!-- Content Widget **************** -->
+
+  <Content
+    id="about"
+    columns={3}
+    image={{
+      src: '/assets/images/launch/presido.jpg',
+      alt: 'Emmanuel Oranwusi and the NUMSA team',
+      loading: 'eager',
+    }}
+  >
+    <Fragment slot="content">
+      <h2 class="text-xl font-bold tracking-tight dark:text-white sm:text-xl mb-2">NUMSA EXCOS and Patrons.</h2>
+      <!-- <p>President of the N Medical Students Association.</p> -->
+      <br />
+      <p class="dark:text-white">
+        In his inaugural address, President Emmanuel Oranwusi emphasized NUMSA’s commitment to enhancing student
+        capacity and fostering collaboration. He reviewed key achievements, including securing 40 offices with NIMSA and
+        2 with FAMSA, organizing the upcoming NIMSA International Health Conference, and launching a new official
+        website. Oranwusi highlighted successful social events and initiatives like canvas tutorial classes and a
+        mentorship program designed to support mental well-being and camaraderie. He also noted the introductory
+        lectures on affiliated medical student associations.
+      </p>
+      <br />
+      <p class="dark:text-white">
+        Expressing deep gratitude to supporters, Oranwusi encouraged ongoing dedication to overcoming challenges and
+        expanding student engagement through outreach activities. He concluded with a powerful quote: “Give me a lever
+        long enough and a fulcrum on which to place it and I shall move the world.” He asserted that today marks the
+        beginning of NUMSA’s journey towards greatness and a foundation of excellence for future generations.
+      </p>
+    </Fragment>
+    <Fragment slot="bg">
+      <div class="absolute inset-0 bg-white dark:bg-transparent"></div>
+    </Fragment>
+  </Content>
+
+  <!-- Content Widget **************** -->
+
+  <Content
+    isReversed
+    id="about"
+    columns={3}
+    image={{
+      src: '/assets/images/launch/presido2.jpg',
+      alt: 'Emmanuel Oranwusi',
+      loading: 'eager',
+    }}
+  >
+    <Fragment slot="content">
+      <h2 class="text-xl font-bold tracking-tight dark:text-white sm:text-xl mb-2">
+        President’s Second Speech Highlights NUMSA’s Legacy and Future Vision
+      </h2>
+      <!-- <p>Head of the Department of Microbiology and Consultant Microbiologist.</p> -->
+      <br />
+      <p class="dark:text-white">
+        In his second address, President Emmanuel Oranwusi recounted the evolution of the Nile University Medical
+        Students' Association (NUMSA), tracing its origins to the 2018/2019 academic session under the leadership of
+        President Ummi Dambatta. Dambatta, who was unanimously elected as NUMSA’s first president, oversaw the drafting
+        and adoption of the association's constitution on January 25, 2019. Her tenure concluded on December 25, 2021,
+        when Ibrahim Khalil Yahaya was elected as her successor. Yahaya led until December 2023, after which a new
+        executive team, led by Emmanuel, was elected through a transparent process managed by Electoral Chairman
+        Adonijah Airede.
+      </p>
+      <br />
+      <p class="dark:text-white">
+        Emmanuel, reflecting on his transition to Nile University in 2022, praised the institution’s infrastructure and
+        academic excellence. He highlighted his initial misconceptions about the university being elitist, which were
+        dispelled by its robust curriculum and supportive environment. He commended Nile University's amenities,
+        including well-equipped hostels and comprehensive student services, which he believes significantly enhance the
+        student experience.
+      </p>
+      <br />
+      <p class="dark:text-white">
+        Addressing past challenges faced by NUMSA, Emmanuel Oranwusi acknowledged the administration's role in
+        overcoming these obstacles and affirmed his commitment to advancing the association’s goals. He lauded the
+        collective effort that led to the creation of NUMSA’s new magazine, expressing gratitude to all contributors.
+        Emmanuel emphasized that the magazine represents the collaborative spirit of the student body and serves as a
+        symbol of future potential.
+      </p>
+      <p class="dark:text-white">
+        Looking ahead, Emmanuel Oranwusi outlined his administration’s goals to revitalize NUMSA and drive it towards
+        progress and excellence. He expressed appreciation for the school administration's support and the strong sense
+        of community among students. Concluding his speech, he articulated a vision of unity and optimism, aiming to
+        elevate NUMSA and contribute to Nile University’s esteemed reputation.
+      </p>
+      <br />
+      <p class="dark:text-white">
+        Emmanuel’s address was marked by his inspirational quote: “Our collective aspiration is to resurrect our
+        association from past challenges and propel it toward a future characterized by progress and excellence.” This
+        quote encapsulates his commitment to fostering a legacy of growth and success for NUMSA and Nile University.
+      </p>
+    </Fragment>
+
+    <Fragment slot="bg">
+      <div class="absolute inset-0 bg-blue-50 dark:bg-transparent"></div>
+    </Fragment>
+  </Content>
+
+  <!-- Content Widget **************** -->
+
+  <Content
+    image={{
+      src: '/assets/images/launch/panel.jpg',
+      alt: 'Features Image',
+    }}
+  >
+    <Fragment slot="content">
+      <h3 class="text-2xl font-bold tracking-tight dark:text-white sm:text-3xl mb-2">Panel Discussion</h3>
+      <br />
+      <p class="dark:text-white">
+        World Tuberculosis Day: Featured a panel discussion led by Dr. Nubwa Medugu, with participation from Emmanuel
+        Oranwusi, Irene Ewe, Ashraf Salihu, Safiya Sadiq Saleh, Abdul-Azeez Ibrahim O., and Maryam Jibrin Wunti.
+      </p>
+    </Fragment>
+  </Content>
+
+  <!-- Content Widget **************** -->
+
+  <Content
+    isAfterContent
+    isReversed
+    image={{
+      src: '/assets/images/launch/speaker.jpg',
+      alt: 'Speaker',
+    }}
+  >
+    <Fragment slot="content">
+      <h3 class="text-2xl font-bold tracking-tight dark:text-white sm:text-3xl mb-2">Speaker</h3>
+      <br />
+      <p class="dark:text-white">
+        World Tuberculosis Day: NUMSA SPEAKER Abdul-Azeez Ibrahim O. answering questions and addressing the audience.
+      </p>
+    </Fragment>
+    <Fragment slot="bg">
+        <div class="absolute inset-0 bg-blue-50 dark:bg-transparent"></div>
+      </Fragment>
+  </Content>
+
+  <Content
+    isAfterContent
+    image={{
+      src: '/assets/images/launch/poem.jpg',
+      alt: 'Poem',
+    }}
+  >
+    <Fragment slot="content">
+      <h3 class="text-2xl font-bold tracking-tight dark:text-white sm:text-3xl mb-2">World International Women’s Day</h3>
+      <br />
+      <p class="dark:text-white">Marked by a presentation from Maymunah Haruna.</p>
+    </Fragment>
+  </Content>
+
+</Layout>

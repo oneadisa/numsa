@@ -17,7 +17,8 @@ const {
   image = await Astro.slots.render('image'),
   isReversed = false,
   isAfterContent = false,
-
+  readMore = false,
+  readMoreLink,
   id,
   isDark = false,
   classes = {},
@@ -88,7 +89,15 @@ const {
             </div>
           )
         }
+              {
+                readMore && (
+                  <div class="mt-10 md:mt-10 md:basis-1/2 text-primary">
+                    <a href={readMoreLink}>Read More</a>
+                  </div>
+                )
+              }
       </div>
+
     </div>
   </div>
 </WidgetWrapper>

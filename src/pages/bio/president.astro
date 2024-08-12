@@ -1,0 +1,134 @@
+---
+import type { InferGetStaticPropsType, GetStaticPaths } from 'astro';
+
+import merge from 'lodash.merge';
+import type { ImageMetadata } from 'astro';
+import Layout from '~/layouts/PageLayout.astro';
+import { I18N } from '~/utils/config';
+// import ToBlogLink from '~/components/blog/ToBlogLink.astro';
+
+import { getBlogPermalink, getCanonical, getPermalink } from '~/utils/permalinks';
+import { getStaticPathsBlogPost, blogPostRobots } from '~/utils/blog';
+import { findImage } from '~/utils/images';
+import type { MetaData } from '~/types';
+// import RelatedPosts from '~/components/blog/RelatedPosts.astro';
+import Button from '~/components/ui/Button.astro';
+import { Icon } from 'astro-icon/components';
+import { getCollection } from 'astro:content';
+import type { Post } from '../../../components/numsa/listItem.astro';
+
+import Image from '../../components/common/Image.astro';
+const { textDirection } = I18N;
+
+export const prerender = true;
+
+export const getStaticPaths = (async () => {
+    const posts = await getCollection('excos');
+    return posts.map(post => ({
+    params: { office: post.id }, props: { post },
+  }));
+}) satisfies GetStaticPaths;
+
+type Props = {
+  post: Post;
+}
+
+// const { post } = Astro.props as Props;
+
+// const url = getCanonical(getPermalink(post.permalink, 'post'));
+// const image = (await findImage(post.data.image)) as ImageMetadata | string | undefined;
+
+const metadata = merge(
+  {
+    title: 'NUMSA PRESIDENT',
+    description: 'Emmanuel Oranwusi',
+    robots: {
+      index: blogPostRobots?.index,
+      follow: blogPostRobots?.follow,
+    },
+    openGraph: {
+      type: 'article',
+    //   ...(image ? { images: [{ url: image, width: (image as ImageMetadata)?.width, height: (image as ImageMetadata)?.height }] } : {}),
+    },
+  },
+//   { ...(post?.metadata ? { ...post.metadata, canonical: post.metadata?.canonical || url } : {}) }
+) as MetaData;
+---
+
+<Layout metadata={metadata}>
+    <section class="py-8 sm:py-16 lg:py-20 mx-auto">
+        <article>
+          <header class="text-center mb-12">
+            <h1 class="px-4 sm:px-6 max-w-3xl mx-auto mb-6 text-4xl md:text-5xl font-bold leading-tight tracking-tight font-heading">
+              NUMSA PRESIDENT
+            </h1>
+
+            <div class="max-w-md mx-auto px-4 sm:px-6">
+              <Image src=/assets/images/excos/studio_pics/presido.jpg width={500} height={806} class="mx-auto" alt="NUMSA President" />
+            </div>
+          </header>
+          <div class="mx-auto px-4 sm:px-6 max-w-3xl prose prose-lg dark:prose-invert mt-12">
+            <h2 class="text-2xl font-bold mb-4">Offices held:</h2>
+            <ul class="list-disc pl-5 space-y-2 mb-8">
+              <li>Nile University Medical Students' Association</li>
+              <li>President Representative at the 47th NIMSA General Assembly, 2023</li>
+              <li>National Training Officer, NIMSA Mental Advocacy Campaign (2022-2023)</li>
+              <li>Chief Editor, Nile University Medical Students' Association Magazine (2022-2023)</li>
+              <li>President, The Nile Student Network (2022-2023)</li>
+              <li>Sub-Committee Head, NIMSA International Health Conference (2022-2023)</li>
+              <li>Research and Project Officer, Non-Communicable Diseases, NIMSA Health Care Trustfund (2022-2023)</li>
+              <li>North Central Regional Coordinator, Standing Committee on Public Health (2022-2023)</li>
+              <li>Special Adviser to the Vice-President External, NIMSA (2022-2023)</li>
+              <li>North Central Regional Coordinator, Auwal Shanon Foundation NIMSA (2022-2023)</li>
+              <li>National Director of Protocol II, Nigerian Medical Students' Association, NIMSA (2021-2022)</li>
+              <li>National Mental Health Advocacy Medical Students' Association Liaison Officer Coordinator, NIMSA (2021-2022)</li>
+              <li>Personal Assistant to the Vice-President External (2021-2022)</li>
+              <li>Member, Global Youth Mental Health Awareness (2021-Till Date)</li>
+              <li>Academic Director, Darlings' Foundation (2021-Till Date)</li>
+              <li>National Welfare Assistant, Standing Committee on Human Rights and Peace, NIMSA (2021-2022)</li>
+              <li>Regional Assistant South East, to Liaison Officer to World Medical Association (2021-2022)</li>
+              <li>South East Regional Director on Media and Communication (2021-2022)</li>
+              <li>National PRO II, Auwal Shanono Foundation (2021-2022)</li>
+              <li>Local Officer to Federation of African Medical Students' Association – Standing Committee on Medical Education and Research (2021-2022)</li>
+              <li>Local Officer to Medical Ethics and Student's Right, Abia State University Medical Students' Association (2021-2022)</li>
+              <li>Local Officer to Standing Committee on Capacity Building, Abia State University Medical Students' Association (2021-2022)</li>
+              <li>ABSUMSA Liaison Officer to NIMSA, FAMSA, IFMSA, and other student organizations</li>
+              <li>IT Personnel to Liaison Officer on Capacity Building (2019-2021)</li>
+              <li>Liaison Officer to Editorial Board, Abia State University Medical Students' Association (2019-2021)</li>
+              <li>Deputy Clerk and Honourable Member of the Lower House of Abia State University Medical Students' Association (2019-2021)</li>
+            </ul>
+
+            <h2 class="text-2xl font-bold mb-4">Awards and Certifications</h2>
+            <ul class="list-disc pl-5 space-y-2">
+              <li>Most Outstanding MHA Coordinator for the First Quarter of the Month, Technical Office on Mental Health Advocacy, 2022</li>
+              <li>Certificate of Excellence from the Vice President External for Service on Face of ACME Magazine, 2022</li>
+              <li>Certificate of Service as the Personal Assistant to the VPE, 2022</li>
+              <li>Certificate of Excellence, as Best Editorial Committee Member, Male Category in the VPE Working Committee, 2022</li>
+              <li>Certificate of Excellence, as the Best Content Creator, Male Category in the VPE Working Committee, 2022</li>
+              <li>Certificate of Service, as a Judge for the 2022 Auwal Shanono Foundation/OCI Foundation Literary Award for Medical Students (LAMS) Essay Competition, 2022</li>
+              <li>Certificate of Attendance for Transcatheter Intervention Online 2022, Coronary Heart Disease/High Risk & Complex PCI (4 CME Credit)</li>
+              <li>Most Outstanding Member of the Auwal Shanono Foundation's Contents and Media Committee for the First Quarter of the 2022 Administration</li>
+              <li>Most Influential Medical Student as Recognized by Anatomical Students' Society of Nigeria, Abia State University Chapter (2021)</li>
+              <li>Best Essay, at Local Level Conducted by Dr. Chinedu Umeadi Foundation (2020)</li>
+              <li>Most Viewed, at Sell Your Craft Challenge by Dr. Chinedu Umeadi Foundation (2019)</li>
+            </ul>
+          </div>
+          <!-- <div class="mx-auto px-6 sm:px-6 max-w-3xl mt-8 flex justify-between flex-col sm:flex-row">
+            <PostTags tags={post.tags} class="mr-5 rtl:mr-0 rtl:ml-5" />
+            <SocialShare url={url} text={post.title} class="mt-5 sm:mt-1 align-middle text-gray-500 dark:text-slate-600" />
+          </div> -->
+        </article>
+      </section>
+  <div class="mx-auto px-3 sm:px-2 max-w-3xl pt-2 md:pt-4 pb-2 md:pb-3">
+    <Button variant="tertiary" class="px-3 md:px-3" href={'/2024/excos/president'}>
+      {
+        textDirection === 'rtl' ? (
+          <Icon name="tabler:chevron-right" class="w-5 h-5 mr-1 -ml-1.5 rtl:-mr-1.5 rtl:ml-1" />
+        ) : (
+          <Icon name="tabler:chevron-left" class="w-5 h-5 mr-1 -ml-1.5 rtl:-mr-1.5 rtl:ml-1" />
+        )
+      } Back to PRESIDENT
+    </Button>
+  </div>
+
+</Layout>

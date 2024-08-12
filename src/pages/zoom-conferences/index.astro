@@ -1,0 +1,56 @@
+---
+import type { InferGetStaticPropsType, GetStaticPaths } from 'astro';
+
+import Layout from '../../layouts/PageLayout.astro';
+import ConferenceList from '../../components/numsa/zoom-conferences/list.astro';
+import Headline from '../../components/blog/Headline.astro';
+// import Pagination from '../../components/blog/Pagination.astro';
+// import PostTags from "../../components/blog/Tags.astro";
+
+import { blogListRobots, getStaticPathsBlogList } from '../../utils/blog';
+import { getCollection } from 'astro:content';
+import { formatCampaignPosts } from '../../utils/numsa';
+
+export const prerender = true;
+
+const posts = await getCollection('zoom-conferences');
+
+// console.log(posts);
+
+// console.log(`These are the original posts: ${posts}`)
+
+const formattedPosts = formatCampaignPosts(posts);
+
+
+const { page } = Astro.props;
+
+// const allCategories = await findCategories();
+// const allTags = await findTags();
+
+const metadata = {
+  title: `Zoom Conferences`,
+  robots: {
+    index: blogListRobots?.index,
+    follow: blogListRobots?.follow,
+  },
+  openGraph: {
+    type: 'numsa',
+  },
+};
+---
+
+<Layout metadata={metadata}>
+  <section class="px-6 sm:px-6 py-12 sm:py-16 lg:py-20 mx-auto max-w-4xl">
+    <Headline
+      subtitle="A collection of recent Zoom conferences by NUMSA"
+    >
+        NUMSA ZOOM Conferences
+    </Headline>
+    <ConferenceList posts={formattedPosts} />
+    <!-- <Pagination prevUrl={page.url.prev} nextUrl={page.url.next} /> -->
+    <!--
+      <PostTags tags={allCategories} class="mb-2" title="Search by Categories:" isCategory />
+      <PostTags tags={allTags}  title="Search by Tags:" />
+    -->
+  </section>
+</Layout>

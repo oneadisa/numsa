@@ -1,21 +1,21 @@
 ---
-import Layout from '~/layouts/PageLayout.astro';
+import Layout from '../layouts/PageLayout.astro';
 
-import Hero from '~/components/widgets/Hero.astro';
-import Note from '~/components/widgets/Note.astro';
-import Features from '~/components/widgets/Features.astro';
-// import Features2 from '~/components/widgets/Features2.astro';
-// import Steps from '~/components/widgets/Steps.astro';
-import Content from '~/components/widgets/Content.astro';
+import Hero from '../components/widgets/Hero.astro';
+import Note from '../components/widgets/Note.astro';
+import Features from '../components/widgets/Features.astro';
+// import Features2 from '../components/widgets/Features2.astro';
+// import Steps from '../components/widgets/Steps.astro';
+import Content from '../components/widgets/Content.astro';
 // import BlogLatestPosts from '~/components/widgets/BlogLatestPosts.astro';
-import FAQs from '~/components/widgets/FAQs.astro';
+import FAQs from '../components/widgets/FAQs.astro';
 // import Stats from '~/components/widgets/Stats.astro';
 // import CallToAction from '~/components/widgets/CallToAction.astro';
 import chew from '../../public/assets/images/unicef.jpg';
-import panel from '../../public/assets/images/panel.jpg'
-import CarouselSlide from '~/components/ui/Carousel';
+import panel from '../../public/assets/images/panel.jpg';
+import CarouselSlide from '../components/ui/Carousel';
 
-import ConfettiButton from '~/components/ui/ConfettiButton.astro';
+import ConfettiButton from '../components/ui/ConfettiButton.astro';
 
 const metadata = {
   title: 'NUMSA - Official Website',
@@ -31,7 +31,7 @@ const metadata = {
       {
         variant: 'primary',
         text: 'Our Activities',
-        href: '#',
+        href: '/inaugural-launch',
         // target: '_blank',
         // icon: 'tabler:download',
       },
@@ -115,7 +115,8 @@ const metadata = {
   
   <Content
   tagline="LATEST NUMSA EVENTS"
-  
+  readMore={true}
+  readMoreLink="/inaugural-launch"
   items={[
     {
       title: 'Cross Border Collaboration',
@@ -142,11 +143,16 @@ const metadata = {
     alt: 'panel',
   }}
 >
-  <Fragment slot="content"><h3 class="text-2xl font-bold tracking-tight dark:text-white sm:text-3xl mb-2">NUMSA Inaugural Launch</h3>
-    A convergence of the Nigerian Medical Professionals.</Fragment>
+  <Fragment slot="content">
+    <h3 class="text-2xl font-bold tracking-tight dark:text-white sm:text-3xl mb-2">
+      <a href="/inaugural-launch">NUMSA Inaugural Launch</a>
+    </h3>
+    <p>A convergence of the Nigerian Medical Professionals.</p>
+  </Fragment>
 
   <Fragment slot="bg">
     <div class="absolute inset-0 bg-blue-50 dark:bg-transparent"></div>
+  </Fragment>
   </Fragment>
 </Content>
 
@@ -155,6 +161,8 @@ const metadata = {
   <Content
     isReversed
     isAfterContent
+    readMore={true}
+  readMoreLink="/world-health-day"
     items={[
       {
         title: 'Free vaccinations',
@@ -176,7 +184,7 @@ const metadata = {
     }}
   >
     <Fragment slot="content">
-      <h3 class="text-2xl font-bold tracking-tight dark:text-white sm:text-3xl mb-2">World Health Day</h3>
+      <h3 class="text-2xl font-bold tracking-tight dark:text-white sm:text-3xl mb-2"><a href="/world-health-day">World Health Day</a></h3>
       A chance to commemorate the advancements made towards the SDG30.
     </Fragment>
 

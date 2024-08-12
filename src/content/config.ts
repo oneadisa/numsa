@@ -152,6 +152,18 @@ const outreaches = defineCollection({
   }),
 });
 
+const zoomConferences = defineCollection({
+  type: "content",
+  schema: z.object({
+    layout: z.string().optional(),
+    date: z.string().optional(),
+    mainImage: z.string().optional(),
+    otherImages: z.array(z.string()).optional(),
+    title: z.string(),
+    serial: z.number().optional(),
+    caption: z.string().optional(),
+  }),
+});
 
 export const collections = {
   post: postCollection,
@@ -159,7 +171,8 @@ export const collections = {
   senators,
   jc,
   'campaign': campaignCollection,
-  'outreaches': outreaches
+  'outreaches': outreaches,
+  'zoom-conferences': zoomConferences
 };
 
 
