@@ -2,7 +2,7 @@
 import type { InferGetStaticPropsType, GetStaticPaths } from 'astro';
 
 import Layout from '../../layouts/PageLayout.astro';
-import CampaignList from '../../components/numsa/campaigns/list.astro';
+import OutreachList from '../../components/numsa/outreaches/list.astro';
 import Headline from '../../components/blog/Headline.astro';
 // import Pagination from '../../components/blog/Pagination.astro';
 // import PostTags from "../../components/blog/Tags.astro";
@@ -13,7 +13,7 @@ import { formatCampaignPosts } from '../../utils/numsa';
 
 export const prerender = true;
 
-const posts = await getCollection('campaigns');
+const posts = await getCollection('outreaches');
 
 // console.log(posts);
 
@@ -28,7 +28,7 @@ const { page } = Astro.props;
 // const allTags = await findTags();
 
 const metadata = {
-  title: `Advocacy Campaigns`,
+  title: `Outreaches`,
   robots: {
     index: blogListRobots?.index,
     follow: blogListRobots?.follow,
@@ -42,11 +42,11 @@ const metadata = {
 <Layout metadata={metadata}>
   <section class="px-6 sm:px-6 py-12 sm:py-16 lg:py-20 mx-auto max-w-4xl">
     <Headline
-      subtitle="A collection of recent campaigns by NUMSA"
+      subtitle="A collection of recent outreaches by NUMSA"
     >
-        Advocacy Campaigns
+        NUMSA Outreaches
     </Headline>
-    <CampaignList posts={formattedPosts} />
+    <OutreachList posts={formattedPosts} />
     <!-- <Pagination prevUrl={page.url.prev} nextUrl={page.url.next} /> -->
     <!--
       <PostTags tags={allCategories} class="mb-2" title="Search by Categories:" isCategory />

@@ -1,4 +1,3 @@
-
 import { TECarousel, TECarouselItem } from "tw-elements-react";
 
 export default function CarouselDarkVariant() {
@@ -65,8 +64,9 @@ export default function CarouselDarkVariant() {
           >
             <img
               src="/assets/images/hero_images/IMG_2047.jpg"
-              className="block w-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 max-w-none max-h-none  absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 max-w-none max-h-none"
+              className="block w-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 max-w-none max-h-none"
               alt="..."
+              
             />
             <div className="absolute inset-x-[15%] bottom-5 hidden py-5 text-center text-black md:block">
               <h5 className="text-xl">Preclinical Students</h5>

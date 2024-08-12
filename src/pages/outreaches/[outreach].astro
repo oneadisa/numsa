@@ -1,0 +1,75 @@
+---
+import type {GetStaticPaths } from 'astro';
+import type { CollectionEntry } from "astro:content";
+import merge from 'lodash.merge';
+import type { ImageMetadata } from 'astro';
+import Layout from '../../layouts/PageLayout.astro';
+import SinglePost from '../../components/numsa/outreaches/singlePost.astro';
+import { I18N } from '../../utils/config';
+// import ToBlogLink from '../../components/blog/ToBlogLink.astro';
+
+import { getStaticPathsBlogPost, blogPostRobots } from '../../utils/blog';
+import { findImage } from '../../utils/images';
+import type { MetaData } from '../../types';
+// import RelatedPosts from '../../components/blog/RelatedPosts.astro';
+import Button from '../../components/ui/Button.astro';
+import { Icon } from 'astro-icon/components';
+import { getCollection } from 'astro:content';
+import MarkdownPostLayout from '../../layouts/MarkdownLayout.astro';
+
+const { textDirection } = I18N;
+
+export const prerender = true;
+export const getStaticPaths = (async () => {
+    const posts = await getCollection('outreaches');
+    return posts.map((post) => ({
+        params: { outreach: post.slug },
+        props: { post },
+    }));
+}) satisfies GetStaticPaths;
+
+// type Props = {
+//   post: Post;
+// }
+
+// export type Props = CollectionEntry<"outreaches">
+const {post} = Astro.props;
+// const { Content } = await post.render();
+
+// console.log(post.Content)
+
+// const url = getCanonical(getPermalink(post.permalink, 'post'));
+const image = (await findImage(post.data.mainImage)) as ImageMetadata | string | undefined;
+
+const metadata = merge(
+  {
+    title: post.data.title,
+    description: post.data.caption,
+    robots: {
+      index: blogPostRobots?.index,
+      follow: blogPostRobots?.follow,
+    },
+    openGraph: {
+      type: 'article',
+      ...(image ? { images: [{ url: image, width: (image as ImageMetadata)?.width, height: (image as ImageMetadata)?.height }] } : {}),
+    },
+  },
+//   { ...(post?.metadata ? { ...post.metadata, canonical: post.metadata?.canonical || url } : {}) }
+) as MetaData;
+---
+
+<Layout metadata={metadata}>
+  <SinglePost post={{...post}} url={`/outreaches/${post.slug}`} />
+  <div class="mx-auto px-3 sm:px-2 max-w-3xl pt-2 md:pt-4 pb-2 md:pb-3">
+    <Button variant="tertiary" class="px-3 md:px-3" href={'/advocacy-outreaches'}>
+      {
+        textDirection === 'rtl' ? (
+          <Icon name="tabler:chevron-right" class="w-5 h-5 mr-1 -ml-1.5 rtl:-mr-1.5 rtl:ml-1" />
+        ) : (
+          <Icon name="tabler:chevron-left" class="w-5 h-5 mr-1 -ml-1.5 rtl:-mr-1.5 rtl:ml-1" />
+        )
+      } Back to Outreaches
+    </Button>
+  </div>
+
+</Layout>

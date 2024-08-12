@@ -64,7 +64,7 @@ const postCollection = defineCollection({
 });
 
 const excos = defineCollection({
-  type: "data",
+  // type: "data",
   schema: z.object({
     name: z.string().max(50, {
       message: "You must keep the name to 50 characters or less",
@@ -127,7 +127,20 @@ const jc = defineCollection({
 });
 
 const campaignCollection = defineCollection({
-  // type: "content",
+  type: "content",
+  schema: z.object({
+    layout: z.string().optional(),
+    date: z.string().optional(),
+    mainImage: z.string().optional(),
+    otherImages: z.array(z.string()).optional(),
+    title: z.string(),
+    serial: z.number().optional(),
+    caption: z.string().optional(),
+  }),
+});
+
+const outreaches = defineCollection({
+  type: "content",
   schema: z.object({
     layout: z.string().optional(),
     date: z.string().optional(),
@@ -140,13 +153,13 @@ const campaignCollection = defineCollection({
 });
 
 
-
 export const collections = {
   post: postCollection,
   excos,
   senators,
   jc,
-  'campaign': campaignCollection
+  'campaign': campaignCollection,
+  'outreaches': outreaches
 };
 
 
