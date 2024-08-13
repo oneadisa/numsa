@@ -11,7 +11,7 @@ const metadata = {
   title: 'Inaugural Launch',
 };
 
-import header from '../../public/assets/images/launch/header.jpg';
+import header from '../../public/assets/images/launch/signage.jpg';
 ---
 
 <!-- subtitle="Explore our meticulously crafted templates tailored to various industries and purposes. From captivating presentations to functional website designs, we offer the tools you need to succeed."
@@ -37,7 +37,7 @@ import header from '../../public/assets/images/launch/header.jpg';
       sizes="(max-width: 767px) 200px, (max-width: 1023px) 400px, (max-width: 2039px) 600px, 900px"
       loading="eager"
       width={900}
-      height={350}
+      height={440}
       src={header}
     />
 
@@ -194,15 +194,15 @@ import header from '../../public/assets/images/launch/header.jpg';
     }}
   >
     <Fragment slot="content">
-      <h2 class="text-xl font-bold tracking-tight dark:text-white sm:text-xl mb-2">NUMSA EXCOS and Patrons.</h2>
+      <h2 class="text-xl font-bold tracking-tight dark:text-white sm:text-xl mb-2">President's First Speech.</h2>
       <!-- <p>President of the N Medical Students Association.</p> -->
       <br />
       <p class="dark:text-white">
-        In his inaugural address, President Emmanuel Oranwusi emphasized NUMSA’s commitment to enhancing student
-        capacity and fostering collaboration. He reviewed key achievements, including securing 40 offices with NIMSA and
-        2 with FAMSA, organizing the upcoming NIMSA International Health Conference, and launching a new official
-        website. Oranwusi highlighted successful social events and initiatives like canvas tutorial classes and a
-        mentorship program designed to support mental well-being and camaraderie. He also noted the introductory
+        In his inaugural address, The NUMSA President, Emmanuel Oranwusi emphasized NUMSA’s commitment to enhancing
+        student capacity and fostering collaboration. He reviewed key achievements, including securing 40 offices with
+        NIMSA and 2 with FAMSA, organizing the upcoming NIMSA International Health Conference, and launching a new
+        official website. Oranwusi highlighted successful social events and initiatives like canvas tutorial classes and
+        a mentorship program designed to support mental well-being and camaraderie. He also noted the introductory
         lectures on affiliated medical student associations.
       </p>
       <br />
@@ -280,9 +280,65 @@ import header from '../../public/assets/images/launch/header.jpg';
     </Fragment>
   </Content>
 
+  <Content
+    image={{
+      src: '/assets/images/launch/presido&patrons.jpg',
+      alt: 'Features Image',
+    }}
+  >
+    <Fragment slot="content">
+      <h3 class="text-2xl font-bold tracking-tight dark:text-white sm:text-3xl mb-2">NUMSA EXCOS & PATRONS</h3>
+      <br />
+      <h4>
+        <strong>Grand Patron</strong>: Prof. B. M. Gali 
+        <br />
+        <strong>Matron</strong>: Dr. Oma Amadi 
+        <br />
+        <strong>Patrons</strong>: Dr. Fagbemiro Emmanuel, Dr. Charles Ugwuanyi, Prof.
+        Ibrahim Yanmis, Dr. Oluseyi Asaolu, Dr. Chidi Nnabuchi, and Assoc. Prof. Onyekbutulem Henry
+      </h4>
+      <br />
+      <br />
+      <p class="dark:text-white">
+        During the course of the NUMSA (Nile University Medical Students' Association) Launch, we were honored to have
+        several distinguished individuals of great repute become our Matron and Patrons. Their acceptance of these roles
+        signifies a momentous occasion for our association, marking the beginning of a new chapter in our journey.
+      </p>
+      <br />
+      <p class="dark:text-white">
+        These esteemed professionals, known for their exceptional achievements and contributions to the field of
+        medicine, were present to witness the unveiling and rebirth of our association. Their presence not only lent
+        prestige to the event but also reinforced the importance of our mission and values as aspiring medical
+        professionals.
+      </p>
+      <br />
+      <p class="dark:text-white">
+        Dr. Fagbemiro Emmanuel, Dr. Charles Ugwuanyi, Dr. Oma Amadi, and Prof. B. M. Gali graced the launch with their
+        presence, offering invaluable insights and encouragement. They spoke eloquently on the importance of adhering to
+        the highest standards of medical practice and maintaining a strong commitment to our mandates as future medical
+        doctors. Their words served as a powerful reminder of the responsibilities that lie ahead in our medical
+        careers.
+      </p>
+      <br />
+      <p class="dark:text-white">
+        In addition to their moral support, our Patrons also contributed significantly to the financial foundation of
+        the association, ensuring that the launch was not only successful but also set a strong precedent for future
+        endeavors. Their generosity and dedication to the cause of NUMSA are deeply appreciated and will continue to
+        inspire us as we pursue excellence in our studies and future careers.
+      </p>
+      <br />
+      <p class="dark:text-white">
+        The guidance and support of our Grand Patron, Matron, and Patrons are invaluable to the continued growth and
+        success of NUMSA. We are profoundly grateful for their involvement and look forward to upholding the principles
+        and standards they have exemplified throughout their illustrious careers.
+      </p>
+    </Fragment>
+  </Content>
+
   <!-- Content Widget **************** -->
 
   <Content
+    isReversed
     image={{
       src: '/assets/images/launch/panel.jpg',
       alt: 'Features Image',
@@ -296,13 +352,15 @@ import header from '../../public/assets/images/launch/header.jpg';
         Oranwusi, Irene Ewe, Ashraf Salihu, Safiya Sadiq Saleh, Abdul-Azeez Ibrahim O., and Maryam Jibrin Wunti.
       </p>
     </Fragment>
+    <Fragment slot="bg">
+      <div class="absolute inset-0 bg-blue-50 dark:bg-transparent"></div>
+    </Fragment>
   </Content>
 
   <!-- Content Widget **************** -->
 
   <Content
     isAfterContent
-    isReversed
     image={{
       src: '/assets/images/launch/speaker.jpg',
       alt: 'Speaker',
@@ -315,9 +373,27 @@ import header from '../../public/assets/images/launch/header.jpg';
         World Tuberculosis Day: NUMSA SPEAKER Abdul-Azeez Ibrahim O. answering questions and addressing the audience.
       </p>
     </Fragment>
+    
+  </Content>
+
+  <Content
+    isReversed
+    isAfterContent
+    image={{
+      src: '/assets/images/launch/maimunah.jpg',
+      alt: 'World International Women’s Day',
+    }}
+  >
+    <Fragment slot="content">
+      <h3 class="text-2xl font-bold tracking-tight dark:text-white sm:text-3xl mb-2">
+        World International Women’s Day
+      </h3>
+      <br />
+      <p class="dark:text-white">Marked by a presentation from Maymunah Haruna.</p>
+    </Fragment>
     <Fragment slot="bg">
-        <div class="absolute inset-0 bg-blue-50 dark:bg-transparent"></div>
-      </Fragment>
+      <div class="absolute inset-0 bg-blue-50 dark:bg-transparent"></div>
+    </Fragment>
   </Content>
 
   <Content
@@ -328,10 +404,46 @@ import header from '../../public/assets/images/launch/header.jpg';
     }}
   >
     <Fragment slot="content">
-      <h3 class="text-2xl font-bold tracking-tight dark:text-white sm:text-3xl mb-2">World International Women’s Day</h3>
+      <h3 class="text-2xl font-bold tracking-tight dark:text-white sm:text-3xl mb-2">Spoken Words</h3>
       <br />
-      <p class="dark:text-white">Marked by a presentation from Maymunah Haruna.</p>
+      <p class="dark:text-white">Poem recitation by Jawarih Kamilu.</p>
+    </Fragment>
+    
+  </Content>
+
+  <Content
+    isReversed
+    isAfterContent
+    image={{
+      src: '/assets/images/launch/saifullah.jpg',
+      alt: 'World Water Day',
+    }}
+  >
+    <Fragment slot="content">
+      <h3 class="text-2xl font-bold tracking-tight dark:text-white sm:text-3xl mb-2">World Water Day</h3>
+      <br />
+      <p class="dark:text-white">Marked by a presentation from Saifullah Maina Badamasi.</p>
+    </Fragment>
+    <Fragment slot="bg">
+      <div class="absolute inset-0 bg-blue-50 dark:bg-transparent"></div>
     </Fragment>
   </Content>
 
+  <!-- Photo Excerpts Section -->
+  <section class="py-16 sm:py-20">
+    <div class="mx-auto max-w-6xl px-4 sm:px-6">
+      <h2 class="text-4xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-5xl mb-8 text-center">
+        Photo Excerpts
+      </h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+        <img src="/assets/images/launch/excerpts/one.jpg" alt="Group photo of NUMSA launch event" class="w-full h-64 object-cover rounded-lg shadow-md">
+        <img src="/assets/images/launch/excerpts/two.jpg" alt="Dr. Ugwuanyi giving keynote address" class="w-full h-64 object-cover rounded-lg shadow-md">
+        <img src="/assets/images/launch/excerpts/three.jpg" alt="Unveiling of The Medical Mindscapes magazine" class="w-full h-64 object-cover rounded-lg shadow-md">
+        <img src="/assets/images/launch/excerpts/four.jpg" alt="Panel discussion on tuberculosis" class="w-full h-64 object-cover rounded-lg shadow-md">
+        <img src="/assets/images/launch/excerpts/five.jpg" alt="Networking session at NUMSA launch" class="w-full h-64 object-cover rounded-lg shadow-md">
+        <img src="/assets/images/launch/excerpts/six.jpg" alt="Cultural performance at NUMSA launch" class="w-full h-64 object-cover rounded-lg shadow-md">
+      </div>
+    </div>
+  </section>
+</Layout>
 </Layout>

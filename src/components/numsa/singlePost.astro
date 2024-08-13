@@ -131,12 +131,12 @@ const { data } = post;
               <li>Ikenna Ugwu</li>
             </ul>
           </div>
-        ) : post.data.position === 'President' ? (
+        ) : post.data.position === 'The President' ? (
           <>
             <Fragment set:html={post.data.bio || ''} />
             <br/>
             <br/>
-            <a href="/bio/president">Offices Held</a>
+            <a href="/bio/president">BIO</a>
           </>
         ) : (
           <Fragment set:html={post.data.bio || ''} />
