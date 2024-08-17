@@ -172,7 +172,7 @@ export const footerData = {
         { text: 'President', href: '/2024/excos/president' },
         { text: 'Speaker Of The House', href: '/2024/house/speaker' },
         { text: 'Secretary General', href: '/2024/excos/sec-gen' },
-        { text: 'Vice President: Internal', href: '/2024/excos/vp-internal' },
+        // { text: 'Vice President: Internal', href: '/2024/excos/vp-internal' },
         
         // { text: 'Electron', href: '#' },
         // { text: 'NUMSA  Desktop', href: '#' },
@@ -181,8 +181,10 @@ export const footerData = {
     {
       title: 'Activities',
       links: [
-        { text: 'NUMSA Inaugural Launch', href: '#' },
-        { text: 'World Health Day', href: '#' },
+        { text: 'NUMSA Inaugural Launch', href: '/inaugural-launch' },
+        { text: 'Advocacy Campaigns', href: '/advocacy-campaigns' },
+        { text: 'Outreaches', href: '/outreaches' },
+        { text: 'Zoom Conferences', href: '/zoom-conferences' },
         // { text: 'Professional Services', href: '#' },
         // { text: 'Skills', href: '#' },
         // { text: 'Status', href: '#' },

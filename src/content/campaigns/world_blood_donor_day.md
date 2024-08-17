@@ -21,7 +21,7 @@ Donating blood is a vital act that can save lives and improve healthcare outcome
 
 ***4. Short Shelf Life:*** Blood has a limited shelf life (35-42 days), making regular donations necessary to maintain a stable supply.
 
-***5. Low Donor Turnout: ***Only a small percentage of eligible donors actually donate, emphasizing the need for more people to participate.
+***5. Low Donor Turnout:*** Only a small percentage of eligible donors actually donate, emphasizing the need for more people to participate.
 
 ***6. Altruism:*** Donating blood is a selfless act that demonstrates compassion and community service.
 
