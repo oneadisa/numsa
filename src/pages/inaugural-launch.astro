@@ -11,7 +11,8 @@ const metadata = {
   title: 'Inaugural Launch',
 };
 
-import header from '../../public/assets/images/launch/signage.jpg';
+import signage from '../../public/assets/images/launch/signage.jpg';
+import header from '../../public/assets/images/launch/header.jpg';
 ---
 
 <!-- subtitle="Explore our meticulously crafted templates tailored to various industries and purposes. From captivating presentations to functional website designs, we offer the tools you need to succeed."
@@ -38,7 +39,7 @@ import header from '../../public/assets/images/launch/signage.jpg';
       loading="eager"
       width={900}
       height={440}
-      src={header}
+      src={signage}
     />
 
     <Fragment
@@ -108,6 +109,19 @@ import header from '../../public/assets/images/launch/signage.jpg';
         The launch event underscored the promise of a vibrant and supportive association for medical students at Nile
         University.
       </span>
+      <br />
+      <br />
+
+      <Image
+      class="mx-auto rounded-md w-full mb-8"
+      widths={[200, 400, 600, 900]}
+      sizes="(max-width: 767px) 200px, (max-width: 1023px) 400px, (max-width: 2039px) 600px, 900px"
+      loading="eager"
+      width={900}
+      height={300}
+      src={header}
+    />
+
     </Fragment>
   </Hero>
 
@@ -261,6 +275,7 @@ import header from '../../public/assets/images/launch/signage.jpg';
         Emmanuel emphasized that the magazine represents the collaborative spirit of the student body and serves as a
         symbol of future potential.
       </p>
+      <br />
       <p class="dark:text-white">
         Looking ahead, Emmanuel Oranwusi outlined his administration’s goals to revitalize NUMSA and drive it towards
         progress and excellence. He expressed appreciation for the school administration's support and the strong sense
