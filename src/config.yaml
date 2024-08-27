@@ -1,6 +1,6 @@
 site:
   name: NUMSA 
-  site: 'https://numsa.netlify.app'
+  site: 'https://numsa.org'
   base: '/'
   trailingSlash: false
 
