@@ -1,0 +1,142 @@
+---
+import PageLayout from '../layouts/PageLayout.astro';
+import { Icon } from 'astro-icon/components';
+
+const file = Astro.url.searchParams.get('file');
+const fileName = file ? decodeURIComponent(file) : '';
+
+const metadata = {
+  title: `Viewing ${fileName}`,
+  description: `PDF Viewer for ${fileName}`,
+};
+---
+
+<PageLayout metadata={metadata}>
+  <div class="min-h-screen bg-gray-50">
+    <!-- Header -->
+    <header class="bg-white shadow-sm border-b">
+      <div class="container mx-auto px-4 py-4">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-4">
+            <a href="/publications" class="flex items-center gap-2 text-gray-600 hover:text-gray-900 transition-colors">
+              <Icon name="tabler:chevron-left" class="w-5 h-5" />
+              <span class="font-medium">Back to Publications</span>
+            </a>
+          </div>
+          <div class="flex items-center gap-4">
+            <h1 class="text-lg font-semibold text-gray-900 truncate max-w-md">
+              {fileName}
+            </h1>
+            <a 
+              href={`/documents/publications/${fileName}`}
+              class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2"
+              download
+            >
+              <Icon name="tabler:download" class="w-4 h-4" />
+              Download
+            </a>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- PDF Viewer -->
+    <main class="container mx-auto px-4 py-6">
+      <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+        <div id="pdf-viewer" class="w-full h-[calc(100vh-200px)] min-h-[600px]">
+          {file ? (
+            <div class="relative w-full h-full">
+              <iframe 
+                src={`/documents/publications/${fileName}#toolbar=1&navpanes=1&scrollbar=1`}
+                class="w-full h-full border-0"
+                title="PDF Viewer"
+                id="pdf-iframe"
+              >
+                <p>Your browser does not support iframes. 
+                  <a href={`/documents/publications/${fileName}`} target="_blank" class="text-blue-600 hover:underline">
+                    Click here to open the PDF in a new tab
+                  </a>
+                </p>
+              </iframe>
+              
+              <!-- Loading overlay -->
+              <div id="loading-overlay" class="absolute inset-0 bg-white bg-opacity-90 flex items-center justify-center">
+                <div class="text-center">
+                  <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+                  <p class="text-gray-600">Loading PDF...</p>
+                </div>
+              </div>
+              
+              <!-- Error overlay -->
+              <div id="error-overlay" class="hidden absolute inset-0 bg-white bg-opacity-90 flex items-center justify-center">
+                <div class="text-center">
+                  <Icon name="tabler:alert-circle" class="w-16 h-16 text-red-500 mx-auto mb-4" />
+                  <h2 class="text-xl font-semibold text-gray-900 mb-2">PDF Not Available</h2>
+                  <p class="text-gray-600 mb-4">The PDF file could not be loaded. It may not be available yet.</p>
+                  <a 
+                    href={`/documents/publications/${fileName}`}
+                    target="_blank"
+                    class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors inline-flex items-center gap-2"
+                  >
+                    <Icon name="tabler:external-link" class="w-4 h-4" />
+                    Open in New Tab
+                  </a>
+                </div>
+              </div>
+            </div>
+          ) : (
+            <div class="flex items-center justify-center h-full">
+              <div class="text-center">
+                <Icon name="tabler:file-text" class="w-16 h-16 text-gray-400 mx-auto mb-4" />
+                <h2 class="text-xl font-semibold text-gray-900 mb-2">No PDF Selected</h2>
+                <p class="text-gray-600 mb-4">Please select a PDF file to view</p>
+                <a href="/publications" class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+                  Go to Publications
+                </a>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    </main>
+  </div>
+</PageLayout>
+
+<script>
+  if (typeof window !== 'undefined') {
+    const iframe = document.getElementById('pdf-iframe');
+    const loadingOverlay = document.getElementById('loading-overlay');
+    const errorOverlay = document.getElementById('error-overlay');
+    
+    if (iframe) {
+      // Hide loading overlay when iframe loads
+      iframe.addEventListener('load', () => {
+        console.log('PDF loaded successfully');
+        if (loadingOverlay) {
+          loadingOverlay.style.display = 'none';
+        }
+      });
+      
+      // Show error overlay if iframe fails to load
+      iframe.addEventListener('error', () => {
+        console.error('Failed to load PDF');
+        if (loadingOverlay) {
+          loadingOverlay.style.display = 'none';
+        }
+        if (errorOverlay) {
+          errorOverlay.classList.remove('hidden');
+        }
+      });
+      
+      // Timeout fallback - if iframe doesn't load within 10 seconds, show error
+      setTimeout(() => {
+        if (loadingOverlay && loadingOverlay.style.display !== 'none') {
+          loadingOverlay.style.display = 'none';
+          if (errorOverlay) {
+            errorOverlay.classList.remove('hidden');
+          }
+        }
+      }, 10000);
+    }
+  }
+</script>

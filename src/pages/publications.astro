@@ -1,0 +1,139 @@
+---
+import PageLayout from '../layouts/PageLayout.astro';
+import { Icon } from 'astro-icon/components';
+
+const publications = [
+  {
+    title: "Medical Mindscape 1",
+    description: "First edition of the Medical Mindscape publication",
+    file: "MEDICAL MINDSCAPE 1.pdf",
+    size: "37.2 MB",
+    date: "2024-04-20",
+    preview: "/assets/images/publications/medical-mindscape-1-preview.jpg"
+  },
+  {
+    title: "NUMSA Journal 3",
+    description: "Third edition of the NUMSA Journal",
+    file: "NUMSA Journal (3)_compressed_250420_022657.pdf",
+    size: "15.4 MB",
+    date: "2024-04-20",
+    preview: "/assets/images/publications/numsa-journal-3-preview.jpg"
+  },
+  {
+    title: "NUMSA Magazine 2",
+    description: "Second edition of the NUMSA Magazine",
+    file: "NUMSA MAGAZINE 2 (1)_compressed_250420_022813.pdf",
+    size: "20.3 MB",
+    date: "2024-04-20",
+    preview: "/assets/images/publications/numsa-magazine-2-preview.jpg"
+  }
+];
+---
+
+<PageLayout metadata={{ title: "Publications" }}>
+  <!-- Main Content -->
+  <main class="container mx-auto px-4 py-8 max-w-6xl">
+    <div class="text-center mb-12">
+      <h1 class="text-4xl font-bold mb-4 text-heading dark:text-white">NUMSA Publications</h1>
+      <p class="text-gray-600 dark:text-gray-300 text-lg">Explore our latest publications and research</p>
+    </div>
+    
+    <div class="grid gap-6 md:gap-8 md:grid-cols-2 lg:grid-cols-3">
+      {publications.map(pub => (
+        <article class="group bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm hover:shadow-lg dark:hover:shadow-xl transition-all duration-300 overflow-hidden transform hover:-translate-y-1">
+          <!-- Preview Image -->
+          <div class="relative cursor-pointer overflow-hidden">
+            <div 
+              class="w-full h-48 bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-700 dark:to-gray-600 flex items-center justify-center border-b border-gray-200 dark:border-gray-700 group-hover:scale-105 transition-transform duration-300"
+            >
+              <div class="text-center">
+                <Icon name="tabler:file-text" class="w-12 h-12 text-gray-400 dark:text-gray-500 mx-auto mb-2" />
+                <p class="text-gray-500 dark:text-gray-400 text-sm">Preview Image</p>
+              </div>
+            </div>
+            <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-300 flex items-center justify-center">
+              <div class="opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                <a 
+                  href={`/viewer?file=${encodeURIComponent(pub.file)}`}
+                  class="bg-white dark:bg-gray-800 text-gray-900 dark:text-white px-6 py-3 rounded-lg font-semibold shadow-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors flex items-center gap-2"
+                >
+                  <Icon name="tabler:eye" class="w-5 h-5" />
+                  Browse Document
+                </a>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Content -->
+          <div class="p-6">
+            <h2 class="text-xl font-semibold mb-3 text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+              {pub.title}
+            </h2>
+            <p class="text-gray-600 dark:text-gray-300 mb-4 line-clamp-3 leading-relaxed">
+              {pub.description}
+            </p>
+            
+            <div class="flex flex-wrap items-center gap-3 text-sm text-gray-500 dark:text-gray-400 mb-4">
+              <span class="flex items-center gap-1">
+                <Icon name="tabler:file-text" class="w-4 h-4" />
+                PDF • {pub.size}
+              </span>
+              <span class="flex items-center gap-1">
+                <Icon name="tabler:calendar" class="w-4 h-4" />
+                {pub.date}
+              </span>
+            </div>
+            
+            <div class="flex flex-col sm:flex-row gap-2">
+              <a 
+                href={`/viewer?file=${encodeURIComponent(pub.file)}`}
+                class="flex-1 px-4 py-2.5 bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 text-white rounded-lg transition-colors text-center font-medium flex items-center justify-center gap-2"
+              >
+                <Icon name="tabler:eye" class="w-4 h-4" />
+                <span class="hidden sm:inline">View</span>
+                <span class="sm:hidden">Browse</span>
+              </a>
+              <a 
+                href={`/documents/publications/${pub.file}`}
+                class="px-4 py-2.5 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors font-medium flex items-center justify-center gap-2 rounded-lg"
+                download
+              >
+                <Icon name="tabler:download" class="w-4 h-4" />
+                <span class="hidden sm:inline">Download</span>
+                <span class="sm:hidden">Get</span>
+              </a>
+            </div>
+          </div>
+        </article>
+      ))}
+    </div>
+  </main>
+</PageLayout>
+
+<style>
+  .line-clamp-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  
+  /* Smooth transitions for theme switching */
+  * {
+    transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 640px) {
+    .container {
+      padding-left: 1rem;
+      padding-right: 1rem;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .grid {
+      gap: 1rem;
+    }
+  }
+</style>
