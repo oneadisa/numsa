@@ -84,7 +84,8 @@ const publications = [
             <div class="flex flex-col sm:flex-row gap-2">
               <a 
                 href={`/viewer/${encodeURIComponent(pub.file)}`}
-                class="flex-1 px-4 py-2.5 bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 text-white rounded-lg transition-colors text-center font-medium flex items-center justify-center gap-2"
+                class="view-pdf-btn flex-1 px-4 py-2.5 bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 text-white rounded-lg transition-colors text-center font-medium flex items-center justify-center gap-2"
+                data-pdf-file={pub.file}
               >
                 <Icon name="tabler:eye" class="w-4 h-4" />
                 <span class="hidden sm:inline">View</span>
@@ -134,3 +135,24 @@ const publications = [
     }
   }
 </style>
+
+<script>
+  // Handle smooth navigation to PDF viewer
+  document.addEventListener('DOMContentLoaded', function() {
+    const viewButtons = document.querySelectorAll('.view-pdf-btn');
+    
+    viewButtons.forEach(button => {
+      button.addEventListener('click', function(e) {
+        e.preventDefault();
+        
+        const pdfFile = this.getAttribute('data-pdf-file');
+        if (pdfFile) {
+          const url = `/viewer/${encodeURIComponent(pdfFile)}`;
+          
+          // Navigate immediately for better performance
+          window.location.href = url;
+        }
+      });
+    });
+  });
+</script>

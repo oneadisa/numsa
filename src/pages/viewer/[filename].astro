@@ -311,7 +311,7 @@ const metadata = {
         }
       }, 300);
       
-      // Hide loading overlay after 5 seconds max
+      // Hide loading overlay after 3 seconds max
       const fallbackTimeout = setTimeout(() => {
         console.log('Fallback: Hiding loading overlay after timeout');
         clearInterval(progressInterval);
@@ -321,9 +321,9 @@ const metadata = {
             loadingOverlay.style.display = 'none';
           }, 300);
         }
-      }, 5000);
+      }, 3000);
 
-      // Quick fallback for navigation from publications page (2 seconds)
+      // Quick fallback for navigation from publications page (0.5 seconds)
       const quickFallback = setTimeout(() => {
         console.log('Quick fallback: Hiding loading overlay for navigation');
         if (loadingOverlay && loadingOverlay.style.display !== 'none') {
@@ -333,7 +333,7 @@ const metadata = {
             loadingOverlay.style.display = 'none';
           }, 300);
         }
-      }, 2000);
+      }, 500);
       
       // Hide loading overlay when iframe loads
       iframe.addEventListener('load', () => {
@@ -352,15 +352,13 @@ const metadata = {
           step3.querySelector('div')?.classList.add('bg-green-500');
         }
         
-        // Hide overlay with delay for smooth transition
-        setTimeout(() => {
-          if (loadingOverlay) {
-            loadingOverlay.style.opacity = '0';
-            setTimeout(() => {
-              loadingOverlay.style.display = 'none';
-            }, 300);
-          }
-        }, 500);
+        // Hide overlay immediately for better UX
+        if (loadingOverlay) {
+          loadingOverlay.style.opacity = '0';
+          setTimeout(() => {
+            loadingOverlay.style.display = 'none';
+          }, 300);
+        }
       });
 
       // Additional check for iframe readyState
