@@ -43,8 +43,15 @@ const publications = [
         <article class="group bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm hover:shadow-lg dark:hover:shadow-xl transition-all duration-300 overflow-hidden transform hover:-translate-y-1">
           <!-- Preview Image -->
           <div class="relative cursor-pointer overflow-hidden">
+            <img 
+              src={pub.preview} 
+              alt={`${pub.title} preview`}
+              class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
+              onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+            />
             <div 
               class="w-full h-48 bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-700 dark:to-gray-600 flex items-center justify-center border-b border-gray-200 dark:border-gray-700 group-hover:scale-105 transition-transform duration-300"
+              style="display: none;"
             >
               <div class="text-center">
                 <Icon name="tabler:file-text" class="w-12 h-12 text-gray-400 dark:text-gray-500 mx-auto mb-2" />

@@ -12,29 +12,38 @@ const metadata = {
 ---
 
 <PageLayout metadata={metadata}>
-  <div class="min-h-screen bg-gray-50">
+  <div class="min-h-screen bg-gray-50 dark:bg-gray-900">
     <!-- Header -->
-    <header class="bg-white shadow-sm border-b">
+    <header class="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700">
       <div class="container mx-auto px-4 py-4">
         <div class="flex items-center justify-between">
           <div class="flex items-center gap-4">
-            <a href="/publications" class="flex items-center gap-2 text-gray-600 hover:text-gray-900 transition-colors">
+            <a href="/publications" class="flex items-center gap-2 text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors">
               <Icon name="tabler:chevron-left" class="w-5 h-5" />
               <span class="font-medium">Back to Publications</span>
             </a>
           </div>
           <div class="flex items-center gap-4">
-            <h1 class="text-lg font-semibold text-gray-900 truncate max-w-md">
+            <h1 class="text-lg font-semibold text-gray-900 dark:text-white truncate max-w-md">
               {fileName}
             </h1>
-            <a 
-              href={`/documents/publications/${fileName}`}
-              class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2"
-              download
-            >
-              <Icon name="tabler:download" class="w-4 h-4" />
-              Download
-            </a>
+            <div class="flex gap-2">
+              <button 
+                id="fullscreen-btn"
+                class="px-3 py-2 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors flex items-center gap-2"
+                title="Toggle Fullscreen"
+              >
+                <Icon name="tabler:maximize" class="w-4 h-4" />
+              </button>
+              <a 
+                href={`/documents/publications/${fileName}`}
+                class="px-4 py-2 bg-blue-600 dark:bg-blue-500 text-white rounded-lg hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors flex items-center gap-2"
+                download
+              >
+                <Icon name="tabler:download" class="w-4 h-4" />
+                Download
+              </a>
+            </div>
           </div>
         </div>
       </div>
@@ -42,45 +51,101 @@ const metadata = {
 
     <!-- PDF Viewer -->
     <main class="container mx-auto px-4 py-6">
-      <div class="bg-white rounded-lg shadow-lg overflow-hidden">
-        <div id="pdf-viewer" class="w-full h-[calc(100vh-200px)] min-h-[600px]">
+      <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden">
+        <!-- PDF Controls -->
+        <div class="bg-gray-50 dark:bg-gray-700 px-4 py-3 border-b border-gray-200 dark:border-gray-600">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-4">
+              <button 
+                id="prev-page"
+                class="px-3 py-2 bg-white dark:bg-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-500 transition-colors flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                disabled
+              >
+                <Icon name="tabler:chevron-left" class="w-4 h-4" />
+                Previous
+              </button>
+              <span id="page-info" class="text-sm text-gray-600 dark:text-gray-400">
+                Page <span id="current-page">1</span> of <span id="total-pages">-</span>
+              </span>
+              <button 
+                id="next-page"
+                class="px-3 py-2 bg-white dark:bg-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-500 transition-colors flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                disabled
+              >
+                Next
+                <Icon name="tabler:chevron-right" class="w-4 h-4" />
+              </button>
+            </div>
+            <div class="flex items-center gap-2">
+              <button 
+                id="zoom-out"
+                class="px-3 py-2 bg-white dark:bg-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-500 transition-colors"
+                title="Zoom Out"
+              >
+                <Icon name="tabler:minus" class="w-4 h-4" />
+              </button>
+              <span id="zoom-level" class="text-sm text-gray-600 dark:text-gray-400 px-2">100%</span>
+              <button 
+                id="zoom-in"
+                class="px-3 py-2 bg-white dark:bg-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-500 transition-colors"
+                title="Zoom In"
+              >
+                <Icon name="tabler:plus" class="w-4 h-4" />
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div id="pdf-viewer" class="w-full h-[calc(100vh-280px)] min-h-[600px] relative">
           {file ? (
             <div class="relative w-full h-full">
               <iframe 
-                src={`/documents/publications/${fileName}#toolbar=1&navpanes=1&scrollbar=1`}
+                src={`/documents/publications/${fileName}#toolbar=1&navpanes=1&scrollbar=1&view=FitH&pagemode=thumbs`}
                 class="w-full h-full border-0"
                 title="PDF Viewer"
                 id="pdf-iframe"
+                allowfullscreen
               >
-                <p>Your browser does not support iframes. 
-                  <a href={`/documents/publications/${fileName}`} target="_blank" class="text-blue-600 hover:underline">
+                <p class="p-4 text-center text-gray-600 dark:text-gray-300">
+                  Your browser does not support iframes. 
+                  <a href={`/documents/publications/${fileName}`} target="_blank" class="text-blue-600 dark:text-blue-400 hover:underline">
                     Click here to open the PDF in a new tab
                   </a>
                 </p>
               </iframe>
               
               <!-- Loading overlay -->
-              <div id="loading-overlay" class="absolute inset-0 bg-white bg-opacity-90 flex items-center justify-center">
+              <div id="loading-overlay" class="absolute inset-0 bg-white dark:bg-gray-800 bg-opacity-90 flex items-center justify-center">
                 <div class="text-center">
                   <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-                  <p class="text-gray-600">Loading PDF...</p>
+                  <p class="text-gray-600 dark:text-gray-300">Loading PDF...</p>
                 </div>
               </div>
               
               <!-- Error overlay -->
-              <div id="error-overlay" class="hidden absolute inset-0 bg-white bg-opacity-90 flex items-center justify-center">
+              <div id="error-overlay" class="hidden absolute inset-0 bg-white dark:bg-gray-800 bg-opacity-90 flex items-center justify-center">
                 <div class="text-center">
                   <Icon name="tabler:alert-circle" class="w-16 h-16 text-red-500 mx-auto mb-4" />
-                  <h2 class="text-xl font-semibold text-gray-900 mb-2">PDF Not Available</h2>
-                  <p class="text-gray-600 mb-4">The PDF file could not be loaded. It may not be available yet.</p>
-                  <a 
-                    href={`/documents/publications/${fileName}`}
-                    target="_blank"
-                    class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors inline-flex items-center gap-2"
-                  >
-                    <Icon name="tabler:external-link" class="w-4 h-4" />
-                    Open in New Tab
-                  </a>
+                  <h2 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">PDF Not Available</h2>
+                  <p class="text-gray-600 dark:text-gray-300 mb-4">The PDF file could not be loaded. It may not be available yet.</p>
+                  <div class="flex gap-3 justify-center">
+                    <a 
+                      href={`/documents/publications/${fileName}`}
+                      target="_blank"
+                      class="px-6 py-3 bg-blue-600 dark:bg-blue-500 text-white rounded-lg hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors inline-flex items-center gap-2"
+                    >
+                      <Icon name="tabler:external-link" class="w-4 h-4" />
+                      Open in New Tab
+                    </a>
+                    <a 
+                      href={`/documents/publications/${fileName}`}
+                      class="px-6 py-3 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors inline-flex items-center gap-2"
+                      download
+                    >
+                      <Icon name="tabler:download" class="w-4 h-4" />
+                      Download
+                    </a>
+                  </div>
                 </div>
               </div>
             </div>
@@ -88,9 +153,9 @@ const metadata = {
             <div class="flex items-center justify-center h-full">
               <div class="text-center">
                 <Icon name="tabler:file-text" class="w-16 h-16 text-gray-400 mx-auto mb-4" />
-                <h2 class="text-xl font-semibold text-gray-900 mb-2">No PDF Selected</h2>
-                <p class="text-gray-600 mb-4">Please select a PDF file to view</p>
-                <a href="/publications" class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+                <h2 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">No PDF Selected</h2>
+                <p class="text-gray-600 dark:text-gray-300 mb-4">Please select a PDF file to view</p>
+                <a href="/publications" class="px-6 py-3 bg-blue-600 dark:bg-blue-500 text-white rounded-lg hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors">
                   Go to Publications
                 </a>
               </div>
@@ -107,6 +172,18 @@ const metadata = {
     const iframe = document.getElementById('pdf-iframe');
     const loadingOverlay = document.getElementById('loading-overlay');
     const errorOverlay = document.getElementById('error-overlay');
+    const fullscreenBtn = document.getElementById('fullscreen-btn');
+    const prevPageBtn = document.getElementById('prev-page');
+    const nextPageBtn = document.getElementById('next-page');
+    const currentPageSpan = document.getElementById('current-page');
+    const totalPagesSpan = document.getElementById('total-pages');
+    const zoomInBtn = document.getElementById('zoom-in');
+    const zoomOutBtn = document.getElementById('zoom-out');
+    const zoomLevelSpan = document.getElementById('zoom-level');
+    
+    let currentPage = 1;
+    let totalPages = 0;
+    let currentZoom = 100;
     
     if (iframe) {
       // Hide loading overlay when iframe loads
@@ -114,6 +191,15 @@ const metadata = {
         console.log('PDF loaded successfully');
         if (loadingOverlay) {
           loadingOverlay.style.display = 'none';
+        }
+        
+        // Try to get PDF info from iframe
+        try {
+          // This is a simplified approach - in a real implementation you'd use PDF.js
+          // For now, we'll enable basic navigation
+          updatePageInfo(1, 1); // Default to page 1
+        } catch (error) {
+          console.log('Could not get PDF info, using default navigation');
         }
       });
       
@@ -128,7 +214,7 @@ const metadata = {
         }
       });
       
-      // Timeout fallback - if iframe doesn't load within 10 seconds, show error
+      // Timeout fallback
       setTimeout(() => {
         if (loadingOverlay && loadingOverlay.style.display !== 'none') {
           loadingOverlay.style.display = 'none';
@@ -138,5 +224,106 @@ const metadata = {
         }
       }, 10000);
     }
+    
+    // Navigation functions
+    function updatePageInfo(current, total) {
+      currentPage = current;
+      totalPages = total;
+      currentPageSpan.textContent = current;
+      totalPagesSpan.textContent = total;
+      
+      // Update button states
+      if (prevPageBtn) {
+        prevPageBtn.disabled = current <= 1;
+      }
+      if (nextPageBtn) {
+        nextPageBtn.disabled = current >= total;
+      }
+    }
+    
+    function navigateToPage(page) {
+      if (page >= 1 && page <= totalPages) {
+        const newUrl = iframe.src.replace(/#.*/, '') + `#page=${page}`;
+        iframe.src = newUrl;
+        updatePageInfo(page, totalPages);
+      }
+    }
+    
+    function changeZoom(delta) {
+      currentZoom = Math.max(50, Math.min(200, currentZoom + delta));
+      zoomLevelSpan.textContent = `${currentZoom}%`;
+      
+      // Update iframe zoom (this is a simplified approach)
+      const newUrl = iframe.src.replace(/#.*/, '') + `#zoom=${currentZoom}`;
+      iframe.src = newUrl;
+    }
+    
+    // Event listeners
+    if (prevPageBtn) {
+      prevPageBtn.addEventListener('click', () => {
+        navigateToPage(currentPage - 1);
+      });
+    }
+    
+    if (nextPageBtn) {
+      nextPageBtn.addEventListener('click', () => {
+        navigateToPage(currentPage + 1);
+      });
+    }
+    
+    if (zoomInBtn) {
+      zoomInBtn.addEventListener('click', () => {
+        changeZoom(25);
+      });
+    }
+    
+    if (zoomOutBtn) {
+      zoomOutBtn.addEventListener('click', () => {
+        changeZoom(-25);
+      });
+    }
+    
+    // Fullscreen functionality
+    if (fullscreenBtn) {
+      fullscreenBtn.addEventListener('click', () => {
+        const viewer = document.getElementById('pdf-viewer');
+        if (viewer) {
+          if (document.fullscreenElement) {
+            document.exitFullscreen();
+          } else {
+            viewer.requestFullscreen();
+          }
+        }
+      });
+    }
+    
+    // Update fullscreen button icon
+    document.addEventListener('fullscreenchange', () => {
+      if (fullscreenBtn) {
+        const icon = fullscreenBtn.querySelector('svg');
+        if (document.fullscreenElement) {
+          fullscreenBtn.innerHTML = '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>';
+        } else {
+          fullscreenBtn.innerHTML = '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"></path></svg>';
+        }
+      }
+    });
+    
+    // Keyboard navigation
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+        e.preventDefault();
+        navigateToPage(currentPage - 1);
+      } else if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+        e.preventDefault();
+        navigateToPage(currentPage + 1);
+      } else if (e.key === '+' || e.key === '=') {
+        e.preventDefault();
+        changeZoom(25);
+      } else if (e.key === '-') {
+        e.preventDefault();
+        changeZoom(-25);
+      }
+    });
   }
 </script>
