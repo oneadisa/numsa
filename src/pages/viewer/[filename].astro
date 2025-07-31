@@ -252,6 +252,20 @@ const metadata = {
       const pathSegments = window.location.pathname.split('/');
       const currentFileName = decodeURIComponent(pathSegments[pathSegments.length - 1]);
       
+      // Check if PDF file exists
+      const pdfUrl = `/documents/publications/${currentFileName}`;
+      fetch(pdfUrl, { method: 'HEAD' })
+        .then(response => {
+          if (!response.ok) {
+            console.log('PDF file not found, showing error overlay');
+            if (loadingOverlay) loadingOverlay.style.display = 'none';
+            if (errorOverlay) errorOverlay.classList.remove('hidden');
+          }
+        })
+        .catch(error => {
+          console.log('Error checking PDF file:', error);
+        });
+      
       const estimatedTime = Math.floor(Math.random() * 3) + 2; // 2-4 seconds
       const fileSize = fileSizes[currentFileName] || 'Unknown size';
       
@@ -289,18 +303,43 @@ const metadata = {
         // Update steps
         if (progress > 30 && step2) {
           step2.classList.remove('opacity-50');
-          step2.querySelector('div').classList.add('bg-blue-500', 'animate-pulse');
+          step2.querySelector('div')?.classList.add('bg-blue-500', 'animate-pulse');
         }
         if (progress > 60 && step3) {
           step3.classList.remove('opacity-50');
-          step3.querySelector('div').classList.add('bg-blue-500', 'animate-pulse');
+          step3.querySelector('div')?.classList.add('bg-blue-500', 'animate-pulse');
         }
       }, 200);
+      
+      // Fallback timeout to hide loading overlay (10 seconds max)
+      const fallbackTimeout = setTimeout(() => {
+        console.log('Fallback: Hiding loading overlay after timeout');
+        clearInterval(progressInterval);
+        if (loadingOverlay) {
+          loadingOverlay.style.opacity = '0';
+          setTimeout(() => {
+            loadingOverlay.style.display = 'none';
+          }, 300);
+        }
+      }, 10000);
+      
+      // Quick fallback (3 seconds) for immediate response
+      const quickFallback = setTimeout(() => {
+        console.log('Quick fallback: Hiding loading overlay');
+        if (loadingOverlay && loadingOverlay.style.display !== 'none') {
+          loadingOverlay.style.opacity = '0';
+          setTimeout(() => {
+            loadingOverlay.style.display = 'none';
+          }, 300);
+        }
+      }, 3000);
       
       // Hide loading overlay when iframe loads
       iframe.addEventListener('load', () => {
         console.log('PDF loaded successfully');
         clearInterval(progressInterval);
+        clearTimeout(fallbackTimeout);
+        clearTimeout(quickFallback); // Clear quick fallback on successful load
         
         if (progressBar) {
           progressBar.style.width = '100%';
@@ -308,8 +347,8 @@ const metadata = {
         
         // Final step completion
         if (step3) {
-          step3.querySelector('div').classList.remove('animate-pulse');
-          step3.querySelector('div').classList.add('bg-green-500');
+          step3.querySelector('div')?.classList.remove('animate-pulse');
+          step3.querySelector('div')?.classList.add('bg-green-500');
         }
         
         // Hide overlay with delay for smooth transition
@@ -325,7 +364,10 @@ const metadata = {
       
       // Show error overlay if PDF fails to load
       iframe.addEventListener('error', () => {
+        console.log('PDF failed to load');
         clearInterval(progressInterval);
+        clearTimeout(fallbackTimeout);
+        clearTimeout(quickFallback); // Clear quick fallback on error
         if (loadingOverlay) loadingOverlay.style.display = 'none';
         if (errorOverlay) errorOverlay.classList.remove('hidden');
       });
