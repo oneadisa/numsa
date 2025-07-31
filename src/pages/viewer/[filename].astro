@@ -24,8 +24,39 @@ const metadata = {
   <div class="min-h-screen bg-gray-50 dark:bg-gray-900">
     <!-- Header -->
     <header class="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700">
-      <div class="container mx-auto px-4 py-4">
-        <div class="flex items-center justify-between">
+      <div class="container mx-auto px-4 py-3 sm:py-4">
+        <!-- Mobile Layout -->
+        <div class="block sm:hidden">
+          <div class="flex items-center justify-between mb-3">
+            <a href="/publications" class="flex items-center gap-2 text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors">
+              <Icon name="tabler:chevron-left" class="w-5 h-5" />
+              <span class="font-medium text-sm">Back</span>
+            </a>
+            <div class="flex gap-2">
+              <button 
+                id="fullscreen-btn-mobile"
+                class="p-2 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
+                title="Toggle Fullscreen"
+              >
+                <Icon name="tabler:maximize" class="w-4 h-4" />
+              </button>
+              <a 
+                href={`/documents/publications/${fileName}`}
+                class="p-2 bg-blue-600 dark:bg-blue-500 text-white rounded-lg hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors"
+                download
+                title="Download PDF"
+              >
+                <Icon name="tabler:download" class="w-4 h-4" />
+              </a>
+            </div>
+          </div>
+          <h1 class="text-base font-semibold text-gray-900 dark:text-white truncate">
+            {fileName}
+          </h1>
+        </div>
+        
+        <!-- Desktop Layout -->
+        <div class="hidden sm:flex items-center justify-between">
           <div class="flex items-center gap-4">
             <a href="/publications" class="flex items-center gap-2 text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors">
               <Icon name="tabler:chevron-left" class="w-5 h-5" />
@@ -105,7 +136,7 @@ const metadata = {
           </div>
         </div> -->
 
-        <div id="pdf-viewer" class="w-full h-[calc(100vh-280px)] min-h-[600px] relative">
+        <div id="pdf-viewer" class="w-full h-[calc(100vh-200px)] sm:h-[calc(100vh-280px)] min-h-[500px] sm:min-h-[600px] relative">
           {fileName ? (
             <div class="relative w-full h-full">
               <iframe 
@@ -413,6 +444,18 @@ const metadata = {
     // Fullscreen logic
     if (fullscreenBtn && iframe) {
       fullscreenBtn.addEventListener('click', () => {
+        if (iframe.requestFullscreen) {
+          iframe.requestFullscreen();
+        } else if ((iframe as any).webkitRequestFullscreen) {
+          (iframe as any).webkitRequestFullscreen();
+        }
+      });
+    }
+    
+    // Mobile fullscreen button
+    const fullscreenBtnMobile = document.getElementById('fullscreen-btn-mobile');
+    if (fullscreenBtnMobile && iframe) {
+      fullscreenBtnMobile.addEventListener('click', () => {
         if (iframe.requestFullscreen) {
           iframe.requestFullscreen();
         } else if ((iframe as any).webkitRequestFullscreen) {
