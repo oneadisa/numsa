@@ -64,6 +64,21 @@
   display: block;
 }
 
+/* Mobile dropdown functionality */
+@media (max-width: 767px) {
+  .dropdown-menu {
+    display: none;
+  }
+  
+  .dropdown-menu.show {
+    display: block;
+  }
+  
+  .dropdown.show button svg {
+    transform: rotate(180deg);
+  }
+}
+
 [astro-icon].icon-light > * {
   stroke-width: 1.2;
 }

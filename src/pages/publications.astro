@@ -4,27 +4,27 @@ import { Icon } from 'astro-icon/components';
 
 const publications = [
   {
-    title: "Medical Mindscape 1",
-    description: "First edition of the Medical Mindscape publication",
+    title: "MEDICAL MINDSCAPE EDITION 1",
+    description: "First Edition of the Medical Mindscape publication",
     file: "MEDICAL MINDSCAPE 1.pdf",
     size: "37.2 MB",
     date: "2024-04-20",
     preview: "/assets/images/publications/medical-mindscape-1-preview.jpg"
   },
   {
-    title: "NUMSA Journal 3",
-    description: "Third edition of the NUMSA Journal",
+    title: "MEDICAL NEXUS MAGAZINE",
+    description: "A compendium of Diseases in Nigeria.",
     file: "NUMSA Journal (3)_compressed_250420_022657.pdf",
     size: "15.4 MB",
-    date: "2024-04-20",
+    date: "2024-10-26",
     preview: "/assets/images/publications/numsa-journal-3-preview.jpg"
   },
   {
-    title: "NUMSA Magazine 2",
-    description: "Second edition of the NUMSA Magazine",
+    title: "MEDICAL MINDSCAPE EDITION 2",
+    description: "Second Edition of The NUMSA Magazine",
     file: "NUMSA MAGAZINE 2 (1)_compressed_250420_022813.pdf",
     size: "20.3 MB",
-    date: "2024-04-20",
+    date: "2024-12-07",
     preview: "/assets/images/publications/numsa-magazine-2-preview.jpg"
   }
 ];
@@ -58,17 +58,7 @@ const publications = [
                 <p class="text-gray-500 dark:text-gray-400 text-sm">Preview Image</p>
               </div>
             </div>
-            <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-300 flex items-center justify-center">
-              <div class="opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                <a 
-                  href={`/viewer?file=${encodeURIComponent(pub.file)}`}
-                  class="bg-white dark:bg-gray-800 text-gray-900 dark:text-white px-6 py-3 rounded-lg font-semibold shadow-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors flex items-center gap-2"
-                >
-                  <Icon name="tabler:eye" class="w-5 h-5" />
-                  Browse Document
-                </a>
-              </div>
-            </div>
+
           </div>
           
           <!-- Content -->
@@ -93,7 +83,7 @@ const publications = [
             
             <div class="flex flex-col sm:flex-row gap-2">
               <a 
-                href={`/viewer?file=${encodeURIComponent(pub.file)}`}
+                href={`/viewer/${encodeURIComponent(pub.file)}`}
                 class="flex-1 px-4 py-2.5 bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 text-white rounded-lg transition-colors text-center font-medium flex items-center justify-center gap-2"
               >
                 <Icon name="tabler:eye" class="w-4 h-4" />

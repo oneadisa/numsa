@@ -30,8 +30,9 @@ function frame() {
   }
 };
 
-  window.onload = function() {
-    frame()
-};
+  // Use DOMContentLoaded instead of window.onload to avoid conflicts
+  document.addEventListener('DOMContentLoaded', function() {
+    frame();
+  });
 
 </script>
