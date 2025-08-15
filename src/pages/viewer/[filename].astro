@@ -203,7 +203,7 @@ const metadata = {
                   <!-- Progressive loading note -->
                   <div class="mt-4 p-3 bg-green-50 dark:bg-green-900/20 rounded-lg">
                     <p class="text-xs text-green-700 dark:text-green-300">
-                      <Icon name="tabler:lightbulb" class="w-3 h-3 inline mr-1" />
+                      <Icon name="tabler:info-circle" class="w-3 h-3 inline mr-1" />
                       Pages will load progressively - you can start scrolling immediately!
                     </p>
                   </div>
@@ -291,18 +291,34 @@ const metadata = {
     let currentFallbackTimeout: ReturnType<typeof setTimeout> | null = null;
     let currentTimeInterval: ReturnType<typeof setInterval> | null = null;
     
+    // Load PDF.js from CDN for progressive loading
+    const loadPDFJS = async () => {
+      if (typeof window !== 'undefined' && !(window as any).pdfjsLib) {
+        const script = document.createElement('script');
+        script.src = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js';
+        script.onload = () => {
+          if ((window as any).pdfjsLib) {
+            (window as any).pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+            console.log('PDF.js loaded successfully');
+          }
+        };
+        document.head.appendChild(script);
+      }
+    };
+    
+    // Load PDF.js when page loads
+    loadPDFJS();
+    
     // Function to initialize progressive PDF viewer
     const initializeProgressivePDFViewer = () => {
       // Clean up any existing intervals/timeouts
       if (currentProgressInterval) clearInterval(currentProgressInterval);
       if (currentFallbackTimeout) clearTimeout(currentFallbackTimeout);
-      if (currentQuickFallback) clearTimeout(currentQuickFallback);
       if (currentTimeInterval) clearInterval(currentTimeInterval);
       
       // Get current elements
       const loadingOverlay = document.getElementById('loading-overlay');
       const progressBar = document.getElementById('progress-bar');
-      const step1 = document.getElementById('step-1');
       const step2 = document.getElementById('step-2');
       const step3 = document.getElementById('step-3');
       const fileInfo = document.getElementById('file-info');
@@ -313,7 +329,6 @@ const metadata = {
       // Store references
       currentLoadingOverlay = loadingOverlay;
       currentProgressBar = progressBar;
-      currentStep1 = step1;
       currentStep2 = step2;
       currentStep3 = step3;
       currentFileInfo = fileInfo;
@@ -419,10 +434,11 @@ const metadata = {
         console.log('Starting progressive PDF loading:', pdfUrl);
         
         // Load the PDF document using global PDF.js
+        let pdf: any;
         if (typeof window !== 'undefined' && (window as any).pdfjsLib) {
           const pdfjsLib = (window as any).pdfjsLib;
           const loadingTask = pdfjsLib.getDocument(pdfUrl);
-          const pdf = await loadingTask.promise;
+          pdf = await loadingTask.promise;
         } else {
           throw new Error('PDF.js library not loaded');
         }
@@ -573,7 +589,6 @@ const metadata = {
       }
       if (currentProgressInterval) clearInterval(currentProgressInterval);
       if (currentFallbackTimeout) clearTimeout(currentFallbackTimeout);
-      if (currentQuickFallback) clearTimeout(currentQuickFallback);
       if (currentTimeInterval) clearInterval(currentTimeInterval);
     };
     
