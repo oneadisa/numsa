@@ -139,27 +139,23 @@ const metadata = {
         <div id="pdf-viewer" class="w-full h-[calc(100vh-200px)] sm:h-[calc(100vh-280px)] min-h-[500px] sm:min-h-[600px] relative">
           {fileName ? (
             <div class="relative w-full h-full">
-              <!-- Primary PDF iframe -->
-              <iframe 
-                src={`/documents/publications/${fileName}`}
-                class="w-full h-full border-0"
-                title="PDF Viewer"
-                id="pdf-iframe"
-                allowfullscreen
-                loading="lazy"
-              />
-              
-              <!-- Fallback content for browsers without iframe support -->
-              <noscript>
-                <div class="p-4 text-center text-gray-600 dark:text-gray-300">
-                  Your browser does not support iframes. 
-                  <a href={`/documents/publications/${fileName}`} target="_blank" class="text-blue-600 dark:text-blue-400 hover:underline">
-                    Click here to open the PDF in a new tab
-                  </a>
+              <!-- Progressive PDF Viewer Container -->
+              <div id="pdf-container" class="w-full h-full overflow-auto bg-gray-100 dark:bg-gray-800">
+                <!-- PDF pages will be rendered here progressively -->
+                <div id="pdf-pages" class="space-y-4 p-4">
+                  <!-- Loading indicator for first page -->
+                  <div class="flex items-center justify-center py-20">
+                    <div class="text-center">
+                      <div class="w-16 h-16 border-4 border-blue-200 dark:border-gray-600 rounded-full animate-spin mx-auto mb-4">
+                        <div class="absolute top-0 left-0 w-16 h-16 border-4 border-transparent border-t-blue-600 dark:border-t-blue-400 rounded-full animate-spin"></div>
+                      </div>
+                      <p class="text-gray-600 dark:text-gray-300">Loading first page...</p>
+                    </div>
+                  </div>
                 </div>
-              </noscript>
+              </div>
               
-              <!-- Loading overlay -->
+              <!-- Loading overlay for initial setup -->
               <div id="loading-overlay" class="absolute inset-0 bg-white dark:bg-gray-800 bg-opacity-95 flex items-center justify-center backdrop-blur-sm transition-opacity duration-300">
                 <div class="text-center max-w-md mx-auto p-8">
                   <!-- Modern loading spinner -->
@@ -174,10 +170,10 @@ const metadata = {
                   
                   <!-- Loading text with animation -->
                   <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2 animate-pulse">
-                    Loading PDF Viewer
+                    Setting Up PDF Viewer
                   </h3>
                   <p class="text-gray-600 dark:text-gray-300 mb-4">
-                    Preparing {fileName} for viewing...
+                    Preparing {fileName} for progressive loading...
                   </p>
                   <div class="text-xs text-gray-500 dark:text-gray-400 mb-4">
                     <span id="file-info">Loading file information...</span>
@@ -204,19 +200,11 @@ const metadata = {
                     </div>
                   </div>
                   
-                  <!-- Simple loading indicator -->
-                  <div class="mt-4 text-center">
-                    <div class="inline-flex items-center gap-2 px-3 py-1 bg-blue-100 dark:bg-blue-900/30 rounded-full">
-                      <div class="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
-                      <span class="text-xs text-blue-700 dark:text-blue-300" id="loading-status">Starting...</span>
-                    </div>
-                  </div>
-                  
-                  <!-- Netlify-specific note -->
-                  <div class="mt-4 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
-                    <p class="text-xs text-blue-700 dark:text-blue-300">
-                      <Icon name="tabler:info-circle" class="w-3 h-3 inline mr-1" />
-                      Large PDFs may take longer to load. If loading fails, use the download option.
+                  <!-- Progressive loading note -->
+                  <div class="mt-4 p-3 bg-green-50 dark:bg-green-900/20 rounded-lg">
+                    <p class="text-xs text-green-700 dark:text-green-300">
+                      <Icon name="tabler:lightbulb" class="w-3 h-3 inline mr-1" />
+                      Pages will load progressively - you can start scrolling immediately!
                     </p>
                   </div>
                 </div>
@@ -291,24 +279,20 @@ const metadata = {
 </PageLayout>
 
 <script>
+  // PDF.js will be loaded from CDN for progressive loading
+  
   if (typeof window !== 'undefined') {
-    let currentIframe: HTMLIFrameElement | null = null;
     let currentLoadingOverlay: HTMLElement | null = null;
-    let currentErrorOverlay: HTMLElement | null = null;
     let currentProgressBar: HTMLElement | null = null;
     let currentStep2: HTMLElement | null = null;
     let currentStep3: HTMLElement | null = null;
     let currentFileInfo: HTMLElement | null = null;
     let currentProgressInterval: ReturnType<typeof setInterval> | null = null;
     let currentFallbackTimeout: ReturnType<typeof setTimeout> | null = null;
-    let currentQuickFallback: ReturnType<typeof setTimeout> | null = null;
     let currentTimeInterval: ReturnType<typeof setInterval> | null = null;
     
-    const fullscreenBtn = document.getElementById('fullscreen-btn');
-    const fullscreenBtnMobile = document.getElementById('fullscreen-btn-mobile');
-    
-    // Function to initialize PDF viewer for a specific file
-    const initializePDFViewer = () => {
+    // Function to initialize progressive PDF viewer
+    const initializeProgressivePDFViewer = () => {
       // Clean up any existing intervals/timeouts
       if (currentProgressInterval) clearInterval(currentProgressInterval);
       if (currentFallbackTimeout) clearTimeout(currentFallbackTimeout);
@@ -316,21 +300,20 @@ const metadata = {
       if (currentTimeInterval) clearInterval(currentTimeInterval);
       
       // Get current elements
-      const iframe = document.getElementById('pdf-iframe') as HTMLIFrameElement;
       const loadingOverlay = document.getElementById('loading-overlay');
-      const errorOverlay = document.getElementById('error-overlay');
       const progressBar = document.getElementById('progress-bar');
+      const step1 = document.getElementById('step-1');
       const step2 = document.getElementById('step-2');
       const step3 = document.getElementById('step-3');
       const fileInfo = document.getElementById('file-info');
+      const pdfPages = document.getElementById('pdf-pages');
       
-      if (!iframe || !loadingOverlay) return;
+      if (!loadingOverlay || !pdfPages) return;
       
       // Store references
-      currentIframe = iframe;
       currentLoadingOverlay = loadingOverlay;
-      currentErrorOverlay = errorOverlay;
       currentProgressBar = progressBar;
+      currentStep1 = step1;
       currentStep2 = step2;
       currentStep3 = step3;
       currentFileInfo = fileInfo;
@@ -353,12 +336,6 @@ const metadata = {
         }
       };
       
-      // Function to show error overlay
-      const showErrorOverlay = () => {
-        if (currentLoadingOverlay) currentLoadingOverlay.style.display = 'none';
-        if (currentErrorOverlay) currentErrorOverlay.classList.remove('hidden');
-      };
-      
       // Simulate file size and load time
       const fileSizes = {
         'MEDICAL MINDSCAPE 1.pdf': '2.4 MB',
@@ -373,11 +350,6 @@ const metadata = {
       if (currentLoadingOverlay) {
         currentLoadingOverlay.style.opacity = '1';
         currentLoadingOverlay.style.display = 'flex';
-      }
-      
-      // Hide error overlay
-      if (currentErrorOverlay) {
-        currentErrorOverlay.classList.add('hidden');
       }
       
       // Update file info
@@ -409,140 +381,155 @@ const metadata = {
         currentStep3.querySelector('div')?.classList.remove('bg-blue-500', 'animate-pulse', 'bg-green-500');
       }
       
-      // Check if PDF file exists with timeout for Netlify
-      const pdfUrl = `/documents/publications/${currentFileName}`;
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout for Netlify
-      
-      fetch(pdfUrl, { 
-        method: 'HEAD',
-        signal: controller.signal
-      })
-        .then(response => {
-          clearTimeout(timeoutId);
-          if (!response.ok) {
-            console.log('PDF file not found, showing error overlay');
-            showErrorOverlay();
-          }
-        })
-        .catch(error => {
-          clearTimeout(timeoutId);
-          if (error.name === 'AbortError') {
-            console.log('PDF check timed out (Netlify issue), proceeding with viewer');
-            // Don't show error for timeout, let the viewer try to load
-          } else {
-            console.log('Error checking PDF file:', error);
-          }
-        });
-      
-      // Simple incremental loading - no complex detection
+      // Simple progress for initial setup
       let progress = 0;
-      const loadingStatus = document.getElementById('loading-status');
-      
       currentProgressInterval = setInterval(() => {
-        progress += 25; // Bigger increments
-        if (progress > 100) progress = 100;
+        progress += 20;
+        if (progress > 90) progress = 90;
         
         if (currentProgressBar) {
           currentProgressBar.style.width = `${progress}%`;
         }
         
-        // Update loading status text
-        if (loadingStatus) {
-          if (progress <= 25) {
-            loadingStatus.textContent = 'Initializing...';
-          } else if (progress <= 50) {
-            loadingStatus.textContent = 'Loading content...';
-          } else if (progress <= 75) {
-            loadingStatus.textContent = 'Rendering...';
-          } else {
-            loadingStatus.textContent = 'Almost ready...';
-          }
-        }
-        
-        // Update steps based on progress
-        if (progress > 25 && currentStep2) {
+        // Update steps
+        if (progress > 30 && currentStep2) {
           currentStep2.classList.remove('opacity-50');
           currentStep2.querySelector('div')?.classList.add('bg-blue-500', 'animate-pulse');
         }
-        if (progress > 50 && currentStep3) {
+        if (progress > 60 && currentStep3) {
           currentStep3.classList.remove('opacity-50');
           currentStep3.querySelector('div')?.classList.add('bg-blue-500', 'animate-pulse');
         }
-        
-        // Auto-hide loading overlay when progress reaches 100%
-        if (progress >= 100) {
-          if (currentProgressInterval) clearInterval(currentProgressInterval);
-          if (currentStep3) {
-            currentStep3.querySelector('div')?.classList.remove('animate-pulse');
-            currentStep3.querySelector('div')?.classList.add('bg-green-500');
-          }
-          hideLoadingOverlay();
-        }
-      }, 300); // Update every 300ms for smooth progress
+      }, 200);
       
-      // Fallback: hide loading overlay after 3 seconds max
+      // Hide loading overlay after 1.5 seconds to show progressive loading
       currentFallbackTimeout = setTimeout(() => {
-        console.log('Fallback: Hiding loading overlay after timeout');
+        console.log('Setup complete, showing progressive loading');
         if (currentProgressInterval) clearInterval(currentProgressInterval);
         hideLoadingOverlay();
-      }, 3000);
-
-      // Quick fallback for navigation (0.5 seconds)
-      currentQuickFallback = setTimeout(() => {
-        console.log('Quick fallback: Hiding loading overlay for navigation');
-        if (currentLoadingOverlay && currentLoadingOverlay.style.display !== 'none') {
-          if (currentProgressInterval) clearInterval(currentProgressInterval);
-          hideLoadingOverlay();
-        }
-      }, 500);
-      
-      // Simple iframe load detection - just hide overlay when PDF loads
-      const handleIframeLoad = () => {
-        console.log('PDF loaded successfully');
-        // Clear all intervals and timeouts
-        if (currentProgressInterval) clearInterval(currentProgressInterval);
-        if (currentFallbackTimeout) clearTimeout(currentFallbackTimeout);
-        if (currentQuickFallback) clearTimeout(currentQuickFallback);
-        if (currentTimeInterval) clearInterval(currentTimeInterval);
+        // Start progressive PDF loading
+        loadPDFProgressively(currentFileName, pdfPages);
+      }, 1500);
+    };
+    
+    // Function to load PDF progressively
+    const loadPDFProgressively = async (filename: string, container: HTMLElement) => {
+      try {
+        const pdfUrl = `/documents/publications/${filename}`;
+        console.log('Starting progressive PDF loading:', pdfUrl);
         
-        // Complete the progress
-        if (currentProgressBar) {
-          currentProgressBar.style.width = '100%';
+        // Load the PDF document using global PDF.js
+        if (typeof window !== 'undefined' && (window as any).pdfjsLib) {
+          const pdfjsLib = (window as any).pdfjsLib;
+          const loadingTask = pdfjsLib.getDocument(pdfUrl);
+          const pdf = await loadingTask.promise;
+        } else {
+          throw new Error('PDF.js library not loaded');
         }
         
-        // Final step completion
-        if (currentStep3) {
-          currentStep3.querySelector('div')?.classList.remove('animate-pulse');
-          currentStep3.querySelector('div')?.classList.add('bg-green-500');
+        console.log('PDF loaded, total pages:', pdf.numPages);
+        
+        // Clear loading indicator
+        container.innerHTML = '';
+        
+        // Load pages progressively
+        for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
+          try {
+            // Load page
+            const page = await pdf.getPage(pageNum);
+            
+            // Create canvas for the page
+            const canvas = document.createElement('canvas');
+            const context = canvas.getContext('2d');
+            
+            if (!context) continue;
+            
+            // Set canvas size (scale for better quality)
+            const viewport = page.getViewport({ scale: 1.5 });
+            canvas.width = viewport.width;
+            canvas.height = viewport.height;
+            
+            // Render page to canvas
+            const renderContext = {
+              canvasContext: context,
+              viewport: viewport
+            };
+            
+            await page.render(renderContext).promise;
+            
+            // Create page container
+            const pageContainer = document.createElement('div');
+            pageContainer.className = 'bg-white dark:bg-gray-700 rounded-lg shadow-lg overflow-hidden';
+            pageContainer.innerHTML = `
+              <div class="p-4 border-b border-gray-200 dark:border-gray-600">
+                <h3 class="text-sm font-medium text-gray-700 dark:text-gray-300">Page ${pageNum}</h3>
+              </div>
+              <div class="flex justify-center p-4">
+                <canvas class="max-w-full h-auto"></canvas>
+              </div>
+            `;
+            
+            // Replace the temporary canvas with the rendered one
+            const tempCanvas = pageContainer.querySelector('canvas');
+            if (tempCanvas) {
+              tempCanvas.width = canvas.width;
+              tempCanvas.height = canvas.height;
+              const tempContext = tempCanvas.getContext('2d');
+              if (tempContext) {
+                tempContext.drawImage(canvas, 0, 0);
+              }
+            }
+            
+            // Add page to container
+            container.appendChild(pageContainer);
+            
+            console.log(`Page ${pageNum} rendered`);
+            
+            // Small delay to show progressive loading
+            await new Promise(resolve => setTimeout(resolve, 100));
+            
+          } catch (error) {
+            console.error(`Error rendering page ${pageNum}:`, error);
+            // Add error indicator for failed page
+            const errorContainer = document.createElement('div');
+            errorContainer.className = 'bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4';
+            errorContainer.innerHTML = `
+              <div class="flex items-center gap-2 text-red-700 dark:text-red-300">
+                <Icon name="tabler:alert-circle" class="w-4 h-4" />
+                <span>Failed to load page ${pageNum}</span>
+              </div>
+            `;
+            container.appendChild(errorContainer);
+          }
         }
         
-        // Hide overlay immediately
-        hideLoadingOverlay();
-      };
-      
-      // Simple event listener
-      iframe.addEventListener('load', handleIframeLoad);
-      
-      // Simple error handling
-      iframe.addEventListener('error', () => {
-        console.log('PDF failed to load');
-        if (currentProgressInterval) clearInterval(currentProgressInterval);
-        if (currentFallbackTimeout) clearTimeout(currentFallbackTimeout);
-        if (currentQuickFallback) clearTimeout(currentQuickFallback);
-        showErrorOverlay();
-      });
-    }; // End of initializePDFViewer function
+        console.log('Progressive PDF loading complete');
+        
+      } catch (error) {
+        console.error('Error loading PDF:', error);
+        // Show error message
+        container.innerHTML = `
+          <div class="text-center py-20">
+            <Icon name="tabler:alert-circle" class="w-16 h-16 text-red-500 mx-auto mb-4" />
+            <h2 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">PDF Loading Failed</h2>
+            <p class="text-gray-600 dark:text-gray-300 mb-4">Unable to load the PDF file.</p>
+            <a href="/documents/publications/${filename}" target="_blank" class="px-6 py-3 bg-blue-600 dark:bg-blue-500 text-white rounded-lg hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors">
+              Open in New Tab
+            </a>
+          </div>
+        `;
+      }
+    };
     
     // Initialize on page load
-    initializePDFViewer();
+    initializeProgressivePDFViewer();
     
     // Handle Astro navigation events for client-side routing
     document.addEventListener('astro:page-load', () => {
       console.log('Astro page load event detected');
       // Re-initialize PDF viewer on navigation
       setTimeout(() => {
-        initializePDFViewer();
+        initializeProgressivePDFViewer();
       }, 100); // Slight delay to ensure DOM is ready
     });
     
@@ -551,7 +538,7 @@ const metadata = {
       console.log('Browser navigation detected');
       // Re-initialize PDF viewer on navigation
       setTimeout(() => {
-        initializePDFViewer();
+        initializeProgressivePDFViewer();
       }, 100); // Slight delay to ensure DOM is ready
     });
     
@@ -564,43 +551,18 @@ const metadata = {
       }
     });
     
-    // Fullscreen logic
-    if (fullscreenBtn && currentIframe) {
-      fullscreenBtn.addEventListener('click', () => {
-        if (currentIframe && currentIframe.requestFullscreen) {
-          currentIframe.requestFullscreen();
-        } else if (currentIframe && (currentIframe as any).webkitRequestFullscreen) {
-          (currentIframe as any).webkitRequestFullscreen();
-        }
-      });
-    }
-    
-    // Mobile fullscreen button
-    if (fullscreenBtnMobile && currentIframe) {
-      fullscreenBtnMobile.addEventListener('click', () => {
-        if (currentIframe && currentIframe.requestFullscreen) {
-          currentIframe.requestFullscreen();
-        } else if (currentIframe && (currentIframe as any).webkitRequestFullscreen) {
-          (currentIframe as any).webkitRequestFullscreen();
-        }
-      });
-    }
-
     // Retry button logic
     const retryBtn = document.getElementById('retry-btn');
     if (retryBtn) {
       retryBtn.addEventListener('click', () => {
         console.log('Retry button clicked');
-        // Hide error overlay and show loading
-        if (currentErrorOverlay) {
-          currentErrorOverlay.classList.add('hidden');
-        }
+        // Show loading overlay
         if (currentLoadingOverlay) {
           currentLoadingOverlay.style.display = 'flex';
           currentLoadingOverlay.style.opacity = '1';
         }
         // Re-initialize the viewer
-        initializePDFViewer();
+        initializeProgressivePDFViewer();
       });
     }
     
