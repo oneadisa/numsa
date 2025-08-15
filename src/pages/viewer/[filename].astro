@@ -204,6 +204,14 @@ const metadata = {
                     </div>
                   </div>
                   
+                  <!-- Simple loading indicator -->
+                  <div class="mt-4 text-center">
+                    <div class="inline-flex items-center gap-2 px-3 py-1 bg-blue-100 dark:bg-blue-900/30 rounded-full">
+                      <div class="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
+                      <span class="text-xs text-blue-700 dark:text-blue-300" id="loading-status">Starting...</span>
+                    </div>
+                  </div>
+                  
                   <!-- Netlify-specific note -->
                   <div class="mt-4 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
                     <p class="text-xs text-blue-700 dark:text-blue-300">
@@ -427,51 +435,78 @@ const metadata = {
           }
         });
       
-      // Simple loading with timeout
+      // Simple incremental loading - no complex detection
       let progress = 0;
+      const loadingStatus = document.getElementById('loading-status');
+      
       currentProgressInterval = setInterval(() => {
-        progress += 20; // Faster progress
-        if (progress > 90) progress = 90;
+        progress += 25; // Bigger increments
+        if (progress > 100) progress = 100;
         
         if (currentProgressBar) {
           currentProgressBar.style.width = `${progress}%`;
         }
         
-        // Update steps
-        if (progress > 30 && currentStep2) {
+        // Update loading status text
+        if (loadingStatus) {
+          if (progress <= 25) {
+            loadingStatus.textContent = 'Initializing...';
+          } else if (progress <= 50) {
+            loadingStatus.textContent = 'Loading content...';
+          } else if (progress <= 75) {
+            loadingStatus.textContent = 'Rendering...';
+          } else {
+            loadingStatus.textContent = 'Almost ready...';
+          }
+        }
+        
+        // Update steps based on progress
+        if (progress > 25 && currentStep2) {
           currentStep2.classList.remove('opacity-50');
           currentStep2.querySelector('div')?.classList.add('bg-blue-500', 'animate-pulse');
         }
-        if (progress > 60 && currentStep3) {
+        if (progress > 50 && currentStep3) {
           currentStep3.classList.remove('opacity-50');
           currentStep3.querySelector('div')?.classList.add('bg-blue-500', 'animate-pulse');
         }
-      }, 150); // Even faster progress updates
+        
+        // Auto-hide loading overlay when progress reaches 100%
+        if (progress >= 100) {
+          if (currentProgressInterval) clearInterval(currentProgressInterval);
+          if (currentStep3) {
+            currentStep3.querySelector('div')?.classList.remove('animate-pulse');
+            currentStep3.querySelector('div')?.classList.add('bg-green-500');
+          }
+          hideLoadingOverlay();
+        }
+      }, 300); // Update every 300ms for smooth progress
       
-      // Simple timeout approach - hide loading after 1.5 seconds
+      // Fallback: hide loading overlay after 3 seconds max
       currentFallbackTimeout = setTimeout(() => {
-        console.log('Simple timeout: Hiding loading overlay');
+        console.log('Fallback: Hiding loading overlay after timeout');
         if (currentProgressInterval) clearInterval(currentProgressInterval);
         hideLoadingOverlay();
-      }, 1500);
+      }, 3000);
 
-      // Very quick fallback for navigation (0.2 seconds)
+      // Quick fallback for navigation (0.5 seconds)
       currentQuickFallback = setTimeout(() => {
         console.log('Quick fallback: Hiding loading overlay for navigation');
         if (currentLoadingOverlay && currentLoadingOverlay.style.display !== 'none') {
           if (currentProgressInterval) clearInterval(currentProgressInterval);
           hideLoadingOverlay();
         }
-      }, 200);
+      }, 500);
       
-      // Simple iframe load detection
+      // Simple iframe load detection - just hide overlay when PDF loads
       const handleIframeLoad = () => {
         console.log('PDF loaded successfully');
+        // Clear all intervals and timeouts
         if (currentProgressInterval) clearInterval(currentProgressInterval);
         if (currentFallbackTimeout) clearTimeout(currentFallbackTimeout);
         if (currentQuickFallback) clearTimeout(currentQuickFallback);
         if (currentTimeInterval) clearInterval(currentTimeInterval);
         
+        // Complete the progress
         if (currentProgressBar) {
           currentProgressBar.style.width = '100%';
         }
