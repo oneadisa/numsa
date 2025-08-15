@@ -294,9 +294,7 @@ const metadata = {
     let currentProgressInterval: ReturnType<typeof setInterval> | null = null;
     let currentFallbackTimeout: ReturnType<typeof setTimeout> | null = null;
     let currentQuickFallback: ReturnType<typeof setTimeout> | null = null;
-    let currentReadyStateInterval: ReturnType<typeof setInterval> | null = null;
     let currentTimeInterval: ReturnType<typeof setInterval> | null = null;
-    let currentObserver: MutationObserver | null = null;
     
     const fullscreenBtn = document.getElementById('fullscreen-btn');
     const fullscreenBtnMobile = document.getElementById('fullscreen-btn-mobile');
@@ -307,12 +305,7 @@ const metadata = {
       if (currentProgressInterval) clearInterval(currentProgressInterval);
       if (currentFallbackTimeout) clearTimeout(currentFallbackTimeout);
       if (currentQuickFallback) clearTimeout(currentQuickFallback);
-      if (currentReadyStateInterval) clearInterval(currentReadyStateInterval);
       if (currentTimeInterval) clearInterval(currentTimeInterval);
-      if (currentObserver) {
-        currentObserver.disconnect();
-        currentObserver = null;
-      }
       
       // Get current elements
       const iframe = document.getElementById('pdf-iframe') as HTMLIFrameElement;
@@ -437,7 +430,7 @@ const metadata = {
       // Simple loading with timeout
       let progress = 0;
       currentProgressInterval = setInterval(() => {
-        progress += 15; // Faster progress
+        progress += 20; // Faster progress
         if (progress > 90) progress = 90;
         
         if (currentProgressBar) {
@@ -453,25 +446,25 @@ const metadata = {
           currentStep3.classList.remove('opacity-50');
           currentStep3.querySelector('div')?.classList.add('bg-blue-500', 'animate-pulse');
         }
-      }, 200); // Faster progress updates
+      }, 150); // Even faster progress updates
       
-      // Hide loading overlay after 2 seconds max (reduced from 3s)
+      // Simple timeout approach - hide loading after 1.5 seconds
       currentFallbackTimeout = setTimeout(() => {
-        console.log('Fallback: Hiding loading overlay after timeout');
+        console.log('Simple timeout: Hiding loading overlay');
         if (currentProgressInterval) clearInterval(currentProgressInterval);
         hideLoadingOverlay();
-      }, 2000);
+      }, 1500);
 
-      // Quick fallback for navigation (0.3 seconds - reduced from 0.5s)
+      // Very quick fallback for navigation (0.2 seconds)
       currentQuickFallback = setTimeout(() => {
         console.log('Quick fallback: Hiding loading overlay for navigation');
         if (currentLoadingOverlay && currentLoadingOverlay.style.display !== 'none') {
           if (currentProgressInterval) clearInterval(currentProgressInterval);
           hideLoadingOverlay();
         }
-      }, 300);
+      }, 200);
       
-      // Enhanced iframe loading detection
+      // Simple iframe load detection
       const handleIframeLoad = () => {
         console.log('PDF loaded successfully');
         if (currentProgressInterval) clearInterval(currentProgressInterval);
@@ -489,85 +482,14 @@ const metadata = {
           currentStep3.querySelector('div')?.classList.add('bg-green-500');
         }
         
-        // Hide overlay immediately for better UX
+        // Hide overlay immediately
         hideLoadingOverlay();
       };
       
-      // Remove existing event listeners and add new ones
-      iframe.removeEventListener('load', handleIframeLoad);
+      // Simple event listener
       iframe.addEventListener('load', handleIframeLoad);
       
-      // Additional check: if iframe content is already loaded (for navigation)
-      try {
-        if (iframe.contentDocument && iframe.contentDocument.readyState === 'complete') {
-          console.log('Iframe already loaded, hiding overlay immediately');
-          handleIframeLoad();
-        }
-      } catch (e) {
-        // Cross-origin restrictions, ignore
-      }
-      
-      // Additional check: if iframe has loaded content (for faster detection)
-      const checkIframeContent = () => {
-        try {
-          if (iframe.contentWindow && iframe.contentWindow.document && iframe.contentWindow.document.body) {
-            console.log('Iframe has content, hiding overlay');
-            handleIframeLoad();
-            return true;
-          }
-        } catch (e) {
-          // Cross-origin restrictions, ignore
-        }
-        return false;
-      };
-      
-      // Check for content every 200ms for faster detection
-      const contentCheckInterval = setInterval(() => {
-        if (checkIframeContent()) {
-          clearInterval(contentCheckInterval);
-        }
-      }, 200);
-      
-      // Clear content check after 3 seconds
-      setTimeout(() => {
-        clearInterval(contentCheckInterval);
-      }, 3000);
-      
-      // Additional check for iframe readyState
-      const checkIframeReady = () => {
-        try {
-          if (iframe.contentDocument && iframe.contentDocument.readyState === 'complete') {
-            console.log('Iframe readyState complete');
-            if (currentProgressInterval) clearInterval(currentProgressInterval);
-            if (currentFallbackTimeout) clearTimeout(currentFallbackTimeout);
-            
-            if (currentProgressBar) {
-              currentProgressBar.style.width = '100%';
-            }
-            
-            if (currentStep3) {
-              currentStep3.querySelector('div')?.classList.remove('animate-pulse');
-              currentStep3.querySelector('div')?.classList.add('bg-green-500');
-            }
-            
-            // Hide overlay immediately instead of waiting
-            hideLoadingOverlay();
-          }
-        } catch (e) {
-          // Cross-origin restrictions, ignore
-        }
-      };
-
-      // Check iframe readyState more frequently
-      currentReadyStateInterval = setInterval(checkIframeReady, 500); // Check every 500ms instead of 1000ms
-      
-      // Clear readyState interval after 5 seconds (reduced from 10s)
-      setTimeout(() => {
-        if (currentReadyStateInterval) clearInterval(currentReadyStateInterval);
-      }, 5000);
-      
-      // Show error overlay if PDF fails to load
-      iframe.removeEventListener('error', handleIframeLoad);
+      // Simple error handling
       iframe.addEventListener('error', () => {
         console.log('PDF failed to load');
         if (currentProgressInterval) clearInterval(currentProgressInterval);
@@ -586,7 +508,7 @@ const metadata = {
       // Re-initialize PDF viewer on navigation
       setTimeout(() => {
         initializePDFViewer();
-      }, 50); // Reduced delay
+      }, 100); // Slight delay to ensure DOM is ready
     });
     
     // Handle browser navigation events
@@ -595,7 +517,7 @@ const metadata = {
       // Re-initialize PDF viewer on navigation
       setTimeout(() => {
         initializePDFViewer();
-      }, 50); // Reduced delay
+      }, 100); // Slight delay to ensure DOM is ready
     });
     
     // Handle before navigation to prevent PDF flash
@@ -655,9 +577,7 @@ const metadata = {
       if (currentProgressInterval) clearInterval(currentProgressInterval);
       if (currentFallbackTimeout) clearTimeout(currentFallbackTimeout);
       if (currentQuickFallback) clearTimeout(currentQuickFallback);
-      if (currentReadyStateInterval) clearInterval(currentReadyStateInterval);
       if (currentTimeInterval) clearInterval(currentTimeInterval);
-      if (currentObserver) currentObserver.disconnect();
     };
     
     // Clean up on page unload
