@@ -1,9 +1,59 @@
 [build]
   publish = "dist"
   command = "npm run build"
+
 [build.processing.html]
   pretty_urls = false
+
+# Headers for assets
 [[headers]]
   for = "/assets/*"
   [headers.values]
     Cache-Control = "public, max-age=31536000, immutable"
+
+# Headers for PDF documents
+[[headers]]
+  for = "/documents/publications/*.pdf"
+  [headers.values]
+    Cache-Control = "public, max-age=86400"
+    Content-Type = "application/pdf"
+    X-Frame-Options = "SAMEORIGIN"
+    X-Content-Type-Options = "nosniff"
+    Access-Control-Allow-Origin = "*"
+
+# Headers for general documents
+[[headers]]
+  for = "/documents/*"
+  [headers.values]
+    Cache-Control = "public, max-age=3600"
+    X-Frame-Options = "SAMEORIGIN"
+
+# Headers for viewer pages
+[[headers]]
+  for = "/viewer/*"
+  [headers.values]
+    Cache-Control = "public, max-age=3600"
+    X-Frame-Options = "SAMEORIGIN"
+
+# Redirects for better PDF handling
+[[redirects]]
+  from = "/viewer/*"
+  to = "/viewer/:splat"
+  status = 200
+  force = false
+
+# Handle large file uploads
+[build.processing.images]
+  compress = true
+
+# Increase function timeout for large files
+[functions]
+  node_bundler = "esbuild"
+
+# Netlify-specific optimizations for large files
+[build.processing]
+  skip_processing = false
+
+# Increase build timeout for large files
+[build.environment]
+  NODE_VERSION = "18"

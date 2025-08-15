@@ -139,13 +139,17 @@ const metadata = {
         <div id="pdf-viewer" class="w-full h-[calc(100vh-200px)] sm:h-[calc(100vh-280px)] min-h-[500px] sm:min-h-[600px] relative">
           {fileName ? (
             <div class="relative w-full h-full">
+              <!-- Primary PDF iframe -->
               <iframe 
                 src={`/documents/publications/${fileName}`}
                 class="w-full h-full border-0"
                 title="PDF Viewer"
                 id="pdf-iframe"
                 allowfullscreen
+                loading="lazy"
               />
+              
+              <!-- Fallback content for browsers without iframe support -->
               <noscript>
                 <div class="p-4 text-center text-gray-600 dark:text-gray-300">
                   Your browser does not support iframes. 
@@ -199,16 +203,40 @@ const metadata = {
                       <span>Rendering pages...</span>
                     </div>
                   </div>
+                  
+                  <!-- Netlify-specific note -->
+                  <div class="mt-4 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+                    <p class="text-xs text-blue-700 dark:text-blue-300">
+                      <Icon name="tabler:info-circle" class="w-3 h-3 inline mr-1" />
+                      Large PDFs may take longer to load on production. If loading fails, use the download option below.
+                    </p>
+                  </div>
                 </div>
               </div>
               
-              <!-- Error overlay -->
-              <div id="error-overlay" class="hidden absolute inset-0 bg-white dark:bg-gray-800 bg-opacity-90 items-center justify-center">
-                <div class="text-center">
+              <!-- Error overlay with better fallback options -->
+              <div id="error-overlay" class="hidden absolute inset-0 bg-white dark:bg-gray-800 bg-opacity-90 flex items-center justify-center">
+                <div class="text-center max-w-lg mx-auto p-8">
                   <Icon name="tabler:alert-circle" class="w-16 h-16 text-red-500 mx-auto mb-4" />
-                  <h2 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">PDF Not Available</h2>
-                  <p class="text-gray-600 dark:text-gray-300 mb-4">The PDF file could not be loaded. It may not be available yet.</p>
-                  <div class="flex gap-3 justify-center">
+                  <h2 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">PDF Loading Failed</h2>
+                  <p class="text-gray-600 dark:text-gray-300 mb-4">
+                    The PDF file could not be loaded in the browser. This is common with large files on production servers.
+                  </p>
+                  
+                  <!-- Alternative viewing options -->
+                  <div class="space-y-3 mb-6">
+                    <div class="p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                      <h3 class="font-medium text-gray-900 dark:text-white mb-2">Try these alternatives:</h3>
+                      <ul class="text-sm text-gray-600 dark:text-gray-300 space-y-1">
+                        <li>• Download and view locally</li>
+                        <li>• Open in a new tab</li>
+                        <li>• Use a different browser</li>
+                        <li>• Check your internet connection</li>
+                      </ul>
+                    </div>
+                  </div>
+                  
+                  <div class="flex flex-col sm:flex-row gap-3 justify-center">
                     <a 
                       href={`/documents/publications/${fileName}`}
                       target="_blank"
@@ -223,8 +251,15 @@ const metadata = {
                       download
                     >
                       <Icon name="tabler:download" class="w-4 h-4" />
-                      Download
+                      Download PDF
                     </a>
+                    <button 
+                      id="retry-btn"
+                      class="px-6 py-3 bg-gray-600 dark:bg-gray-500 text-white rounded-lg hover:bg-gray-700 dark:hover:bg-gray-600 transition-colors inline-flex items-center gap-2"
+                    >
+                      <Icon name="tabler:refresh" class="w-4 h-4" />
+                      Retry
+                    </button>
                   </div>
                 </div>
               </div>
@@ -373,17 +408,30 @@ const metadata = {
         currentStep3.querySelector('div')?.classList.remove('bg-blue-500', 'animate-pulse', 'bg-green-500');
       }
       
-      // Check if PDF file exists
+      // Check if PDF file exists with timeout for Netlify
       const pdfUrl = `/documents/publications/${currentFileName}`;
-      fetch(pdfUrl, { method: 'HEAD' })
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout for Netlify
+      
+      fetch(pdfUrl, { 
+        method: 'HEAD',
+        signal: controller.signal
+      })
         .then(response => {
+          clearTimeout(timeoutId);
           if (!response.ok) {
             console.log('PDF file not found, showing error overlay');
             showErrorOverlay();
           }
         })
         .catch(error => {
-          console.log('Error checking PDF file:', error);
+          clearTimeout(timeoutId);
+          if (error.name === 'AbortError') {
+            console.log('PDF check timed out (Netlify issue), proceeding with viewer');
+            // Don't show error for timeout, let the viewer try to load
+          } else {
+            console.log('Error checking PDF file:', error);
+          }
         });
       
       // Simple loading with timeout
@@ -536,6 +584,24 @@ const metadata = {
         }
       });
     }
+
+          // Retry button logic
+      const retryBtn = document.getElementById('retry-btn');
+      if (retryBtn) {
+        retryBtn.addEventListener('click', () => {
+          console.log('Retry button clicked');
+          // Hide error overlay and show loading
+          if (currentErrorOverlay) {
+            currentErrorOverlay.classList.add('hidden');
+          }
+          if (currentLoadingOverlay) {
+            currentLoadingOverlay.style.display = 'flex';
+            currentLoadingOverlay.style.opacity = '1';
+          }
+          // Re-initialize the viewer
+          initializePDFViewer();
+        });
+      }
     
     // Cleanup function for navigation
     const cleanup = () => {
