@@ -203,7 +203,7 @@ const metadata = {
               </div>
               
               <!-- Error overlay -->
-              <div id="error-overlay" class="hidden absolute inset-0 bg-white dark:bg-gray-800 bg-opacity-90 flex items-center justify-center">
+              <div id="error-overlay" class="hidden absolute inset-0 bg-white dark:bg-gray-800 bg-opacity-90 items-center justify-center">
                 <div class="text-center">
                   <Icon name="tabler:alert-circle" class="w-16 h-16 text-red-500 mx-auto mb-4" />
                   <h2 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">PDF Not Available</h2>
@@ -249,28 +249,79 @@ const metadata = {
 
 <script>
   if (typeof window !== 'undefined') {
-    const iframe = document.getElementById('pdf-iframe');
-    const loadingOverlay = document.getElementById('loading-overlay');
-    const errorOverlay = document.getElementById('error-overlay');
+    let currentIframe: HTMLIFrameElement | null = null;
+    let currentLoadingOverlay: HTMLElement | null = null;
+    let currentErrorOverlay: HTMLElement | null = null;
+    let currentProgressBar: HTMLElement | null = null;
+    let currentStep2: HTMLElement | null = null;
+    let currentStep3: HTMLElement | null = null;
+    let currentFileInfo: HTMLElement | null = null;
+    let currentProgressInterval: ReturnType<typeof setInterval> | null = null;
+    let currentFallbackTimeout: ReturnType<typeof setTimeout> | null = null;
+    let currentQuickFallback: ReturnType<typeof setTimeout> | null = null;
+    let currentReadyStateInterval: ReturnType<typeof setInterval> | null = null;
+    let currentTimeInterval: ReturnType<typeof setInterval> | null = null;
+    let currentObserver: MutationObserver | null = null;
+    
     const fullscreenBtn = document.getElementById('fullscreen-btn');
-    const prevPageBtn = document.getElementById('prev-page');
-    const nextPageBtn = document.getElementById('next-page');
-    const currentPageSpan = document.getElementById('current-page');
-    const totalPagesSpan = document.getElementById('total-pages');
-    const zoomInBtn = document.getElementById('zoom-in');
-    const zoomOutBtn = document.getElementById('zoom-out');
-    const zoomLevelSpan = document.getElementById('zoom-level');
+    const fullscreenBtnMobile = document.getElementById('fullscreen-btn-mobile');
     
-    let currentPage = 1;
-    let totalPages = 0;
-    let currentZoom = 100;
-    
-    if (iframe) {
+    // Function to initialize PDF viewer for a specific file
+    const initializePDFViewer = () => {
+      // Clean up any existing intervals/timeouts
+      if (currentProgressInterval) clearInterval(currentProgressInterval);
+      if (currentFallbackTimeout) clearTimeout(currentFallbackTimeout);
+      if (currentQuickFallback) clearTimeout(currentQuickFallback);
+      if (currentReadyStateInterval) clearInterval(currentReadyStateInterval);
+      if (currentTimeInterval) clearInterval(currentTimeInterval);
+      if (currentObserver) {
+        currentObserver.disconnect();
+        currentObserver = null;
+      }
+      
+      // Get current elements
+      const iframe = document.getElementById('pdf-iframe') as HTMLIFrameElement;
+      const loadingOverlay = document.getElementById('loading-overlay');
+      const errorOverlay = document.getElementById('error-overlay');
       const progressBar = document.getElementById('progress-bar');
-      const step1 = document.getElementById('step-1');
       const step2 = document.getElementById('step-2');
       const step3 = document.getElementById('step-3');
       const fileInfo = document.getElementById('file-info');
+      
+      if (!iframe || !loadingOverlay) return;
+      
+      // Store references
+      currentIframe = iframe;
+      currentLoadingOverlay = loadingOverlay;
+      currentErrorOverlay = errorOverlay;
+      currentProgressBar = progressBar;
+      currentStep2 = step2;
+      currentStep3 = step3;
+      currentFileInfo = fileInfo;
+      
+      // Get filename from URL path
+      const pathSegments = window.location.pathname.split('/');
+      const currentFileName = decodeURIComponent(pathSegments[pathSegments.length - 1]);
+      
+      if (!currentFileName) return;
+      
+      // Function to hide loading overlay
+      const hideLoadingOverlay = () => {
+        if (currentLoadingOverlay) {
+          currentLoadingOverlay.style.opacity = '0';
+          setTimeout(() => {
+            if (currentLoadingOverlay) {
+              currentLoadingOverlay.style.display = 'none';
+            }
+          }, 300);
+        }
+      };
+      
+      // Function to show error overlay
+      const showErrorOverlay = () => {
+        if (currentLoadingOverlay) currentLoadingOverlay.style.display = 'none';
+        if (currentErrorOverlay) currentErrorOverlay.classList.remove('hidden');
+      };
       
       // Simulate file size and load time
       const fileSizes = {
@@ -279,9 +330,48 @@ const metadata = {
         'NUMSA MAGAZINE 2 (1)_compressed_250420_022813.pdf': '3.1 MB'
       };
       
-      // Get filename from URL path
-      const pathSegments = window.location.pathname.split('/');
-      const currentFileName = decodeURIComponent(pathSegments[pathSegments.length - 1]);
+      const fileSize = fileSizes[currentFileName] || 'Unknown size';
+      const estimatedTime = Math.floor(Math.random() * 3) + 2; // 2-4 seconds
+      
+      // Reset loading overlay
+      if (currentLoadingOverlay) {
+        currentLoadingOverlay.style.opacity = '1';
+        currentLoadingOverlay.style.display = 'flex';
+      }
+      
+      // Hide error overlay
+      if (currentErrorOverlay) {
+        currentErrorOverlay.classList.add('hidden');
+      }
+      
+      // Update file info
+      if (currentFileInfo) {
+        currentFileInfo.textContent = `${fileSize} • Estimated load time: ${estimatedTime}s`;
+        
+        // Update loading time in real-time
+        let elapsedTime = 0;
+        currentTimeInterval = setInterval(() => {
+          elapsedTime++;
+          if (currentFileInfo) {
+            currentFileInfo.textContent = `${fileSize} • Loading... ${elapsedTime}s`;
+          }
+        }, 1000);
+      }
+      
+      // Reset progress bar
+      if (currentProgressBar) {
+        currentProgressBar.style.width = '0%';
+      }
+      
+      // Reset steps
+      if (currentStep2) {
+        currentStep2.classList.add('opacity-50');
+        currentStep2.querySelector('div')?.classList.remove('bg-blue-500', 'animate-pulse');
+      }
+      if (currentStep3) {
+        currentStep3.classList.add('opacity-50');
+        currentStep3.querySelector('div')?.classList.remove('bg-blue-500', 'animate-pulse', 'bg-green-500');
+      }
       
       // Check if PDF file exists
       const pdfUrl = `/documents/publications/${currentFileName}`;
@@ -289,133 +379,95 @@ const metadata = {
         .then(response => {
           if (!response.ok) {
             console.log('PDF file not found, showing error overlay');
-            if (loadingOverlay) loadingOverlay.style.display = 'none';
-            if (errorOverlay) errorOverlay.classList.remove('hidden');
+            showErrorOverlay();
           }
         })
         .catch(error => {
           console.log('Error checking PDF file:', error);
         });
       
-      const estimatedTime = Math.floor(Math.random() * 3) + 2; // 2-4 seconds
-      const fileSize = fileSizes[currentFileName] || 'Unknown size';
-      
-      if (fileInfo) {
-        fileInfo.textContent = `${fileSize} • Estimated load time: ${estimatedTime}s`;
-        
-        // Update loading time in real-time
-        let elapsedTime = 0;
-        const timeInterval = setInterval(() => {
-          elapsedTime++;
-          if (fileInfo) {
-            fileInfo.textContent = `${fileSize} • Loading... ${elapsedTime}s`;
-          }
-        }, 1000);
-        
-        // Clear time interval when loading completes
-        iframe.addEventListener('load', () => {
-          clearInterval(timeInterval);
-          if (fileInfo) {
-            fileInfo.textContent = `${fileSize} • Loaded successfully!`;
-          }
-        });
-      }
-      
       // Simple loading with timeout
       let progress = 0;
-      const progressInterval = setInterval(() => {
+      currentProgressInterval = setInterval(() => {
         progress += 10;
         if (progress > 90) progress = 90;
         
-        if (progressBar) {
-          progressBar.style.width = `${progress}%`;
+        if (currentProgressBar) {
+          currentProgressBar.style.width = `${progress}%`;
         }
         
         // Update steps
-        if (progress > 30 && step2) {
-          step2.classList.remove('opacity-50');
-          step2.querySelector('div')?.classList.add('bg-blue-500', 'animate-pulse');
+        if (progress > 30 && currentStep2) {
+          currentStep2.classList.remove('opacity-50');
+          currentStep2.querySelector('div')?.classList.add('bg-blue-500', 'animate-pulse');
         }
-        if (progress > 60 && step3) {
-          step3.classList.remove('opacity-50');
-          step3.querySelector('div')?.classList.add('bg-blue-500', 'animate-pulse');
+        if (progress > 60 && currentStep3) {
+          currentStep3.classList.remove('opacity-50');
+          currentStep3.querySelector('div')?.classList.add('bg-blue-500', 'animate-pulse');
         }
       }, 300);
       
       // Hide loading overlay after 3 seconds max
-      const fallbackTimeout = setTimeout(() => {
+      currentFallbackTimeout = setTimeout(() => {
         console.log('Fallback: Hiding loading overlay after timeout');
-        clearInterval(progressInterval);
-        if (loadingOverlay) {
-          loadingOverlay.style.opacity = '0';
-          setTimeout(() => {
-            loadingOverlay.style.display = 'none';
-          }, 300);
-        }
+        if (currentProgressInterval) clearInterval(currentProgressInterval);
+        hideLoadingOverlay();
       }, 3000);
 
-      // Quick fallback for navigation from publications page (0.5 seconds)
-      const quickFallback = setTimeout(() => {
+      // Quick fallback for navigation (0.5 seconds)
+      currentQuickFallback = setTimeout(() => {
         console.log('Quick fallback: Hiding loading overlay for navigation');
-        if (loadingOverlay && loadingOverlay.style.display !== 'none') {
-          clearInterval(progressInterval);
-          loadingOverlay.style.opacity = '0';
-          setTimeout(() => {
-            loadingOverlay.style.display = 'none';
-          }, 300);
+        if (currentLoadingOverlay && currentLoadingOverlay.style.display !== 'none') {
+          if (currentProgressInterval) clearInterval(currentProgressInterval);
+          hideLoadingOverlay();
         }
       }, 500);
       
-      // Hide loading overlay when iframe loads
-      iframe.addEventListener('load', () => {
+      // Enhanced iframe loading detection
+      const handleIframeLoad = () => {
         console.log('PDF loaded successfully');
-        clearInterval(progressInterval);
-        clearTimeout(fallbackTimeout);
-        clearTimeout(quickFallback);
+        if (currentProgressInterval) clearInterval(currentProgressInterval);
+        if (currentFallbackTimeout) clearTimeout(currentFallbackTimeout);
+        if (currentQuickFallback) clearTimeout(currentQuickFallback);
+        if (currentTimeInterval) clearInterval(currentTimeInterval);
         
-        if (progressBar) {
-          progressBar.style.width = '100%';
+        if (currentProgressBar) {
+          currentProgressBar.style.width = '100%';
         }
         
         // Final step completion
-        if (step3) {
-          step3.querySelector('div')?.classList.remove('animate-pulse');
-          step3.querySelector('div')?.classList.add('bg-green-500');
+        if (currentStep3) {
+          currentStep3.querySelector('div')?.classList.remove('animate-pulse');
+          currentStep3.querySelector('div')?.classList.add('bg-green-500');
         }
         
         // Hide overlay immediately for better UX
-        if (loadingOverlay) {
-          loadingOverlay.style.opacity = '0';
-          setTimeout(() => {
-            loadingOverlay.style.display = 'none';
-          }, 300);
-        }
-      });
-
+        hideLoadingOverlay();
+      };
+      
+      // Remove existing event listeners and add new ones
+      iframe.removeEventListener('load', handleIframeLoad);
+      iframe.addEventListener('load', handleIframeLoad);
+      
       // Additional check for iframe readyState
       const checkIframeReady = () => {
         try {
-          if ((iframe as HTMLIFrameElement).contentDocument && (iframe as HTMLIFrameElement).contentDocument.readyState === 'complete') {
+          if (iframe.contentDocument && iframe.contentDocument.readyState === 'complete') {
             console.log('Iframe readyState complete');
-            clearInterval(progressInterval);
-            clearTimeout(fallbackTimeout);
+            if (currentProgressInterval) clearInterval(currentProgressInterval);
+            if (currentFallbackTimeout) clearTimeout(currentFallbackTimeout);
             
-            if (progressBar) {
-              progressBar.style.width = '100%';
+            if (currentProgressBar) {
+              currentProgressBar.style.width = '100%';
             }
             
-            if (step3) {
-              step3.querySelector('div')?.classList.remove('animate-pulse');
-              step3.querySelector('div')?.classList.add('bg-green-500');
+            if (currentStep3) {
+              currentStep3.querySelector('div')?.classList.remove('animate-pulse');
+              currentStep3.querySelector('div')?.classList.add('bg-green-500');
             }
             
             setTimeout(() => {
-              if (loadingOverlay) {
-                loadingOverlay.style.opacity = '0';
-                setTimeout(() => {
-                  loadingOverlay.style.display = 'none';
-                }, 300);
-              }
+              hideLoadingOverlay();
             }, 500);
           }
         } catch (e) {
@@ -424,45 +476,84 @@ const metadata = {
       };
 
       // Check iframe readyState periodically
-      const readyStateInterval = setInterval(checkIframeReady, 1000);
+      currentReadyStateInterval = setInterval(checkIframeReady, 1000);
       
       // Clear readyState interval after 10 seconds
       setTimeout(() => {
-        clearInterval(readyStateInterval);
+        if (currentReadyStateInterval) clearInterval(currentReadyStateInterval);
       }, 10000);
       
       // Show error overlay if PDF fails to load
+      iframe.removeEventListener('error', handleIframeLoad);
       iframe.addEventListener('error', () => {
         console.log('PDF failed to load');
-        clearInterval(progressInterval);
-        clearTimeout(fallbackTimeout);
-        clearTimeout(quickFallback);
-        if (loadingOverlay) loadingOverlay.style.display = 'none';
-        if (errorOverlay) errorOverlay.classList.remove('hidden');
+        if (currentProgressInterval) clearInterval(currentProgressInterval);
+        if (currentFallbackTimeout) clearTimeout(currentFallbackTimeout);
+        if (currentQuickFallback) clearTimeout(currentQuickFallback);
+        showErrorOverlay();
       });
-    }
+    };
+    
+    // Initialize on page load
+    initializePDFViewer();
+    
+    // Handle Astro navigation events for client-side routing
+    document.addEventListener('astro:page-load', () => {
+      console.log('Astro page load event detected');
+      // Re-initialize PDF viewer on navigation
+      setTimeout(() => {
+        initializePDFViewer();
+      }, 100);
+    });
+    
+    // Handle browser navigation events
+    window.addEventListener('popstate', () => {
+      console.log('Browser navigation detected');
+      // Re-initialize PDF viewer on navigation
+      setTimeout(() => {
+        initializePDFViewer();
+      }, 100);
+    });
+    
     // Fullscreen logic
-    if (fullscreenBtn && iframe) {
+    if (fullscreenBtn && currentIframe) {
       fullscreenBtn.addEventListener('click', () => {
-        if (iframe.requestFullscreen) {
-          iframe.requestFullscreen();
-        } else if ((iframe as any).webkitRequestFullscreen) {
-          (iframe as any).webkitRequestFullscreen();
+        if (currentIframe && currentIframe.requestFullscreen) {
+          currentIframe.requestFullscreen();
+        } else if (currentIframe && (currentIframe as any).webkitRequestFullscreen) {
+          (currentIframe as any).webkitRequestFullscreen();
         }
       });
     }
     
     // Mobile fullscreen button
-    const fullscreenBtnMobile = document.getElementById('fullscreen-btn-mobile');
-    if (fullscreenBtnMobile && iframe) {
+    if (fullscreenBtnMobile && currentIframe) {
       fullscreenBtnMobile.addEventListener('click', () => {
-        if (iframe.requestFullscreen) {
-          iframe.requestFullscreen();
-        } else if ((iframe as any).webkitRequestFullscreen) {
-          (iframe as any).webkitRequestFullscreen();
+        if (currentIframe && currentIframe.requestFullscreen) {
+          currentIframe.requestFullscreen();
+        } else if (currentIframe && (currentIframe as any).webkitRequestFullscreen) {
+          (currentIframe as any).webkitRequestFullscreen();
         }
       });
     }
-    // Keyboard navigation, zoom, etc. can be added here
+    
+    // Cleanup function for navigation
+    const cleanup = () => {
+      if (currentLoadingOverlay) {
+        currentLoadingOverlay.style.display = 'none';
+      }
+      if (currentProgressInterval) clearInterval(currentProgressInterval);
+      if (currentFallbackTimeout) clearTimeout(currentFallbackTimeout);
+      if (currentQuickFallback) clearTimeout(currentQuickFallback);
+      if (currentReadyStateInterval) clearInterval(currentReadyStateInterval);
+      if (currentTimeInterval) clearInterval(currentTimeInterval);
+      if (currentObserver) currentObserver.disconnect();
+    };
+    
+    // Clean up on page unload
+    window.addEventListener('beforeunload', cleanup);
+    
+    // Clean up on Astro navigation
+    document.addEventListener('astro:before-preparation', cleanup);
   }
 </script>
