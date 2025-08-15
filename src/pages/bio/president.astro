@@ -15,9 +15,8 @@ import type { MetaData } from '~/types';
 import Button from '~/components/ui/Button.astro';
 import { Icon } from 'astro-icon/components';
 import { getCollection } from 'astro:content';
-import type { Post } from '../../../components/numsa/listItem.astro';
-
-import Image from '../../components/common/Image.astro';
+// Removed broken import of Post type
+import Image from '~/components/common/Image.astro';
 const { textDirection } = I18N;
 
 export const prerender = true;

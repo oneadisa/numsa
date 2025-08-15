@@ -208,7 +208,7 @@ const metadata = {
                   <div class="mt-4 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
                     <p class="text-xs text-blue-700 dark:text-blue-300">
                       <Icon name="tabler:info-circle" class="w-3 h-3 inline mr-1" />
-                      Large PDFs may take longer to load on production. If loading fails, use the download option below.
+                      Large PDFs may take longer to load. If loading fails, use the download option.
                     </p>
                   </div>
                 </div>
@@ -437,7 +437,7 @@ const metadata = {
       // Simple loading with timeout
       let progress = 0;
       currentProgressInterval = setInterval(() => {
-        progress += 10;
+        progress += 15; // Faster progress
         if (progress > 90) progress = 90;
         
         if (currentProgressBar) {
@@ -453,23 +453,23 @@ const metadata = {
           currentStep3.classList.remove('opacity-50');
           currentStep3.querySelector('div')?.classList.add('bg-blue-500', 'animate-pulse');
         }
-      }, 300);
+      }, 200); // Faster progress updates
       
-      // Hide loading overlay after 3 seconds max
+      // Hide loading overlay after 2 seconds max (reduced from 3s)
       currentFallbackTimeout = setTimeout(() => {
         console.log('Fallback: Hiding loading overlay after timeout');
         if (currentProgressInterval) clearInterval(currentProgressInterval);
         hideLoadingOverlay();
-      }, 3000);
+      }, 2000);
 
-      // Quick fallback for navigation (0.5 seconds)
+      // Quick fallback for navigation (0.3 seconds - reduced from 0.5s)
       currentQuickFallback = setTimeout(() => {
         console.log('Quick fallback: Hiding loading overlay for navigation');
         if (currentLoadingOverlay && currentLoadingOverlay.style.display !== 'none') {
           if (currentProgressInterval) clearInterval(currentProgressInterval);
           hideLoadingOverlay();
         }
-      }, 500);
+      }, 300);
       
       // Enhanced iframe loading detection
       const handleIframeLoad = () => {
@@ -497,6 +497,42 @@ const metadata = {
       iframe.removeEventListener('load', handleIframeLoad);
       iframe.addEventListener('load', handleIframeLoad);
       
+      // Additional check: if iframe content is already loaded (for navigation)
+      try {
+        if (iframe.contentDocument && iframe.contentDocument.readyState === 'complete') {
+          console.log('Iframe already loaded, hiding overlay immediately');
+          handleIframeLoad();
+        }
+      } catch (e) {
+        // Cross-origin restrictions, ignore
+      }
+      
+      // Additional check: if iframe has loaded content (for faster detection)
+      const checkIframeContent = () => {
+        try {
+          if (iframe.contentWindow && iframe.contentWindow.document && iframe.contentWindow.document.body) {
+            console.log('Iframe has content, hiding overlay');
+            handleIframeLoad();
+            return true;
+          }
+        } catch (e) {
+          // Cross-origin restrictions, ignore
+        }
+        return false;
+      };
+      
+      // Check for content every 200ms for faster detection
+      const contentCheckInterval = setInterval(() => {
+        if (checkIframeContent()) {
+          clearInterval(contentCheckInterval);
+        }
+      }, 200);
+      
+      // Clear content check after 3 seconds
+      setTimeout(() => {
+        clearInterval(contentCheckInterval);
+      }, 3000);
+      
       // Additional check for iframe readyState
       const checkIframeReady = () => {
         try {
@@ -514,22 +550,21 @@ const metadata = {
               currentStep3.querySelector('div')?.classList.add('bg-green-500');
             }
             
-            setTimeout(() => {
-              hideLoadingOverlay();
-            }, 500);
+            // Hide overlay immediately instead of waiting
+            hideLoadingOverlay();
           }
         } catch (e) {
           // Cross-origin restrictions, ignore
         }
       };
 
-      // Check iframe readyState periodically
-      currentReadyStateInterval = setInterval(checkIframeReady, 1000);
+      // Check iframe readyState more frequently
+      currentReadyStateInterval = setInterval(checkIframeReady, 500); // Check every 500ms instead of 1000ms
       
-      // Clear readyState interval after 10 seconds
+      // Clear readyState interval after 5 seconds (reduced from 10s)
       setTimeout(() => {
         if (currentReadyStateInterval) clearInterval(currentReadyStateInterval);
-      }, 10000);
+      }, 5000);
       
       // Show error overlay if PDF fails to load
       iframe.removeEventListener('error', handleIframeLoad);
@@ -540,7 +575,7 @@ const metadata = {
         if (currentQuickFallback) clearTimeout(currentQuickFallback);
         showErrorOverlay();
       });
-    };
+    }; // End of initializePDFViewer function
     
     // Initialize on page load
     initializePDFViewer();
@@ -551,7 +586,7 @@ const metadata = {
       // Re-initialize PDF viewer on navigation
       setTimeout(() => {
         initializePDFViewer();
-      }, 100);
+      }, 50); // Reduced delay
     });
     
     // Handle browser navigation events
@@ -560,7 +595,16 @@ const metadata = {
       // Re-initialize PDF viewer on navigation
       setTimeout(() => {
         initializePDFViewer();
-      }, 100);
+      }, 50); // Reduced delay
+    });
+    
+    // Handle before navigation to prevent PDF flash
+    document.addEventListener('astro:before-preparation', () => {
+      console.log('Astro before preparation - cleaning up');
+      // Immediately hide loading overlay to prevent flash
+      if (currentLoadingOverlay) {
+        currentLoadingOverlay.style.display = 'none';
+      }
     });
     
     // Fullscreen logic
@@ -585,23 +629,23 @@ const metadata = {
       });
     }
 
-          // Retry button logic
-      const retryBtn = document.getElementById('retry-btn');
-      if (retryBtn) {
-        retryBtn.addEventListener('click', () => {
-          console.log('Retry button clicked');
-          // Hide error overlay and show loading
-          if (currentErrorOverlay) {
-            currentErrorOverlay.classList.add('hidden');
-          }
-          if (currentLoadingOverlay) {
-            currentLoadingOverlay.style.display = 'flex';
-            currentLoadingOverlay.style.opacity = '1';
-          }
-          // Re-initialize the viewer
-          initializePDFViewer();
-        });
-      }
+    // Retry button logic
+    const retryBtn = document.getElementById('retry-btn');
+    if (retryBtn) {
+      retryBtn.addEventListener('click', () => {
+        console.log('Retry button clicked');
+        // Hide error overlay and show loading
+        if (currentErrorOverlay) {
+          currentErrorOverlay.classList.add('hidden');
+        }
+        if (currentLoadingOverlay) {
+          currentLoadingOverlay.style.display = 'flex';
+          currentLoadingOverlay.style.opacity = '1';
+        }
+        // Re-initialize the viewer
+        initializePDFViewer();
+      });
+    }
     
     // Cleanup function for navigation
     const cleanup = () => {
@@ -618,8 +662,5 @@ const metadata = {
     
     // Clean up on page unload
     window.addEventListener('beforeunload', cleanup);
-    
-    // Clean up on Astro navigation
-    document.addEventListener('astro:before-preparation', cleanup);
   }
 </script>
