@@ -2,21 +2,40 @@
 import PageLayout from '../../layouts/PageLayout.astro';
 import { Icon } from 'astro-icon/components';
 
-// Define the PDF files that can be viewed
+// Define the PDF files that can be viewed with their Google Drive links
 export async function getStaticPaths() {
   return [
-    { params: { filename: 'MEDICAL MINDSCAPE 1.pdf' } },
-    { params: { filename: 'NUMSA Journal (3)_compressed_250420_022657.pdf' } },
-    { params: { filename: 'NUMSA MAGAZINE 2 (1)_compressed_250420_022813.pdf' } }
+    { 
+      params: { filename: 'MEDICAL MINDSCAPE 1.pdf' },
+      props: { 
+        driveId: '1tbDdhQoOxKh8shu7_D0j7IHzcsjPEhSI',
+        title: 'MEDICAL MINDSCAPE EDITION 1'
+      }
+    },
+    { 
+      params: { filename: 'NUMSA Journal (3)_compressed_250420_022657.pdf' },
+      props: { 
+        driveId: '1SUkX1pkLmMLrv16vvoi2lIV8lCqfP1mO',
+        title: 'MEDICAL NEXUS MAGAZINE'
+      }
+    },
+    { 
+      params: { filename: 'NUMSA MAGAZINE 2 (1)_compressed_250420_022813.pdf' },
+      props: { 
+        driveId: '1aR28qcmaIcu5mNjTlxcBQpNSku3QKD6S',
+        title: 'MEDICAL MINDSCAPE EDITION 2'
+      }
+    }
   ];
 }
 
 const file = Astro.params.filename;
 const fileName = file ? decodeURIComponent(file) : '';
+const { driveId, title } = Astro.props;
 
 const metadata = {
-  title: `Viewing ${fileName}`,
-  description: `PDF Viewer for ${fileName}`,
+  title: `Viewing ${title}`,
+  description: `PDF Viewer for ${title}`,
 };
 ---
 
@@ -26,7 +45,7 @@ const metadata = {
     <header class="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700">
       <div class="container mx-auto px-4 py-3 sm:py-4">
         <!-- Mobile Layout -->
-        <div class="block sm:hidden">
+        <div class="block lg:hidden">
           <div class="flex items-center justify-between mb-3">
             <a href="/publications" class="flex items-center gap-2 text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors">
               <Icon name="tabler:chevron-left" class="w-5 h-5" />
@@ -35,28 +54,67 @@ const metadata = {
             <div class="flex gap-2">
               <button 
                 id="fullscreen-btn-mobile"
-                class="p-2 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
+                class="p-3 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 active:bg-gray-300 dark:active:bg-gray-500 transition-all duration-200 shadow-sm hover:shadow-md active:scale-95 touch-manipulation"
                 title="Toggle Fullscreen"
+                aria-label="Toggle Fullscreen"
               >
-                <Icon name="tabler:maximize" class="w-4 h-4" />
+                <Icon name="tabler:maximize" class="w-5 h-5" id="mobile-icon" />
               </button>
               <a 
-                href={`/documents/publications/${fileName}`}
-                class="p-2 bg-blue-600 dark:bg-blue-500 text-white rounded-lg hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors"
+                href={`https://drive.google.com/uc?export=download&id=${driveId}`}
+                class="p-3 bg-blue-600 dark:bg-blue-500 text-white rounded-lg hover:bg-blue-700 dark:hover:bg-blue-600 active:bg-blue-800 dark:active:bg-blue-700 transition-all duration-200 shadow-sm hover:shadow-md active:scale-95 touch-manipulation flex items-center justify-center"
                 download
                 title="Download PDF"
+                aria-label="Download PDF"
               >
-                <Icon name="tabler:download" class="w-4 h-4" />
+                <Icon name="tabler:download" class="w-5 h-5" />
               </a>
             </div>
           </div>
           <h1 class="text-base font-semibold text-gray-900 dark:text-white truncate">
-            {fileName}
+            {title}
           </h1>
         </div>
         
+        <!-- Tablet Layout -->
+        <div class="hidden lg:block xl:hidden">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-4">
+              <a href="/publications" class="flex items-center gap-2 text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors">
+                <Icon name="tabler:chevron-left" class="w-5 h-5" />
+                <span class="font-medium">Back to Publications</span>
+              </a>
+            </div>
+            <div class="flex items-center gap-4">
+              <h1 class="text-lg font-semibold text-gray-900 dark:text-white truncate max-w-md">
+                {title}
+              </h1>
+              <div class="flex gap-3">
+                <button 
+                  id="fullscreen-btn-tablet"
+                  class="px-4 py-2.5 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 active:bg-gray-300 dark:active:bg-gray-500 transition-all duration-200 shadow-sm hover:shadow-md active:scale-95 touch-manipulation flex items-center gap-2"
+                  title="Toggle Fullscreen"
+                  aria-label="Toggle Fullscreen"
+                >
+                  <Icon name="tabler:maximize" class="w-4 h-4" id="tablet-icon" />
+                  <span class="text-sm font-medium" id="tablet-text">Fullscreen</span>
+                </button>
+                <a 
+                  href={`https://drive.google.com/uc?export=download&id=${driveId}`}
+                  class="px-4 py-2.5 bg-blue-600 dark:bg-blue-500 text-white rounded-lg hover:bg-blue-700 dark:hover:bg-blue-600 active:bg-blue-800 dark:active:bg-blue-700 transition-all duration-200 shadow-sm hover:shadow-md active:scale-95 touch-manipulation flex items-center gap-2"
+                  download
+                  aria-label="Download PDF"
+                >
+                  <Icon name="tabler:download" class="w-4 h-4" />
+                  <span class="text-sm font-medium">Download</span>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+        
         <!-- Desktop Layout -->
-        <div class="hidden sm:flex items-center justify-between">
+        <div class="hidden xl:flex items-center justify-between">
           <div class="flex items-center gap-4">
             <a href="/publications" class="flex items-center gap-2 text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors">
               <Icon name="tabler:chevron-left" class="w-5 h-5" />
@@ -65,23 +123,26 @@ const metadata = {
           </div>
           <div class="flex items-center gap-4">
             <h1 class="text-lg font-semibold text-gray-900 dark:text-white truncate max-w-md">
-              {fileName}
+              {title}
             </h1>
-            <div class="flex gap-2">
+            <div class="flex gap-3">
               <button 
                 id="fullscreen-btn"
-                class="px-3 py-2 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors flex items-center gap-2"
+                class="px-5 py-2.5 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 active:bg-gray-300 dark:active:bg-gray-500 transition-all duration-200 shadow-sm hover:shadow-md active:scale-95 touch-manipulation flex items-center gap-2"
                 title="Toggle Fullscreen"
+                aria-label="Toggle Fullscreen"
               >
-                <Icon name="tabler:maximize" class="w-4 h-4" />
+                <Icon name="tabler:maximize" class="w-4 h-4" id="desktop-icon" />
+                <span class="font-medium" id="desktop-text">Fullscreen</span>
               </button>
               <a 
-                href={`/documents/publications/${fileName}`}
-                class="px-4 py-2 bg-blue-600 dark:bg-blue-500 text-white rounded-lg hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors flex items-center gap-2"
+                href={`https://drive.google.com/uc?export=download&id=${driveId}`}
+                class="px-5 py-2.5 bg-blue-600 dark:bg-blue-500 text-white rounded-lg hover:bg-blue-700 dark:hover:bg-blue-600 active:bg-blue-800 dark:active:bg-blue-700 transition-all duration-200 shadow-sm hover:shadow-md active:scale-95 touch-manipulation flex items-center gap-2"
                 download
+                aria-label="Download PDF"
               >
                 <Icon name="tabler:download" class="w-4 h-4" />
-                Download
+                <span class="font-medium">Download</span>
               </a>
             </div>
           </div>
@@ -92,507 +153,282 @@ const metadata = {
     <!-- PDF Viewer -->
     <main class="container mx-auto px-4 py-6">
       <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden">
-        <!-- PDF Controls -->
-        <!-- <div class="bg-gray-50 dark:bg-gray-700 px-4 py-3 border-b border-gray-200 dark:border-gray-600">
-          <div class="flex items-center justify-between">
-            <div class="flex items-center gap-4">
-              <button 
-                id="prev-page"
-                class="px-3 py-2 bg-white dark:bg-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-500 transition-colors flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
-                disabled
-              >
-                <Icon name="tabler:chevron-left" class="w-4 h-4" />
-                Previous
-              </button>
-              <span id="page-info" class="text-sm text-gray-600 dark:text-gray-400">
-                Page <span id="current-page">1</span> of <span id="total-pages">-</span>
-              </span>
-              <button 
-                id="next-page"
-                class="px-3 py-2 bg-white dark:bg-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-500 transition-colors flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
-                disabled
-              >
-                Next
-                <Icon name="tabler:chevron-right" class="w-4 h-4" />
-              </button>
-            </div>
-            <div class="flex items-center gap-2">
-              <button 
-                id="zoom-out"
-                class="px-3 py-2 bg-white dark:bg-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-500 transition-colors"
-                title="Zoom Out"
-              >
-                <Icon name="tabler:minus" class="w-4 h-4" />
-              </button>
-              <span id="zoom-level" class="text-sm text-gray-600 dark:text-gray-400 px-2">100%</span>
-              <button 
-                id="zoom-in"
-                class="px-3 py-2 bg-white dark:bg-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-500 transition-colors"
-                title="Zoom In"
-              >
-                <Icon name="tabler:plus" class="w-4 h-4" />
-              </button>
+        {fileName && driveId ? (
+          <div class="w-full h-[calc(100vh-200px)] sm:h-[calc(100vh-280px)] min-h-[500px] sm:min-h-[600px] relative">
+            <!-- Google Drive Embedded Viewer -->
+            <iframe
+              id="pdf-viewer"
+              src={`https://drive.google.com/file/d/${driveId}/preview`}
+              class="w-full h-full border-0"
+              title={`Viewing ${title}`}
+              allowfullscreen
+            ></iframe>
+            
+            <!-- Loading indicator -->
+            <div id="loading-indicator" class="absolute inset-0 bg-white dark:bg-gray-800 flex items-center justify-center">
+              <div class="text-center">
+                <div class="w-16 h-16 border-4 border-blue-200 dark:border-gray-600 rounded-full animate-spin mx-auto mb-4">
+                  <div class="absolute top-0 left-0 w-16 h-16 border-4 border-transparent border-t-blue-600 dark:border-t-blue-400 rounded-full animate-spin"></div>
+                </div>
+                <p class="text-gray-600 dark:text-gray-300">Loading PDF viewer...</p>
+              </div>
             </div>
           </div>
-        </div> -->
-
-        <div id="pdf-viewer" class="w-full h-[calc(100vh-200px)] sm:h-[calc(100vh-280px)] min-h-[500px] sm:min-h-[600px] relative">
-          {fileName ? (
-            <div class="relative w-full h-full">
-              <!-- Progressive PDF Viewer Container -->
-              <div id="pdf-container" class="w-full h-full overflow-auto bg-gray-100 dark:bg-gray-800">
-                <!-- PDF pages will be rendered here progressively -->
-                <div id="pdf-pages" class="space-y-4 p-4">
-                  <!-- Loading indicator for first page -->
-                  <div class="flex items-center justify-center py-20">
-                    <div class="text-center">
-                      <div class="w-16 h-16 border-4 border-blue-200 dark:border-gray-600 rounded-full animate-spin mx-auto mb-4">
-                        <div class="absolute top-0 left-0 w-16 h-16 border-4 border-transparent border-t-blue-600 dark:border-t-blue-400 rounded-full animate-spin"></div>
-                      </div>
-                      <p class="text-gray-600 dark:text-gray-300">Loading first page...</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              
-              <!-- Loading overlay for initial setup -->
-              <div id="loading-overlay" class="absolute inset-0 bg-white dark:bg-gray-800 bg-opacity-95 flex items-center justify-center backdrop-blur-sm transition-opacity duration-300">
-                <div class="text-center max-w-md mx-auto p-8">
-                  <!-- Modern loading spinner -->
-                  <div class="relative mb-6">
-                    <div class="w-16 h-16 border-4 border-blue-200 dark:border-gray-600 rounded-full animate-spin mx-auto">
-                      <div class="absolute top-0 left-0 w-16 h-16 border-4 border-transparent border-t-blue-600 dark:border-t-blue-400 rounded-full animate-spin"></div>
-                    </div>
-                    <div class="absolute inset-0 flex items-center justify-center">
-                      <Icon name="tabler:file-text" class="w-6 h-6 text-blue-600 dark:text-blue-400" />
-                    </div>
-                  </div>
-                  
-                  <!-- Loading text with animation -->
-                  <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2 animate-pulse">
-                    Setting Up PDF Viewer
-                  </h3>
-                  <p class="text-gray-600 dark:text-gray-300 mb-4">
-                    Preparing {fileName} for progressive loading...
-                  </p>
-                  <div class="text-xs text-gray-500 dark:text-gray-400 mb-4">
-                    <span id="file-info">Loading file information...</span>
-                  </div>
-                  
-                  <!-- Progress bar -->
-                  <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2 mb-4">
-                    <div id="progress-bar" class="bg-gradient-to-r from-blue-500 to-blue-600 h-2 rounded-full transition-all duration-300 ease-out" style="width: 0%"></div>
-                  </div>
-                  
-                  <!-- Loading steps -->
-                  <div class="space-y-2 text-sm text-gray-500 dark:text-gray-400">
-                    <div id="step-1" class="flex items-center gap-2">
-                      <div class="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
-                      <span>Initializing viewer...</span>
-                    </div>
-                    <div id="step-2" class="flex items-center gap-2 opacity-50">
-                      <div class="w-2 h-2 bg-gray-300 dark:bg-gray-600 rounded-full"></div>
-                      <span>Loading PDF content...</span>
-                    </div>
-                    <div id="step-3" class="flex items-center gap-2 opacity-50">
-                      <div class="w-2 h-2 bg-gray-300 dark:bg-gray-600 rounded-full"></div>
-                      <span>Rendering pages...</span>
-                    </div>
-                  </div>
-                  
-                  <!-- Progressive loading note -->
-                  <div class="mt-4 p-3 bg-green-50 dark:bg-green-900/20 rounded-lg">
-                    <p class="text-xs text-green-700 dark:text-green-300">
-                      <Icon name="tabler:info-circle" class="w-3 h-3 inline mr-1" />
-                      Pages will load progressively - you can start scrolling immediately!
-                    </p>
-                  </div>
-                </div>
-              </div>
-              
-              <!-- Error overlay with better fallback options -->
-              <div id="error-overlay" class="hidden absolute inset-0 bg-white dark:bg-gray-800 bg-opacity-90 flex items-center justify-center">
-                <div class="text-center max-w-lg mx-auto p-8">
-                  <Icon name="tabler:alert-circle" class="w-16 h-16 text-red-500 mx-auto mb-4" />
-                  <h2 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">PDF Loading Failed</h2>
-                  <p class="text-gray-600 dark:text-gray-300 mb-4">
-                    The PDF file could not be loaded in the browser. This is common with large files on production servers.
-                  </p>
-                  
-                  <!-- Alternative viewing options -->
-                  <div class="space-y-3 mb-6">
-                    <div class="p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
-                      <h3 class="font-medium text-gray-900 dark:text-white mb-2">Try these alternatives:</h3>
-                      <ul class="text-sm text-gray-600 dark:text-gray-300 space-y-1">
-                        <li>• Download and view locally</li>
-                        <li>• Open in a new tab</li>
-                        <li>• Use a different browser</li>
-                        <li>• Check your internet connection</li>
-                      </ul>
-                    </div>
-                  </div>
-                  
-                  <div class="flex flex-col sm:flex-row gap-3 justify-center">
-                    <a 
-                      href={`/documents/publications/${fileName}`}
-                      target="_blank"
-                      class="px-6 py-3 bg-blue-600 dark:bg-blue-500 text-white rounded-lg hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors inline-flex items-center gap-2"
-                    >
-                      <Icon name="tabler:external-link" class="w-4 h-4" />
-                      Open in New Tab
-                    </a>
-                    <a 
-                      href={`/documents/publications/${fileName}`}
-                      class="px-6 py-3 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors inline-flex items-center gap-2"
-                      download
-                    >
-                      <Icon name="tabler:download" class="w-4 h-4" />
-                      Download PDF
-                    </a>
-                    <button 
-                      id="retry-btn"
-                      class="px-6 py-3 bg-gray-600 dark:bg-gray-500 text-white rounded-lg hover:bg-gray-700 dark:hover:bg-gray-600 transition-colors inline-flex items-center gap-2"
-                    >
-                      <Icon name="tabler:refresh" class="w-4 h-4" />
-                      Retry
-                    </button>
-                  </div>
-                </div>
-              </div>
+        ) : (
+          <div class="flex items-center justify-center h-[400px]">
+            <div class="text-center">
+              <Icon name="tabler:file-text" class="w-16 h-16 text-gray-400 mx-auto mb-4" />
+              <h2 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">PDF Not Found</h2>
+              <p class="text-gray-600 dark:text-gray-300 mb-4">The requested PDF file could not be found</p>
+              <a href="/publications" class="px-6 py-3 bg-blue-600 dark:bg-blue-500 text-white rounded-lg hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors">
+                Go to Publications
+              </a>
             </div>
-          ) : (
-            <div class="flex items-center justify-center h-full">
-              <div class="text-center">
-                <Icon name="tabler:file-text" class="w-16 h-16 text-gray-400 mx-auto mb-4" />
-                <h2 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">No PDF Selected</h2>
-                <p class="text-gray-600 dark:text-gray-300 mb-4">Please select a PDF file to view</p>
-                <a href="/publications" class="px-6 py-3 bg-blue-600 dark:bg-blue-500 text-white rounded-lg hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors">
-                  Go to Publications
-                </a>
-              </div>
-            </div>
-          )}
-        </div>
+          </div>
+        )}
       </div>
     </main>
   </div>
 </PageLayout>
 
 <script>
-  // PDF.js will be loaded from CDN for progressive loading
-  
   if (typeof window !== 'undefined') {
-    let currentLoadingOverlay: HTMLElement | null = null;
-    let currentProgressBar: HTMLElement | null = null;
-    let currentStep2: HTMLElement | null = null;
-    let currentStep3: HTMLElement | null = null;
-    let currentFileInfo: HTMLElement | null = null;
-    let currentProgressInterval: ReturnType<typeof setInterval> | null = null;
-    let currentFallbackTimeout: ReturnType<typeof setTimeout> | null = null;
-    let currentTimeInterval: ReturnType<typeof setInterval> | null = null;
+    let loadCheckInterval: ReturnType<typeof setInterval>;
+    let observer: IntersectionObserver;
     
-    // Load PDF.js from CDN for progressive loading
-    const loadPDFJS = async () => {
-      if (typeof window !== 'undefined' && !(window as any).pdfjsLib) {
-        const script = document.createElement('script');
-        script.src = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js';
-        script.onload = () => {
-          if ((window as any).pdfjsLib) {
-            (window as any).pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
-            console.log('PDF.js loaded successfully');
+    // Function to initialize the PDF viewer
+    const initializePDFViewer = () => {
+      const fullscreenBtn = document.getElementById('fullscreen-btn');
+      const fullscreenBtnMobile = document.getElementById('fullscreen-btn-mobile');
+      const fullscreenBtnTablet = document.getElementById('fullscreen-btn-tablet');
+      const pdfViewer = document.getElementById('pdf-viewer') as HTMLIFrameElement;
+      const loadingIndicator = document.getElementById('loading-indicator');
+      
+      if (!pdfViewer || !loadingIndicator) return;
+      
+      // Clear any existing intervals
+      if (loadCheckInterval) {
+        clearInterval(loadCheckInterval);
+      }
+      
+      // Reset loading indicator
+      loadingIndicator.style.display = 'flex';
+      
+      // Get the current driveId from the iframe src to detect changes
+      const currentSrc = pdfViewer.src;
+      const currentDriveId = currentSrc.match(/\/d\/([^/]+)\/preview/)?.[1];
+      
+      // If the driveId has changed, reload the iframe
+      if (currentDriveId && currentDriveId !== (window as any).currentDriveId) {
+        console.log('DriveId changed, reloading iframe');
+        // Force reload the iframe by updating its src
+        const newSrc = pdfViewer.src;
+        pdfViewer.src = '';
+        setTimeout(() => {
+          pdfViewer.src = newSrc;
+        }, 100);
+        // Reset the current driveId
+        (window as any).currentDriveId = currentDriveId;
+      } else if (!(window as any).currentDriveId) {
+        // First time loading, store the driveId
+        (window as any).currentDriveId = currentDriveId;
+      }
+      
+      // Function to toggle fullscreen
+      const toggleFullscreen = () => {
+        if (!pdfViewer) return;
+        
+        if (!document.fullscreenElement) {
+          if (pdfViewer.requestFullscreen) {
+            pdfViewer.requestFullscreen();
+          } else if ((pdfViewer as any).webkitRequestFullscreen) {
+            (pdfViewer as any).webkitRequestFullscreen();
           }
-        };
-        document.head.appendChild(script);
-      }
-    };
-    
-    // Load PDF.js when page loads
-    loadPDFJS();
-    
-    // Function to initialize progressive PDF viewer
-    const initializeProgressivePDFViewer = () => {
-      // Clean up any existing intervals/timeouts
-      if (currentProgressInterval) clearInterval(currentProgressInterval);
-      if (currentFallbackTimeout) clearTimeout(currentFallbackTimeout);
-      if (currentTimeInterval) clearInterval(currentTimeInterval);
-      
-      // Get current elements
-      const loadingOverlay = document.getElementById('loading-overlay');
-      const progressBar = document.getElementById('progress-bar');
-      const step2 = document.getElementById('step-2');
-      const step3 = document.getElementById('step-3');
-      const fileInfo = document.getElementById('file-info');
-      const pdfPages = document.getElementById('pdf-pages');
-      
-      if (!loadingOverlay || !pdfPages) return;
-      
-      // Store references
-      currentLoadingOverlay = loadingOverlay;
-      currentProgressBar = progressBar;
-      currentStep2 = step2;
-      currentStep3 = step3;
-      currentFileInfo = fileInfo;
-      
-      // Get filename from URL path
-      const pathSegments = window.location.pathname.split('/');
-      const currentFileName = decodeURIComponent(pathSegments[pathSegments.length - 1]);
-      
-      if (!currentFileName) return;
-      
-      // Function to hide loading overlay
-      const hideLoadingOverlay = () => {
-        if (currentLoadingOverlay) {
-          currentLoadingOverlay.style.opacity = '0';
-          setTimeout(() => {
-            if (currentLoadingOverlay) {
-              currentLoadingOverlay.style.display = 'none';
-            }
-          }, 300);
-        }
-      };
-      
-      // Simulate file size and load time
-      const fileSizes = {
-        'MEDICAL MINDSCAPE 1.pdf': '2.4 MB',
-        'NUMSA Journal (3)_compressed_250420_022657.pdf': '1.8 MB',
-        'NUMSA MAGAZINE 2 (1)_compressed_250420_022813.pdf': '3.1 MB'
-      };
-      
-      const fileSize = fileSizes[currentFileName] || 'Unknown size';
-      const estimatedTime = Math.floor(Math.random() * 3) + 2; // 2-4 seconds
-      
-      // Reset loading overlay
-      if (currentLoadingOverlay) {
-        currentLoadingOverlay.style.opacity = '1';
-        currentLoadingOverlay.style.display = 'flex';
-      }
-      
-      // Update file info
-      if (currentFileInfo) {
-        currentFileInfo.textContent = `${fileSize} • Estimated load time: ${estimatedTime}s`;
-        
-        // Update loading time in real-time
-        let elapsedTime = 0;
-        currentTimeInterval = setInterval(() => {
-          elapsedTime++;
-          if (currentFileInfo) {
-            currentFileInfo.textContent = `${fileSize} • Loading... ${elapsedTime}s`;
-          }
-        }, 1000);
-      }
-      
-      // Reset progress bar
-      if (currentProgressBar) {
-        currentProgressBar.style.width = '0%';
-      }
-      
-      // Reset steps
-      if (currentStep2) {
-        currentStep2.classList.add('opacity-50');
-        currentStep2.querySelector('div')?.classList.remove('bg-blue-500', 'animate-pulse');
-      }
-      if (currentStep3) {
-        currentStep3.classList.add('opacity-50');
-        currentStep3.querySelector('div')?.classList.remove('bg-blue-500', 'animate-pulse', 'bg-green-500');
-      }
-      
-      // Simple progress for initial setup
-      let progress = 0;
-      currentProgressInterval = setInterval(() => {
-        progress += 20;
-        if (progress > 90) progress = 90;
-        
-        if (currentProgressBar) {
-          currentProgressBar.style.width = `${progress}%`;
-        }
-        
-        // Update steps
-        if (progress > 30 && currentStep2) {
-          currentStep2.classList.remove('opacity-50');
-          currentStep2.querySelector('div')?.classList.add('bg-blue-500', 'animate-pulse');
-        }
-        if (progress > 60 && currentStep3) {
-          currentStep3.classList.remove('opacity-50');
-          currentStep3.querySelector('div')?.classList.add('bg-blue-500', 'animate-pulse');
-        }
-      }, 200);
-      
-      // Hide loading overlay after 1.5 seconds to show progressive loading
-      currentFallbackTimeout = setTimeout(() => {
-        console.log('Setup complete, showing progressive loading');
-        if (currentProgressInterval) clearInterval(currentProgressInterval);
-        hideLoadingOverlay();
-        // Start progressive PDF loading
-        loadPDFProgressively(currentFileName, pdfPages);
-      }, 1500);
-    };
-    
-    // Function to load PDF progressively
-    const loadPDFProgressively = async (filename: string, container: HTMLElement) => {
-      try {
-        const pdfUrl = `/documents/publications/${filename}`;
-        console.log('Starting progressive PDF loading:', pdfUrl);
-        
-        // Load the PDF document using global PDF.js
-        let pdf: any;
-        if (typeof window !== 'undefined' && (window as any).pdfjsLib) {
-          const pdfjsLib = (window as any).pdfjsLib;
-          const loadingTask = pdfjsLib.getDocument(pdfUrl);
-          pdf = await loadingTask.promise;
         } else {
-          throw new Error('PDF.js library not loaded');
-        }
-        
-        console.log('PDF loaded, total pages:', pdf.numPages);
-        
-        // Clear loading indicator
-        container.innerHTML = '';
-        
-        // Load pages progressively
-        for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
-          try {
-            // Load page
-            const page = await pdf.getPage(pageNum);
-            
-            // Create canvas for the page
-            const canvas = document.createElement('canvas');
-            const context = canvas.getContext('2d');
-            
-            if (!context) continue;
-            
-            // Set canvas size (scale for better quality)
-            const viewport = page.getViewport({ scale: 1.5 });
-            canvas.width = viewport.width;
-            canvas.height = viewport.height;
-            
-            // Render page to canvas
-            const renderContext = {
-              canvasContext: context,
-              viewport: viewport
-            };
-            
-            await page.render(renderContext).promise;
-            
-            // Create page container
-            const pageContainer = document.createElement('div');
-            pageContainer.className = 'bg-white dark:bg-gray-700 rounded-lg shadow-lg overflow-hidden';
-            pageContainer.innerHTML = `
-              <div class="p-4 border-b border-gray-200 dark:border-gray-600">
-                <h3 class="text-sm font-medium text-gray-700 dark:text-gray-300">Page ${pageNum}</h3>
-              </div>
-              <div class="flex justify-center p-4">
-                <canvas class="max-w-full h-auto"></canvas>
-              </div>
-            `;
-            
-            // Replace the temporary canvas with the rendered one
-            const tempCanvas = pageContainer.querySelector('canvas');
-            if (tempCanvas) {
-              tempCanvas.width = canvas.width;
-              tempCanvas.height = canvas.height;
-              const tempContext = tempCanvas.getContext('2d');
-              if (tempContext) {
-                tempContext.drawImage(canvas, 0, 0);
-              }
-            }
-            
-            // Add page to container
-            container.appendChild(pageContainer);
-            
-            console.log(`Page ${pageNum} rendered`);
-            
-            // Small delay to show progressive loading
-            await new Promise(resolve => setTimeout(resolve, 100));
-            
-          } catch (error) {
-            console.error(`Error rendering page ${pageNum}:`, error);
-            // Add error indicator for failed page
-            const errorContainer = document.createElement('div');
-            errorContainer.className = 'bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4';
-            errorContainer.innerHTML = `
-              <div class="flex items-center gap-2 text-red-700 dark:text-red-300">
-                <Icon name="tabler:alert-circle" class="w-4 h-4" />
-                <span>Failed to load page ${pageNum}</span>
-              </div>
-            `;
-            container.appendChild(errorContainer);
+          if (document.exitFullscreen) {
+            document.exitFullscreen();
+          } else if ((document as any).webkitExitFullscreen) {
+            (document as any).webkitExitFullscreen();
           }
         }
-        
-        console.log('Progressive PDF loading complete');
-        
-      } catch (error) {
-        console.error('Error loading PDF:', error);
-        // Show error message
-        container.innerHTML = `
-          <div class="text-center py-20">
-            <Icon name="tabler:alert-circle" class="w-16 h-16 text-red-500 mx-auto mb-4" />
-            <h2 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">PDF Loading Failed</h2>
-            <p class="text-gray-600 dark:text-gray-300 mb-4">Unable to load the PDF file.</p>
-            <a href="/documents/publications/${filename}" target="_blank" class="px-6 py-3 bg-blue-600 dark:bg-blue-500 text-white rounded-lg hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors">
-              Open in New Tab
-            </a>
-          </div>
-        `;
+      };
+      
+      // Add event listeners for fullscreen buttons
+      if (fullscreenBtn) {
+        fullscreenBtn.removeEventListener('click', toggleFullscreen);
+        fullscreenBtn.addEventListener('click', toggleFullscreen);
       }
-    };
-    
-    // Initialize on page load
-    initializeProgressivePDFViewer();
-    
-    // Handle Astro navigation events for client-side routing
-    document.addEventListener('astro:page-load', () => {
-      console.log('Astro page load event detected');
-      // Re-initialize PDF viewer on navigation
-      setTimeout(() => {
-        initializeProgressivePDFViewer();
-      }, 100); // Slight delay to ensure DOM is ready
-    });
-    
-    // Handle browser navigation events
-    window.addEventListener('popstate', () => {
-      console.log('Browser navigation detected');
-      // Re-initialize PDF viewer on navigation
-      setTimeout(() => {
-        initializeProgressivePDFViewer();
-      }, 100); // Slight delay to ensure DOM is ready
-    });
-    
-    // Handle before navigation to prevent PDF flash
-    document.addEventListener('astro:before-preparation', () => {
-      console.log('Astro before preparation - cleaning up');
-      // Immediately hide loading overlay to prevent flash
-      if (currentLoadingOverlay) {
-        currentLoadingOverlay.style.display = 'none';
+      if (fullscreenBtnMobile) {
+        fullscreenBtnMobile.removeEventListener('click', toggleFullscreen);
+        fullscreenBtnMobile.addEventListener('click', toggleFullscreen);
       }
-    });
-    
-    // Retry button logic
-    const retryBtn = document.getElementById('retry-btn');
-    if (retryBtn) {
-      retryBtn.addEventListener('click', () => {
-        console.log('Retry button clicked');
-        // Show loading overlay
-        if (currentLoadingOverlay) {
-          currentLoadingOverlay.style.display = 'flex';
-          currentLoadingOverlay.style.opacity = '1';
+      if (fullscreenBtnTablet) {
+        fullscreenBtnTablet.removeEventListener('click', toggleFullscreen);
+        fullscreenBtnTablet.addEventListener('click', toggleFullscreen);
+      }
+      
+      // Hide loading indicator when iframe loads
+      const hideLoadingIndicator = () => {
+        if (loadingIndicator && loadingIndicator.style.display !== 'none') {
+          console.log('Hiding loading indicator');
+          loadingIndicator.style.display = 'none';
         }
-        // Re-initialize the viewer
-        initializeProgressivePDFViewer();
+        if (loadCheckInterval) {
+          clearInterval(loadCheckInterval);
+        }
+      };
+      
+      // Method 1: Listen for iframe load event
+      pdfViewer.addEventListener('load', () => {
+        console.log('Iframe load event fired');
+        hideLoadingIndicator();
       });
-    }
-    
-    // Cleanup function for navigation
-    const cleanup = () => {
-      if (currentLoadingOverlay) {
-        currentLoadingOverlay.style.display = 'none';
+      
+      // Method 2: Check iframe content periodically
+      let loadAttempts = 0;
+      const maxAttempts = 20; // 10 seconds total
+      
+      loadCheckInterval = setInterval(() => {
+        loadAttempts++;
+        
+        try {
+          // Check if iframe has content
+          const iframeDoc = (pdfViewer as HTMLIFrameElement).contentDocument;
+          const iframeBody = iframeDoc?.body;
+          
+          if (iframeBody && iframeBody.children.length > 0) {
+            console.log('Iframe content detected, hiding loading indicator');
+            hideLoadingIndicator();
+            return;
+          }
+          
+          // Check if iframe src has changed (Google Drive sometimes redirects)
+          const currentSrc = (pdfViewer as HTMLIFrameElement).src;
+          if (currentSrc && !currentSrc.includes('preview')) {
+            console.log('Iframe src changed, hiding loading indicator');
+            hideLoadingIndicator();
+            return;
+          }
+          
+          // Force hide after max attempts
+          if (loadAttempts >= maxAttempts) {
+            console.log('Max attempts reached, hiding loading indicator');
+            hideLoadingIndicator();
+          }
+        } catch (error) {
+          // Cross-origin error, which is expected with Google Drive
+          // This means the iframe is loading properly
+          if (loadAttempts >= 3) {
+            console.log('Cross-origin access detected, iframe is loading, hiding loading indicator');
+            hideLoadingIndicator();
+          }
+        }
+      }, 500); // Check every 500ms
+      
+      // Method 3: Fallback timeout
+      setTimeout(() => {
+        hideLoadingIndicator();
+      }, 3000); // 3 seconds
+      
+      // Method 4: Hide loading indicator when iframe becomes visible
+      if (observer) {
+        observer.disconnect();
       }
-      if (currentProgressInterval) clearInterval(currentProgressInterval);
-      if (currentFallbackTimeout) clearTimeout(currentFallbackTimeout);
-      if (currentTimeInterval) clearInterval(currentTimeInterval);
+      
+      observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting && entry.intersectionRatio > 0.1) {
+            // Iframe is visible, give it a moment then hide loading indicator
+            setTimeout(() => {
+              hideLoadingIndicator();
+            }, 1000);
+            observer.disconnect();
+          }
+        });
+      });
+      
+      observer.observe(pdfViewer);
+      
+      // Method 5: Aggressive timeout for Google Drive
+      setTimeout(() => {
+        hideLoadingIndicator();
+      }, 1500); // 1.5 seconds - Google Drive should be showing content by then
     };
     
-    // Clean up on page unload
+    // Function to cleanup resources
+    const cleanup = () => {
+      if (loadCheckInterval) {
+        clearInterval(loadCheckInterval);
+      }
+      if (observer) {
+        observer.disconnect();
+      }
+    };
+    
+    // Initialize on first load
+    initializePDFViewer();
+    
+    // Handle Astro page transitions
+    document.addEventListener('astro:page-load', () => {
+      console.log('Astro page loaded, re-initializing PDF viewer');
+      // Small delay to ensure DOM is ready
+      setTimeout(() => {
+        initializePDFViewer();
+      }, 100);
+    });
+    
+    // Handle browser back/forward navigation
+    window.addEventListener('popstate', () => {
+      console.log('Popstate event, re-initializing PDF viewer');
+      // Small delay to ensure DOM is ready
+      setTimeout(() => {
+        initializePDFViewer();
+      }, 100);
+    });
+    
+    // Handle fullscreen change events
+    document.addEventListener('fullscreenchange', () => {
+      const isFullscreen = !!document.fullscreenElement;
+      
+      // Update desktop button
+      const fullscreenBtn = document.getElementById('fullscreen-btn');
+      if (fullscreenBtn) {
+        const desktopIcon = fullscreenBtn.querySelector('#desktop-icon');
+        const desktopText = fullscreenBtn.querySelector('#desktop-text');
+        
+        if (desktopIcon) {
+          desktopIcon.setAttribute('name', isFullscreen ? 'tabler:minimize' : 'tabler:maximize');
+        }
+        if (desktopText) {
+          desktopText.textContent = isFullscreen ? 'Exit Fullscreen' : 'Fullscreen';
+        }
+      }
+      
+      // Update mobile button
+      const fullscreenBtnMobile = document.getElementById('fullscreen-btn-mobile');
+      if (fullscreenBtnMobile) {
+        const mobileIcon = fullscreenBtnMobile.querySelector('#mobile-icon');
+        if (mobileIcon) {
+          mobileIcon.setAttribute('name', isFullscreen ? 'tabler:minimize' : 'tabler:maximize');
+        }
+      }
+      
+      // Update tablet button
+      const fullscreenBtnTablet = document.getElementById('fullscreen-btn-tablet');
+      if (fullscreenBtnTablet) {
+        const tabletIcon = fullscreenBtnTablet.querySelector('#tablet-icon');
+        const tabletText = fullscreenBtnTablet.querySelector('#tablet-text');
+        
+        if (tabletIcon) {
+          tabletIcon.setAttribute('name', isFullscreen ? 'tabler:minimize' : 'tabler:maximize');
+        }
+        if (tabletText) {
+          tabletText.textContent = isFullscreen ? 'Exit Fullscreen' : 'Fullscreen';
+        }
+      }
+    });
+    
+    // Cleanup on page unload
     window.addEventListener('beforeunload', cleanup);
   }
 </script>
