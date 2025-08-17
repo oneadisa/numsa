@@ -78,7 +78,7 @@ const metadata = {
         
         <!-- Tablet Layout -->
         <div class="hidden lg:block xl:hidden">
-          <div class="flex items-center justify-between">
+        <div class="flex items-center justify-between">
             <div class="flex items-center gap-4">
               <a href="/publications" class="flex items-center gap-2 text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors">
                 <Icon name="tabler:chevron-left" class="w-5 h-5" />
@@ -156,36 +156,36 @@ const metadata = {
         {fileName && driveId ? (
           <div class="w-full h-[calc(100vh-200px)] sm:h-[calc(100vh-280px)] min-h-[500px] sm:min-h-[600px] relative">
             <!-- Google Drive Embedded Viewer -->
-            <iframe
+              <iframe 
               id="pdf-viewer"
               src={`https://drive.google.com/file/d/${driveId}/preview`}
-              class="w-full h-full border-0"
+                class="w-full h-full border-0"
               title={`Viewing ${title}`}
-              allowfullscreen
+                allowfullscreen
             ></iframe>
             
             <!-- Loading indicator -->
             <div id="loading-indicator" class="absolute inset-0 bg-white dark:bg-gray-800 flex items-center justify-center">
-              <div class="text-center">
+                <div class="text-center">
                 <div class="w-16 h-16 border-4 border-blue-200 dark:border-gray-600 rounded-full animate-spin mx-auto mb-4">
                   <div class="absolute top-0 left-0 w-16 h-16 border-4 border-transparent border-t-blue-600 dark:border-t-blue-400 rounded-full animate-spin"></div>
                 </div>
                 <p class="text-gray-600 dark:text-gray-300">Loading PDF viewer...</p>
               </div>
+              </div>
             </div>
-          </div>
-        ) : (
+          ) : (
           <div class="flex items-center justify-center h-[400px]">
-            <div class="text-center">
-              <Icon name="tabler:file-text" class="w-16 h-16 text-gray-400 mx-auto mb-4" />
+              <div class="text-center">
+                <Icon name="tabler:file-text" class="w-16 h-16 text-gray-400 mx-auto mb-4" />
               <h2 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">PDF Not Found</h2>
               <p class="text-gray-600 dark:text-gray-300 mb-4">The requested PDF file could not be found</p>
-              <a href="/publications" class="px-6 py-3 bg-blue-600 dark:bg-blue-500 text-white rounded-lg hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors">
-                Go to Publications
-              </a>
+                <a href="/publications" class="px-6 py-3 bg-blue-600 dark:bg-blue-500 text-white rounded-lg hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors">
+                  Go to Publications
+                </a>
+              </div>
             </div>
-          </div>
-        )}
+          )}
       </div>
     </main>
   </div>

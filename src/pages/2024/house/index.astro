@@ -1,29 +1,17 @@
 ---
 
 import Layout from '../../../layouts/PageLayout.astro';
-import OfficesList from '../../../components/numsa/list.astro';
+import ContentList from '../../../components/numsa/ContentList.astro';
 import Headline from '../../../components/blog/Headline.astro';
 import { getCollection } from 'astro:content';
 
 import { blogListRobots } from '../../../utils/blog';
-import {formatNumsaPosts} from '../../../utils/numsa'
+import { formatContent } from '../../../utils/numsa';
 
 export const prerender = true;
 
 const posts = await getCollection('senators');
-
-// console.log(`These are the original posts: ${posts}`)
-
-const formattedPosts = formatNumsaPosts(posts);
-// console.log(formattedPosts)
-
-// console.log(`These are the serially arranged posts: ${JSON.stringify(formattedPosts)}`)
-
-
-
-
-// const allCategories = await findCategories();
-// const allTags = await findTags();
+const formattedPosts = formatContent(posts, 'senators');
 
 const metadata = {
   title: `NUMSA HOUSE OF REPS`,
@@ -44,6 +32,6 @@ const metadata = {
     >
       The HOUSE MEMBERS
     </Headline>
-    <OfficesList posts={formattedPosts} excos={'house'} />
+    <ContentList items={formattedPosts} contentType="senators" />
   </section>
 </Layout>

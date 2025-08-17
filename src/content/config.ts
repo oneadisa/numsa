@@ -1,50 +1,35 @@
 import { z, defineCollection } from 'astro:content';
 
-const metadataDefinition = () =>
-  z
-    .object({
-      title: z.string().optional(),
-      ignoreTitleTemplate: z.boolean().optional(),
+// Base schema for all content types
+const baseContentSchema = z.object({
+  title: z.string().optional(),
+  excerpt: z.string().optional(),
+  image: z.string().optional(),
+  date: z.string().optional(),
+  author: z.string().optional(),
+  serial: z.number().optional(),
+  draft: z.boolean().optional(),
+});
 
-      canonical: z.string().url().optional(),
+// Extended schema for executive council members
+const excosSchema = baseContentSchema.extend({
+  name: z.string().max(50, {
+    message: "You must keep the name to 50 characters or less",
+  }),
+  position: z.string(),
+  level: z.number().optional(),
+  bio: z.string().optional(),
+});
 
-      robots: z
-        .object({
-          index: z.boolean().optional(),
-          follow: z.boolean().optional(),
-        })
-        .optional(),
+// Extended schema for campaigns, outreaches, and zoom conferences
+const contentSchema = baseContentSchema.extend({
+  layout: z.string().optional(),
+  mainImage: z.string().optional(),
+  otherImages: z.array(z.string()).optional(),
+  caption: z.string().optional(),
+});
 
-      description: z.string().optional(),
-
-      openGraph: z
-        .object({
-          url: z.string().optional(),
-          siteName: z.string().optional(),
-          images: z
-            .array(
-              z.object({
-                url: z.string(),
-                width: z.number().optional(),
-                height: z.number().optional(),
-              })
-            )
-            .optional(),
-          locale: z.string().optional(),
-          type: z.string().optional(),
-        })
-        .optional(),
-
-      twitter: z
-        .object({
-          handle: z.string().optional(),
-          site: z.string().optional(),
-          cardType: z.string().optional(),
-        })
-        .optional(),
-    })
-    .optional();
-
+// Blog post schema (keeping existing for backward compatibility)
 const postCollection = defineCollection({
   schema: z.object({
     publishDate: z.date().optional(),
@@ -59,120 +44,46 @@ const postCollection = defineCollection({
     tags: z.array(z.string()).optional(),
     author: z.string().optional(),
 
-    metadata: metadataDefinition(),
+    metadata: z.object({
+      title: z.string().optional(),
+      ignoreTitleTemplate: z.boolean().optional(),
+      canonical: z.string().url().optional(),
+      robots: z.object({
+        index: z.boolean().optional(),
+        follow: z.boolean().optional(),
+      }).optional(),
+      description: z.string().optional(),
+      openGraph: z.object({
+        url: z.string().optional(),
+        siteName: z.string().optional(),
+        images: z.array(
+          z.object({
+            url: z.string(),
+            width: z.number().optional(),
+            height: z.number().optional(),
+          })
+        ).optional(),
+        locale: z.string().optional(),
+        type: z.string().optional(),
+      }).optional(),
+      twitter: z.object({
+        handle: z.string().optional(),
+        site: z.string().optional(),
+        cardType: z.string().optional(),
+      }).optional(),
+    }).optional(),
   }),
 });
 
-const excos = defineCollection({
-  type: "data",
-  schema: z.object({
-    name: z.string().max(50, {
-      message: "You must keep the name to 50 characters or less",
-    }),
-    serial: z.number(),
-    position: z.string(),
-    level: z.number().optional(),
-    image: z.string().default('/assets/images/default_pic.jpg'),
-    bio: z.string().optional(),
-    // category: z.enum([
-    //   "Automotive",
-    //   "Home & Garden",
-    //   "Fashion",
-    //   "Electronics",
-    //   "Toys",
-    // ]),
-  }),
-});
-
-const senators = defineCollection({
-  type: "data",
-  schema: z.object({
-    name: z.string().max(50, {
-      message: "You must keep the name to 50 characters or less",
-    }),
-    serial: z.number(),
-    position: z.string().optional(),
-    level: z.number().optional(),
-    image: z.string().default('/assets/images/default_pic.jpg'),
-    bio: z.string().optional(),
-    // category: z.enum([
-    //   "Automotive",
-    //   "Home & Garden",
-    //   "Fashion",
-    //   "Electronics",
-    //   "Toys",
-    // ]),
-  }),
-});
-
-const jc = defineCollection({
-  type: "data",
-  schema: z.object({
-    name: z.string().max(50, {
-      message: "You must keep the name to 50 characters or less",
-    }),
-    serial: z.number(),
-    position: z.string().optional(),
-    level: z.number().optional(),
-    image: z.string().default('/assets/images/default_pic.jpg'),
-    bio: z.string().optional(),
-    // category: z.enum([
-    //   "Automotive",
-    //   "Home & Garden",
-    //   "Fashion",
-    //   "Electronics",
-    //   "Toys",
-    // ]),
-  }),
-});
-
-const campaignCollection = defineCollection({
-  type: "content",
-  schema: z.object({
-    layout: z.string().optional(),
-    date: z.string().optional(),
-    mainImage: z.string().optional(),
-    otherImages: z.array(z.string()).optional(),
-    title: z.string(),
-    serial: z.number().optional(),
-    caption: z.string().optional(),
-  }),
-});
-
-const outreaches = defineCollection({
-  type: "content",
-  schema: z.object({
-    layout: z.string().optional(),
-    date: z.string().optional(),
-    mainImage: z.string().optional(),
-    otherImages: z.array(z.string()).optional(),
-    title: z.string(),
-    serial: z.number().optional(),
-    caption: z.string().optional(),
-  }),
-});
-
-const zoomConferences = defineCollection({
-  type: "content",
-  schema: z.object({
-    layout: z.string().optional(),
-    date: z.string().optional(),
-    mainImage: z.string().optional(),
-    otherImages: z.array(z.string()).optional(),
-    title: z.string(),
-    serial: z.number().optional(),
-    caption: z.string().optional(),
-  }),
-});
-
+// Define collections with unified schemas
 export const collections = {
   post: postCollection,
-  excos,
-  senators,
-  jc,
-  'campaign': campaignCollection,
-  'outreaches': outreaches,
-  'zoom-conferences': zoomConferences
+  excos: defineCollection({ type: "data", schema: excosSchema }),
+  senators: defineCollection({ type: "data", schema: excosSchema }),
+  jc: defineCollection({ type: "data", schema: excosSchema }),
+  campaigns: defineCollection({ type: "content", schema: contentSchema }),
+  outreaches: defineCollection({ type: "content", schema: contentSchema }),
+  'zoom-conferences': defineCollection({ type: "content", schema: contentSchema }),
 };
 
 

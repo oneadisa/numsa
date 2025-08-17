@@ -1,29 +1,16 @@
 ---
 
 import Layout from '../../../layouts/PageLayout.astro';
-import OfficesList from '../../../components/numsa/list.astro';
+import ContentList from '../../../components/numsa/ContentList.astro';
 import Headline from '../../../components/blog/Headline.astro';
 import { getCollection } from 'astro:content';
-
+import { formatContent } from '../../../utils/numsa';
 import { blogListRobots } from '../../../utils/blog';
-import {formatNumsaPosts} from '../../../utils/numsa' 
 
 export const prerender = true;
 
 const posts = await getCollection('excos');
-
-// console.log(`These are the original posts: ${posts}`)
-
-const formattedPosts = formatNumsaPosts(posts);
-// console.log(formattedPosts)
-
-// console.log(`These are the serially arranged posts: ${JSON.stringify(formattedPosts)}`)
-
-
-
-
-// const allCategories = await findCategories();
-// const allTags = await findTags();
+const formattedPosts = formatContent(posts, 'excos');
 
 const metadata = {
   title: `NUMSA EXCOS`,
@@ -44,6 +31,6 @@ const metadata = {
     >
       The EXCOS
     </Headline>
-    <OfficesList posts={formattedPosts} excos={'excos'} />
+    <ContentList items={formattedPosts} contentType={'excos'} />
   </section>
 </Layout>

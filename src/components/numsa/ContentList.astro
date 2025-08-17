@@ -1,0 +1,53 @@
+---
+import ContentItem from './ContentItem.astro';
+import type { ContentItem as ContentItemType } from '../../types/numsa';
+
+export interface Props {
+  items: ContentItemType[];
+  contentType: string;
+  layout?: 'grid' | 'list' | 'cards';
+}
+
+const { items, contentType, layout = 'grid' } = Astro.props;
+
+// Layout-specific classes
+const layoutClasses = {
+  grid: 'grid gap-6 md:gap-8 md:grid-cols-2 lg:grid-cols-3',
+  list: 'space-y-6',
+  cards: 'grid gap-4 md:gap-6 md:grid-cols-2 lg:grid-cols-4'
+};
+---
+
+<ul class={layoutClasses[layout]}>
+  {items.map((item) => (
+    <li class="mb-12 md:mb-20">
+      <ContentItem item={item} contentType={contentType} layout={layout} />
+    </li>
+  ))}
+</ul>
+
+<style>
+  /* Responsive adjustments for different layouts */
+  .grid {
+    @apply gap-4 md:gap-6 lg:gap-8;
+  }
+  
+  .list {
+    @apply space-y-4 md:space-y-6;
+  }
+  
+  .cards {
+    @apply gap-3 md:gap-4 lg:gap-6;
+  }
+  
+  /* Mobile optimizations */
+  @media (max-width: 640px) {
+    .grid, .cards {
+      @apply grid-cols-1;
+    }
+    
+    .list {
+      @apply space-y-4;
+    }
+  }
+</style>

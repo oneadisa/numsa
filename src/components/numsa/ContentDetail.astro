@@ -1,0 +1,241 @@
+---
+import type { ContentItem } from '../../types/numsa';
+import { Icon } from 'astro-icon/components';
+import Image from '../common/Image.astro';
+import { findImage } from '../../utils/images';
+import type { ImageMetadata } from 'astro';
+
+export interface Props {
+  item: ContentItem;
+  contentType: string;
+}
+
+const { item, contentType } = Astro.props;
+
+// Get the appropriate image for the item
+const imageSrc = item.image || item.mainImage;
+const image = imageSrc ? await findImage(imageSrc) as ImageMetadata | undefined : undefined;
+
+// Get appropriate title
+const displayTitle = item.title || item.position || 'Untitled';
+
+// Get appropriate excerpt
+const displayExcerpt = item.excerpt || item.caption || item.bio || '';
+
+// Determine if this is an executive council member
+const isExcos = contentType === 'excos' || contentType === 'senators' || contentType === 'jc';
+---
+
+<section class="py-0.5 sm:py-4 lg:py-5 mx-auto">
+  <article>
+    <header class={image ? '' : ''}>
+      <div class="flex justify-between flex-col sm:flex-row max-w-3xl mx-auto mt-0 mb-2 px-4 sm:px-6 sm:items-center">
+        <div class="meta-info">
+          {item.date && (
+            <span class="meta-item">
+              <Icon name="tabler:clock" class="meta-icon" />
+              <time datetime={item.date}>{item.date}</time>
+            </span>
+          )}
+          
+          {item.author && (
+            <span class="meta-item">
+              <Icon name="tabler:user" class="meta-icon" />
+              <span>{item.author}</span>
+            </span>
+          )}
+          
+          {item.level && isExcos && (
+            <span class="meta-item">
+              <Icon name="tabler:school" class="meta-icon" />
+              <span>{item.level} Level</span>
+            </span>
+          )}
+          
+          {item.serial && (
+            <span class="meta-item">
+              <Icon name="tabler:hash" class="meta-icon" />
+              <span>#{item.serial}</span>
+            </span>
+          )}
+        </div>
+      </div>
+
+      <h1 class="main-title">
+        {displayTitle}
+      </h1>
+
+      {displayExcerpt && (
+        <p class="excerpt">
+          {displayExcerpt}
+        </p>
+      )}
+
+      {image && (
+        <div class="image-container">
+          <Image
+            src={image}
+            class="main-image"
+            widths={[400, 900]}
+            sizes="(max-width: 900px) 350px, 900px"
+            alt={displayTitle}
+            width={350}
+            height={500}
+            loading="eager"
+            decoding="async"
+          />
+        </div>
+      )}
+    </header>
+
+    <div class="content-body">
+      {isExcos && item.position === 'House Members' ? (
+        <div class="house-members">
+          <h2 class="section-title">600 Level</h2>
+          <ul class="member-list">
+            <li>Abraham Pere</li>
+            <li>Ummi Zahra</li>
+            <li>Naja'atu Bawa</li>
+            <li>Maimunah Haruna</li>
+          </ul>
+          
+          <h2 class="section-title">500 Level</h2>
+          <ul class="member-list">
+            <li>Lawal Sakinatu</li>
+            <li>Osaze-Ogedegbe Adaora</li>
+            <li>Hyeladzira Mshelbara</li>
+            <li>Eniola Oladele</li>
+          </ul>
+          
+          <h2 class="section-title">400 Level</h2>
+          <ul class="member-list">
+            <li>Mohammed-Neizifi Yusuf</li>
+            <li>Kolade Suliyat</li>
+            <li>Fareedat Opeifa</li>
+          </ul>
+          
+          <h2 class="section-title">300 Level</h2>
+          <ul class="member-list">
+            <li>Simisola Okunrinboye</li>
+            <li>Fatima Murtala</li>
+            <li>Salama Sanda</li>
+            <li>Idah Mercy Ene</li>
+          </ul>
+          
+          <h2 class="section-title">200 Level</h2>
+          <ul class="member-list">
+            <li>David Ejenavi</li>
+            <li>Musbaudeen Idris Girei</li>
+            <li>Chigbo Oluchi Joy Chisom</li>
+            <li>Matilukuro Omobolaji Theressa</li>
+            <li>Ikenna Ugwu</li>
+          </ul>
+        </div>
+      ) : isExcos && item.position === 'The President' ? (
+        <div class="president-bio">
+          <div class="bio-content" set:html={item.bio || ''} />
+          <div class="bio-link">
+            <a href="/bio/president" class="bio-button">BIO</a>
+          </div>
+        </div>
+      ) : isExcos ? (
+        <div class="bio-content" set:html={item.bio || ''} />
+      ) : (
+        <div class="markdown-content">
+          {/* For campaigns, outreaches, and zoom conferences, render the markdown content */}
+          <slot />
+          
+          {/* Administration line for campaigns, outreaches, and zoom conferences */}
+          <div class="admin-line mt-12">
+            <p class="admin-text">NUMSA 23/24 Emmanuel Oranwusi (President) and Abdul-Azeez Ibrahim (Speaker) led administration.</p>
+          </div>
+        </div>
+      )}
+    </div>
+  </article>
+</section>
+
+<style>
+  .meta-info {
+    @apply flex flex-wrap items-center gap-3 text-sm text-gray-500 dark:text-gray-400;
+  }
+  
+  .meta-item {
+    @apply flex items-center gap-1;
+  }
+  
+  .meta-icon {
+    @apply w-4 h-4 inline-block -mt-0.5 dark:text-gray-400;
+  }
+  
+  .main-title {
+    @apply px-4 text-center sm:px-6 max-w-3xl mx-auto text-4xl md:text-5xl font-bold leading-tight tracking-tight pb-12 font-heading;
+  }
+  
+  .excerpt {
+    @apply max-w-3xl mx-auto mt-4 mb-8 px-4 sm:px-6 text-xl md:text-2xl text-muted dark:text-slate-400 text-justify;
+  }
+  
+  .image-container {
+    @apply max-w-3xl mx-auto px-4 sm:px-6 mb-12;
+  }
+  
+  .main-image {
+    @apply max-w-full mx-auto rounded-md bg-gray-400 dark:bg-slate-700;
+  }
+  
+  .content-body {
+    @apply mx-auto px-6 sm:px-6 max-w-3xl prose prose-lg lg:prose-xl dark:prose-invert dark:prose-headings:text-slate-300 prose-headings:font-heading prose-headings:leading-tight prose-headings:tracking-tight prose-headings:font-bold prose-a:text-primary dark:prose-a:text-blue-400 prose-img:rounded-md prose-img:shadow-lg mt-8 prose-headings:scroll-mt-[80px];
+  }
+  
+  .section-title {
+    @apply mb-2 text-lg font-semibold text-gray-900 dark:text-white;
+  }
+  
+  .member-list {
+    @apply max-w-md space-y-1 text-gray-500 list-disc list-inside dark:text-gray-400 mb-6;
+  }
+  
+  .president-bio {
+    @apply space-y-6;
+  }
+  
+  .bio-content {
+    @apply prose prose-lg dark:prose-invert;
+  }
+  
+  .bio-link {
+    @apply pt-4;
+  }
+  
+  .bio-button {
+    @apply px-6 py-3 bg-blue-600 dark:bg-blue-500 text-white rounded-lg hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors;
+  }
+  
+  .markdown-content {
+    @apply prose prose-lg dark:prose-invert;
+  }
+  
+  .admin-line {
+    @apply mb-6 p-4 bg-blue-50 dark:bg-blue-900/20 border-l-4 border-blue-500 dark:border-blue-400 rounded-r-lg;
+  }
+  
+  .admin-text {
+    @apply text-sm text-blue-800 dark:text-blue-200 font-medium italic;
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 640px) {
+    .main-title {
+      @apply text-3xl px-4;
+    }
+    
+    .excerpt {
+      @apply text-lg px-4;
+    }
+    
+    .content-body {
+      @apply px-4;
+    }
+  }
+</style>

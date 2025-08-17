@@ -4,19 +4,17 @@ import type { InferGetStaticPropsType, GetStaticPaths } from 'astro';
 import merge from 'lodash.merge';
 import type { ImageMetadata } from 'astro';
 import Layout from '~/layouts/PageLayout.astro';
-import SinglePost from '~/components/numsa/singlePost.astro';
+import ContentDetail from '~/components/numsa/ContentDetail.astro';
 import { I18N } from '~/utils/config';
-// import ToBlogLink from '~/components/blog/ToBlogLink.astro';
 
 import { getBlogPermalink, getCanonical, getPermalink } from '~/utils/permalinks';
-import { getStaticPathsBlogPost, blogPostRobots } from '~/utils/blog';
+import { blogPostRobots } from '~/utils/blog';
 import { findImage } from '~/utils/images';
 import type { MetaData } from '~/types';
-// import RelatedPosts from '~/components/blog/RelatedPosts.astro';
 import Button from '~/components/ui/Button.astro';
 import { Icon } from 'astro-icon/components';
 import { getCollection } from 'astro:content';
-import type { Post } from '../../../components/numsa/listItem.astro';
+import { formatContent } from '~/utils/numsa';
 
 const { textDirection } = I18N;
 
@@ -30,12 +28,11 @@ export const getStaticPaths = (async () => {
 }) satisfies GetStaticPaths;
 
 type Props = {
-  post: Post;
+  post: any;
 }
 
 const { post } = Astro.props as Props;
 
-// const url = getCanonical(getPermalink(post.permalink, 'post'));
 const image = (await findImage(post.data.image)) as ImageMetadata | string | undefined;
 
 const metadata = merge(
@@ -51,12 +48,14 @@ const metadata = merge(
       ...(image ? { images: [{ url: image, width: (image as ImageMetadata)?.width, height: (image as ImageMetadata)?.height }] } : {}),
     },
   },
-//   { ...(post?.metadata ? { ...post.metadata, canonical: post.metadata?.canonical || url } : {}) }
 ) as MetaData;
+
+// Format the post for ContentDetail component
+const formattedPost = formatContent([post], 'senators')[0];
 ---
 
 <Layout metadata={metadata}>
-  <SinglePost post={{...post}} url={`/2024/house/${post.id}`} />
+  <ContentDetail item={formattedPost} contentType="senators" />
   <div class="mx-auto px-3 sm:px-2 max-w-3xl pt-2 md:pt-4 pb-2 md:pb-3">
     <Button variant="tertiary" class="px-3 md:px-3" href={'/2024/house'}>
       {
@@ -68,5 +67,4 @@ const metadata = merge(
       } Back to HOUSE
     </Button>
   </div>
-
 </Layout>
