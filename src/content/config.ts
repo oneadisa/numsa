@@ -107,6 +107,7 @@ export const collections = {
   campaigns: defineCollection({ type: "content", schema: contentSchema }),
   outreaches: defineCollection({ type: "content", schema: contentSchema }),
   'zoom-conferences': defineCollection({ type: "content", schema: contentSchema }),
+  events: defineCollection({ type: "content", schema: contentSchema }),
   
   // Publications collection
   publications: defineCollection({ type: "data", schema: publicationSchema }),

@@ -89,8 +89,8 @@ export function formatContent(items: CollectionItem[], contentType: string, sess
   return items
     .filter(item => !item.data.draft)
     .sort((a, b) => {
-      // For outreaches, campaigns, and zoom-conferences, sort by date (newest first)
-      if (contentType === 'campaigns' || contentType === 'outreaches' || contentType === 'zoom-conferences') {
+      // For outreaches, campaigns, zoom-conferences, and events, sort by date (newest first)
+      if (contentType === 'campaigns' || contentType === 'outreaches' || contentType === 'zoom-conferences' || contentType === 'events') {
         const dateA = parseDate(a.data.date || '');
         const dateB = parseDate(b.data.date || '');
         if (dateA && dateB) {
@@ -148,6 +148,8 @@ export function getContentLink(contentType: string, item: CollectionItem, sessio
       return `/outreaches/${item.slug || item.id}`;
     case 'zoom-conferences':
       return `/zoom-conferences/${item.slug || item.id}`;
+    case 'events':
+      return `/events/${item.slug || item.id}`;
     default:
       return `/${contentType}/${item.slug || item.id}`;
   }
@@ -178,6 +180,7 @@ export function getContentTypeDisplayName(contentType: string): string {
     'campaigns': 'Advocacy Campaigns',
     'outreaches': 'Outreach Programs',
     'zoom-conferences': 'Zoom Conferences',
+    'events': 'Events',
   };
   
   return displayNames[contentType] || contentType.charAt(0).toUpperCase() + contentType.slice(1);
@@ -195,6 +198,7 @@ export function getContentTypeDescription(contentType: string): string {
     'campaigns': 'Browse our latest advocacy campaigns',
     'outreaches': 'Discover our community outreach programs',
     'zoom-conferences': 'Watch our recorded zoom conferences',
+    'events': 'Explore NUMSA events and gatherings',
   };
   
   return descriptions[contentType] || `Browse our ${contentType}`;

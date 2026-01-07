@@ -118,8 +118,8 @@ export const headerData = {
       text: 'Activities',
       links: [
         {
-          text: 'Inaugural Launch',
-          href: getPermalink('/inaugural-launch'),
+          text: 'Events',
+          href: getPermalink('/events'),
         },
         {
           text: 'Advocacy Campaigns',
@@ -167,7 +167,7 @@ export const footerData = {
     {
       title: 'Activities',
       links: [
-        { text: 'NUMSA Inaugural Launch', href: '/inaugural-launch' },
+        { text: 'Events', href: '/events' },
         { text: 'Advocacy Campaigns', href: '/advocacy-campaigns' },
         { text: 'Outreaches', href: '/outreaches' },
         { text: 'Zoom Conferences', href: '/zoom-conferences' },

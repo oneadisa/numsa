@@ -171,13 +171,13 @@ const isEmmanuelOranwusi = item.session === '2023-24' && item.position === 'The 
         <div class="bio-content" set:html={item.bio || ''} />
       ) : (
         <div class="markdown-content">
-          {/* For campaigns, outreaches, and zoom conferences, render the markdown content */}
+          {/* For campaigns, outreaches, zoom conferences, and events, render the markdown content */}
           <slot />
           
-          {/* Administration line - only for specific 2024-25 outreaches */}
-          {contentType === 'outreaches' && item.id && (item.id === 'menstrual_health_outreach' || item.id === 'pulse_health_initiative') && (
+          {/* Administration footnote - for all 2023-24 events and outreaches */}
+          {(contentType === 'outreaches' || contentType === 'events') && item.session === '2023-24' && (
             <div class="admin-line mt-12">
-              <p class="admin-text">NUMSA 23/24 Emmanuel Oranwusi (President) and Abdul-Azeez Ibrahim (Speaker) led administration.</p>
+              <p class="admin-text">Conducted by the Emmanuel Oranwusi (President) and Abdul-Azeez O. Ibrahim (Speaker) led 2023/24 NUMSA Administration.</p>
             </div>
           )}
         </div>
