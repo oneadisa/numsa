@@ -1,0 +1,85 @@
+---
+/**
+ * Session Indicator Component
+ *
+ * Displays the current active session in the header
+ * Shows different styling for current vs archived sessions
+ */
+import { createSessionContext } from '../../utils/session-context';
+
+interface Props {
+  pathname: string;
+}
+
+const { pathname } = Astro.props;
+const sessionContext = createSessionContext(pathname);
+---
+
+<div class="session-indicator">
+  <span
+    class:list={[
+      'session-badge',
+      sessionContext.badgeVariant === 'current' ? 'current' : 'archived',
+    ]}
+  >
+    {sessionContext.isCurrent ? '📅' : '📚'}
+    <span class="session-text">{sessionContext.displayText}</span>
+  </span>
+</div>
+
+<style>
+  .session-indicator {
+    display: inline-flex;
+    align-items: center;
+    margin-left: 1rem;
+  }
+
+  .session-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    white-space: nowrap;
+    transition: all 0.2s ease;
+  }
+
+  .session-badge.current {
+    background-color: rgb(219 234 254);
+    color: rgb(29 78 216);
+  }
+
+  .session-badge.archived {
+    background-color: rgb(254 249 195);
+    color: rgb(161 98 7);
+  }
+
+  :global(.dark) .session-badge.current {
+    background-color: rgb(30 58 138);
+    color: rgb(191 219 254);
+  }
+
+  :global(.dark) .session-badge.archived {
+    background-color: rgb(113 63 18);
+    color: rgb(253 224 71);
+  }
+
+  @media (max-width: 768px) {
+    .session-indicator {
+      margin-left: 0;
+      margin-top: 0.5rem;
+    }
+
+    .session-text {
+      display: none;
+    }
+  }
+
+  @media (min-width: 769px) {
+    .session-text {
+      display: inline;
+    }
+  }
+</style>

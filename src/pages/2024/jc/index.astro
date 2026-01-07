@@ -1,37 +1,7 @@
 ---
-
-import Layout from '../../../layouts/PageLayout.astro';
-import ContentList from '../../../components/numsa/ContentList.astro';
-import Headline from '../../../components/blog/Headline.astro';
-import { getCollection } from 'astro:content';
-
-import { blogListRobots } from '../../../utils/blog';
-import { formatContent } from '../../../utils/numsa';
-
+/**
+ * Legacy URL redirect - automatically generated
+ */
 export const prerender = true;
-
-const posts = await getCollection('jc');
-const formattedPosts = formatContent(posts, 'jc');
-
-const metadata = {
-  title: `NUMSA Legislative Committee`,
-  robots: {
-    index: blogListRobots?.index,
-    follow: blogListRobots?.follow,
-  },
-  openGraph: {
-    type: 'numsa',
-  },
-};
+return Astro.redirect('/2023-24/' + Astro.url.pathname.replace('/2024/', ''), 301);
 ---
-
-<Layout metadata={metadata}>
-  <section class="px-6 sm:px-6 py-12 sm:py-16 lg:py-20 mx-auto max-w-4xl">
-    <Headline
-      subtitle="The 2024 Legislative Committee Of NUMSA."
-    >
-      The Legislative COMITTEE
-    </Headline>
-    <ContentList items={formattedPosts} contentType="jc" />
-  </section>
-</Layout>

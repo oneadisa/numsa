@@ -3,6 +3,7 @@
     mainImage: /assets/images/campaigns/w_hyp_d.png
     title: World Hypertension Day
     serial: 22
+    session: "2023-24"
     caption: High blood pressure is a silent killer. It can strike without warning, but with proper care and lifestyle changes, it can be controlled. - Dr. David B. Ryder
 ---
 

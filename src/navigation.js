@@ -101,31 +101,19 @@ export const headerData = {
           text: 'Offices',
           links: [
             {
-              text: 'Executive Council',
-              href: getPermalink('/2024/excos'),
+              text: '2024/25 Administration',
+              href: getPermalink('/2024-25'),
             },
             {
-              text: 'The House',
-              href: getPermalink('/2024/house'),
+              text: '2023/24 Administration',
+              href: getPermalink('/2023-24'),
             },
-            {
-              text: 'Legislative Committee',
-              href: getPermalink('/2024/jc'),
-            },
-            // {
-            //   text: 'Personal',
-            //   href: getPermalink('/homes/personal'),
-            // },
           ],
         },
         // {
         //   text: 'Activities',
         //   href: getPermalink('#'),
         // },
-    {
-      text: 'Magazine',
-      href: getPermalink('/magazine'),
-    },
     {
       text: 'Activities',
       links: [
@@ -164,7 +152,7 @@ export const footerData = {
         { text: 'Sports Week', href: '/about' },
         // { text: 'Team', href: '#' },
         // { text: 'Enterprise', href: '#' },
-        { text: 'Our stories', href: '/magazine' },
+        // { text: 'Our stories', href: '/magazine' },
         // { text: 'Pricing', href: '#' },
         // { text: 'Resources', href: '#' },
       ],
@@ -172,13 +160,8 @@ export const footerData = {
     {
       title: 'Offices',
       links: [
-        { text: 'President', href: '/2024/excos/president' },
-        { text: 'Speaker Of The House', href: '/2024/house/speaker' },
-        { text: 'Secretary General', href: '/2024/excos/sec-gen' },
-        // { text: 'Vice President: Internal', href: '/2024/excos/vp-internal' },
-        
-        // { text: 'Electron', href: '#' },
-        // { text: 'NUMSA  Desktop', href: '#' },
+        { text: '2024/25 Administration', href: '/2024-25' },
+        { text: '2023/24 Administration', href: '/2023-24' },
       ],
     },
     {
@@ -218,7 +201,6 @@ export const footerData = {
     // { ariaLabel: 'Github', icon: 'tabler:brand-github', href: 'https://github.com/onwidget/astrowind' },
   ],
   footNote: `
-    <span class="w-5 h-5 md:w-6 md:h-6 md:-mt-0.5 bg-cover mr-1.5 rtl:mr-0 rtl:ml-1.5 float-left rtl:float-right rounded-sm bg-[url(https://onwidget.com/favicon/favicon-32x32.png)]"></span>
-    Made by <a class="text-blue-600 hover:underline dark:text-gray-200" href="https://oneadisa.vercel.app">Adisa</a> · All rights reserved.
+    Made by <a class="text-blue-600 hover:underline dark:text-gray-200" href="http://embrion.com.ng" target="_blank" rel="noopener noreferrer">Embrion Technologies Limited</a>. All Rights Reserved.
   `,
 };

@@ -3,6 +3,7 @@
     mainImage: /assets/images/campaigns/wbbd.png
     title: World Blood Donor Day
     serial: 24
+    session: "2023-24"
    #  category: Campaigns
     caption: WISE NOTES ON THE THE WORLD BLOOD DONOR DAY 2024
 

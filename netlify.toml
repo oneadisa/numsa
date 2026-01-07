@@ -35,6 +35,25 @@
     Cache-Control = "public, max-age=3600"
     X-Frame-Options = "SAMEORIGIN"
 
+# Redirects for old 2024 URLs to 2023-24 session
+[[redirects]]
+  from = "/2024/excos/*"
+  to = "/2023-24/excos/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/2024/house/*"
+  to = "/2023-24/house/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/2024/jc/*"
+  to = "/2023-24/jc/:splat"
+  status = 301
+  force = true
+
 # Redirects for better PDF handling
 [[redirects]]
   from = "/viewer/*"

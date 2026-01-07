@@ -3,6 +3,7 @@
     mainImage: /assets/images/campaigns/nbhad.jpg
     title: National Black HIV/AIDS Awareness Day
     serial: 5
+    session: "2023-24"
     caption: HIV (human immunodeficiency virus) is a virus that attacks the body's immune system, making it difficult for the body to fight off infections and diseases.
 ---
 

@@ -2,19 +2,22 @@
 import Layout from '../../layouts/PageLayout.astro';
 import ContentList from '../../components/numsa/ContentList.astro';
 import Headline from '../../components/blog/Headline.astro';
-
 import { blogListRobots } from '../../utils/blog';
 import { getCollection } from 'astro:content';
-import { formatContent } from '../../utils/numsa';
+import { formatContent, getSessionDisplayName } from '../../utils/numsa';
 
 export const prerender = true;
 
-const posts = await getCollection('outreaches');
-const formattedPosts = formatContent(posts, 'outreaches');
+// Get ALL outreaches from all administrations
+const allPosts = await getCollection('outreaches');
+const formattedPosts = formatContent(allPosts, 'outreaches');
+
+// Get unique sessions for filtering
+const availableSessions = [...new Set(allPosts.map(p => p.data.session).filter(Boolean))].sort().reverse();
 
 const metadata = {
-  title: `Outreaches`,
-  robots: {
+  title: 'Outreaches - All Administrations',
+  robots: { 
     index: blogListRobots?.index,
     follow: blogListRobots?.follow,
   },
@@ -27,10 +30,59 @@ const metadata = {
 <Layout metadata={metadata}>
   <section class="px-6 sm:px-6 py-12 sm:py-16 lg:py-20 mx-auto max-w-4xl">
     <Headline
-      subtitle="A collection of recent outreaches by NUMSA"
+      subtitle="A collection of all outreaches by NUMSA across all administrations"
     >
-        NUMSA Outreaches
+      NUMSA Outreaches
     </Headline>
-    <ContentList items={formattedPosts} contentType="outreaches" />
+
+    <!-- Session Filter -->
+    {availableSessions.length > 1 && (
+      <div class="mb-8 flex items-center gap-3 justify-center">
+        <label for="session-filter" class="text-sm font-medium text-gray-700 dark:text-gray-300">Filter by:</label>
+        <select 
+          id="session-filter"
+          class="px-4 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 font-medium cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400"
+        >
+          <option value="all">All Administrations</option>
+          {availableSessions.map(session => (
+            <option value={session || ''}>{getSessionDisplayName(session || '')}</option>
+          ))}
+        </select>
+      </div>
+    )}
+
+    <div id="outreaches-container">
+      <ContentList items={formattedPosts} contentType="outreaches" />
+    </div>
   </section>
 </Layout>
+
+<script is:inline>
+  document.addEventListener('DOMContentLoaded', function() {
+    const filterSelect = document.getElementById('session-filter');
+    const outreachItems = document.querySelectorAll('#outreaches-container li[data-session]');
+
+    if (!filterSelect) return;
+
+    function filterOutreaches(selectedSession) {
+      outreachItems.forEach(function(item) {
+        const itemSession = item.getAttribute('data-session') || '';
+        
+        if (selectedSession === 'all' || itemSession === selectedSession) {
+          item.style.display = '';
+        } else {
+          item.style.display = 'none';
+        }
+      });
+    }
+
+    // Add event listener to select dropdown
+    filterSelect.addEventListener('change', function() {
+      const selectedSession = this.value || 'all';
+      filterOutreaches(selectedSession);
+    });
+
+    // Initialize with 'all' selected
+    filterOutreaches('all');
+  });
+</script>

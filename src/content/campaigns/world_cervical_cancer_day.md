@@ -13,6 +13,7 @@
     ]
     title: World Cervical Cancer Day
     serial: 2
+    session: "2023-24"
 ---
 
 

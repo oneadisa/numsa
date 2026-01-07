@@ -1,0 +1,97 @@
+---
+import type { GetStaticPaths } from 'astro';
+import Layout from '../../layouts/PageLayout.astro';
+import Headline from '../../components/blog/Headline.astro';
+import { Icon } from 'astro-icon/components';
+import { getAvailableSessions, getSessionDisplayName } from '../../utils/numsa';
+
+export const prerender = true;
+
+export const getStaticPaths = (async () => {
+  const sessions = getAvailableSessions();
+  return sessions.map((session) => ({
+    params: { session },
+    props: { session },
+  }));
+}) satisfies GetStaticPaths;
+
+const { session } = Astro.props;
+
+const metadata = {
+  title: `${getSessionDisplayName(session)} Administration - NUMSA`,
+  description: `Explore the ${getSessionDisplayName(session)} administration: Executive Council, The House, and Legislative Commission.`,
+};
+
+// Define the three branches of government
+const branches = [
+  {
+    name: 'Executive Council',
+    description: 'Meet the executive leadership team',
+    href: `/${session}/excos`,
+    icon: 'tabler:users',
+  },
+  {
+    name: 'The House',
+    description: 'View the house of representatives members',
+    href: `/${session}/house`,
+    icon: 'tabler:building',
+  },
+  {
+    name: 'Legislative Commission',
+    description: 'Explore the legislative commission members',
+    href: `/${session}/jc`,
+    icon: 'tabler:scale',
+  },
+];
+---
+
+<Layout metadata={metadata}>
+  <section class="px-6 sm:px-6 py-12 sm:py-16 lg:py-20 mx-auto max-w-6xl">
+    <Headline 
+      subtitle="Administration leadership and governance structure"
+    >
+      {getSessionDisplayName(session)} Administration
+    </Headline>
+
+    <div class="grid gap-8 md:gap-12 md:grid-cols-3 mt-12">
+      {branches.map((branch) => {
+        return (
+          <a
+            href={branch.href}
+            class="group block p-8 border border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 transition-all duration-200"
+          >
+            <div class="flex flex-col items-center text-center">
+              <div class="mb-6 p-4 border border-gray-200 dark:border-gray-700">
+                <Icon name={branch.icon} class="w-8 h-8 text-gray-700 dark:text-gray-300" />
+              </div>
+              <h3 class="text-xl font-semibold mb-3 text-gray-900 dark:text-white">
+                {branch.name}
+              </h3>
+              <p class="text-sm text-gray-600 dark:text-gray-400 mb-6 leading-relaxed">
+                {branch.description}
+              </p>
+              <span class="inline-flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-300 group-hover:gap-3 transition-all">
+                Explore
+                <Icon name="tabler:arrow-right" class="w-4 h-4" />
+              </span>
+            </div>
+          </a>
+        );
+      })}
+    </div>
+
+    <!-- Additional Info -->
+    <div class="mt-16 pt-8 border-t border-gray-200 dark:border-gray-700">
+      <h3 class="text-lg font-semibold mb-4 text-gray-900 dark:text-white">
+        About This Administration
+      </h3>
+      <p class="text-gray-600 dark:text-gray-300 leading-relaxed">
+        The {getSessionDisplayName(session)} administration is organized into three branches:
+        the <strong>Executive Council</strong> responsible for day-to-day operations and leadership,
+        <strong>The House</strong> representing the legislative body, and the
+        <strong>Legislative Commission</strong> overseeing governance and compliance.
+        Click on any branch above to explore its members and their roles.
+      </p>
+    </div>
+  </section>
+</Layout>

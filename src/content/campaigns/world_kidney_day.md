@@ -4,6 +4,7 @@
     otherImages: ["/assets/images/campaigns/wkd/wkd_2.jpg","/assets/images/campaigns/wkd/wkd_3.jpg","/assets/images/campaigns/wkd/wkd_4.jpg"]
     title: World Kidney Day
     serial: 11
+    session: "2023-24"
     caption:  Today, as we celebrate World Kidney Day, let us unite in raising awareness about the importance of kidney health and the steps we can take to protect these vital organs.
 ---
 

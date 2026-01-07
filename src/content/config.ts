@@ -1,4 +1,8 @@
-import { z, defineCollection } from 'astro:content';
+import { z, defineCollection, reference } from 'astro:content';
+
+// Valid session identifiers
+export const VALID_SESSIONS = ['2023-24', '2024-25'] as const;
+export const CURRENT_SESSION = '2024-25';
 
 // Base schema for all content types
 const baseContentSchema = z.object({
@@ -21,12 +25,27 @@ const excosSchema = baseContentSchema.extend({
   bio: z.string().optional(),
 });
 
-// Extended schema for campaigns, outreaches, and zoom conferences
+// Extended schema for campaigns, outreaches, and zoom conferences (with session tagging)
 const contentSchema = baseContentSchema.extend({
   layout: z.string().optional(),
   mainImage: z.string().optional(),
   otherImages: z.array(z.string()).optional(),
   caption: z.string().optional(),
+  session: z.enum(VALID_SESSIONS).optional(), // Tag which administration ran this activity
+});
+
+// Schema for publications (Official Magazines and Medical Journals only)
+const publicationSchema = z.object({
+  title: z.string(),
+  description: z.string(),
+  file: z.string(),
+  size: z.string(),
+  date: z.string(),
+  preview: z.string().optional(),
+  session: z.enum(VALID_SESSIONS).optional(),
+  type: z.enum(['magazine', 'journal']), // Only magazines and journals allowed
+  category: z.string().optional(),
+  draft: z.boolean().optional(),
 });
 
 // Blog post schema (keeping existing for backward compatibility)
@@ -78,12 +97,17 @@ const postCollection = defineCollection({
 // Define collections with unified schemas
 export const collections = {
   post: postCollection,
+  
+  // Legacy collections (kept for backwards compatibility during migration)
   excos: defineCollection({ type: "data", schema: excosSchema }),
   senators: defineCollection({ type: "data", schema: excosSchema }),
   jc: defineCollection({ type: "data", schema: excosSchema }),
+  
+  // Shared activity collections (with session tagging)
   campaigns: defineCollection({ type: "content", schema: contentSchema }),
   outreaches: defineCollection({ type: "content", schema: contentSchema }),
   'zoom-conferences': defineCollection({ type: "content", schema: contentSchema }),
+  
+  // Publications collection
+  publications: defineCollection({ type: "data", schema: publicationSchema }),
 };
-
-

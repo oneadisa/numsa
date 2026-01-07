@@ -24,8 +24,9 @@ export interface CampaignContent extends BaseContent {
 }
 
 export interface ContentItem extends BaseContent {
-  contentType: 'excos' | 'campaigns' | 'outreaches' | 'zoom-conferences' | 'senators' | 'jc';
+  contentType: 'excos' | 'campaigns' | 'outreaches' | 'zoom-conferences' | 'senators' | 'jc' | 'house';
   link: string;
+  session?: string;
   // Extended fields for specific types
   position?: string;
   level?: number;
@@ -33,6 +34,7 @@ export interface ContentItem extends BaseContent {
   mainImage?: string;
   otherImages?: string[];
   caption?: string;
+  name?: string; // Person's name for excos/house/jc
 }
 
 export interface ContentCollection {

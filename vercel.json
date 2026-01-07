@@ -1,6 +1,23 @@
 {
   "cleanUrls": true,
   "trailingSlash": false,
+  "redirects": [
+    {
+      "source": "/2024/excos/:path*",
+      "destination": "/2023-24/excos/:path*",
+      "permanent": true
+    },
+    {
+      "source": "/2024/house/:path*",
+      "destination": "/2023-24/house/:path*",
+      "permanent": true
+    },
+    {
+      "source": "/2024/jc/:path*",
+      "destination": "/2023-24/jc/:path*",
+      "permanent": true
+    }
+  ],
   "headers": [
     {
       "source": "/_astro/(.*)",

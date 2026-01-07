@@ -1,114 +1,231 @@
 ---
 import PageLayout from '../layouts/PageLayout.astro';
 import { Icon } from 'astro-icon/components';
+import { getCollection } from 'astro:content';
+import { VALID_SESSIONS, CURRENT_SESSION } from '../content/config';
+import { getSessionDisplayName } from '../utils/numsa';
 
-const publications = [
-  {
-    title: "MEDICAL MINDSCAPE EDITION 1",
-    description: "First Edition of the Medical Mindscape publication",
-    file: "MEDICAL MINDSCAPE 1.pdf",
-    size: "37.2 MB",
-    date: "2024-04-20",
-    preview: "/assets/images/publications/medical-mindscape-1-preview.jpg"
-  },
-  {
-    title: "Medical NEXUS JOURNAL 1",
-    description: "A compendium of Diseases in Nigeria.",
-    file: "MEDICAL NEXUS JOURNAL 1.pdf",
-    size: "15.4 MB",
-    date: "2024-10-26",
-    preview: "/assets/images/publications/numsa-journal-3-preview.jpg"
-  },
-  {
-    title: "MEDICAL MINDSCAPE EDITION 2",
-    description: "Second Edition of The NUMSA Magazine",
-    file: "NUMSA MAGAZINE 2 (1)_compressed_250420_022813.pdf",
-    size: "20.3 MB",
-    date: "2024-12-07",
-    preview: "/assets/images/publications/numsa-magazine-2-preview.jpg"
-  }
-];
+export const prerender = true;
+
+// Get all publications from content collection
+const allPublications = await getCollection('publications');
+const publications = allPublications
+  .filter(pub => !pub.data.draft && (pub.data.type === 'magazine' || pub.data.type === 'journal'))
+  .map(pub => ({
+    id: pub.id,
+    ...pub.data,
+  }))
+  .sort((a, b) => {
+    // Sort by date (newest first)
+    const dateA = new Date(a.date).getTime();
+    const dateB = new Date(b.date).getTime();
+    return dateB - dateA;
+  });
+
+// Get unique sessions and types for filtering
+const availableSessions = [...new Set(publications.map(p => p.session).filter(Boolean))];
+const availableTypes = [...new Set(publications.map(p => p.type).filter(Boolean))];
+
+// Format date for display
+function formatDate(dateString: string): string {
+  const date = new Date(dateString);
+  return date.toLocaleDateString('en-US', { 
+    year: 'numeric', 
+    month: 'long', 
+    day: 'numeric' 
+  });
+}
+
+// Format file size
+function formatFileSize(size: string): string {
+  return size;
+}
+
+const metadata = {
+  title: "NUMSA Publications - Official Magazines & Medical Journals",
+  description: "Explore NUMSA's official magazines and medical journals. Browse our collection of publications covering medical research, student life, and association activities.",
+};
 ---
 
-<PageLayout metadata={{ title: "Publications" }}>
+<PageLayout metadata={metadata}>
   <!-- Main Content -->
-  <main class="container mx-auto px-4 py-8 max-w-6xl">
+  <main class="container mx-auto px-4 py-8 max-w-7xl">
+    <!-- Header -->
     <div class="text-center mb-12">
-      <h1 class="text-4xl font-bold mb-4 text-heading dark:text-white">NUMSA Publications</h1>
-      <p class="text-gray-600 dark:text-gray-300 text-lg">Explore our latest publications and research</p>
+      <h1 class="text-4xl md:text-5xl font-bold mb-4 text-heading dark:text-white">
+        NUMSA Publications
+      </h1>
+      <p class="text-gray-600 dark:text-gray-300 text-lg max-w-2xl mx-auto">
+        Official Magazines and Medical Journals published by the Nigerian University Medical Students' Association
+      </p>
     </div>
-    
-    <div class="grid gap-6 md:gap-8 md:grid-cols-2 lg:grid-cols-3">
-      {publications.map(pub => (
-        <article class="group bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm hover:shadow-lg dark:hover:shadow-xl transition-all duration-300 overflow-hidden transform hover:-translate-y-1">
-          <!-- Preview Image -->
-          <div class="relative cursor-pointer overflow-hidden">
-            <img 
-              src={pub.preview} 
-              alt={`${pub.title} preview`}
-              class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
-              onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
-            />
-            <div 
-              class="w-full h-48 bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-700 dark:to-gray-600 flex items-center justify-center border-b border-gray-200 dark:border-gray-700 group-hover:scale-105 transition-transform duration-300"
-              style="display: none;"
-            >
-              <div class="text-center">
-                <Icon name="tabler:file-text" class="w-12 h-12 text-gray-400 dark:text-gray-500 mx-auto mb-2" />
-                <p class="text-gray-500 dark:text-gray-400 text-sm">Preview Image</p>
+
+    <!-- Filters -->
+    <div class="mb-8 flex flex-wrap gap-4 justify-center items-center">
+      <div class="flex items-center gap-2">
+        <Icon name="tabler:filter" class="w-5 h-5 text-gray-500 dark:text-gray-400" />
+        <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Filter by:</span>
+      </div>
+      
+      <!-- Session Filter -->
+      {availableSessions.length > 0 && (
+        <select 
+          id="session-filter" 
+          class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+        >
+          <option value="all">All Sessions</option>
+          {availableSessions.map(session => (
+            <option value={session}>{getSessionDisplayName(session)}</option>
+          ))}
+        </select>
+      )}
+
+      <!-- Type Filter -->
+      {availableTypes.length > 0 && (
+        <select 
+          id="type-filter" 
+          class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+        >
+          <option value="all">All Types</option>
+          {availableTypes.map(type => (
+            <option value={type}>
+              {type === 'magazine' ? 'Magazines' : 'Journals'}
+            </option>
+          ))}
+        </select>
+      )}
+
+      <!-- Search -->
+      <div class="relative flex-1 max-w-md">
+        <Icon name="tabler:search" class="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+        <input 
+          type="text" 
+          id="search-input"
+          placeholder="Search publications..." 
+          class="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+        />
+      </div>
+    </div>
+
+    <!-- Publications Grid -->
+    {publications.length > 0 ? (
+      <div id="publications-grid" class="grid gap-6 md:gap-8 md:grid-cols-2 lg:grid-cols-3">
+        {publications.map(pub => (
+          <article 
+            class="publication-card group bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm hover:shadow-lg dark:hover:shadow-xl transition-all duration-300 overflow-hidden transform hover:-translate-y-1"
+            data-session={pub.session || ''}
+            data-type={pub.type}
+            data-title={pub.title.toLowerCase()}
+            data-description={pub.description.toLowerCase()}
+          >
+            <!-- Preview Image -->
+            <div class="relative cursor-pointer overflow-hidden bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-700 dark:to-gray-600">
+              {pub.preview ? (
+                <img 
+                  src={pub.preview} 
+                  alt={`${pub.title} preview`}
+                  class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
+                  onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+                />
+              ) : null}
+              <div 
+                class={`w-full h-48 flex items-center justify-center border-b border-gray-200 dark:border-gray-700 ${pub.preview ? 'hidden' : ''}`}
+              >
+                <div class="text-center">
+                  <Icon name="tabler:file-text" class="w-12 h-12 text-gray-400 dark:text-gray-500 mx-auto mb-2" />
+                  <p class="text-gray-500 dark:text-gray-400 text-sm">Preview Image</p>
+                </div>
+              </div>
+              
+              <!-- Type Badge -->
+              <div class="absolute top-3 right-3">
+                <span class={`px-3 py-1 rounded-full text-xs font-semibold ${
+                  pub.type === 'magazine' 
+                    ? 'bg-blue-500 text-white' 
+                    : 'bg-green-500 text-white'
+                }`}>
+                  {pub.type === 'magazine' ? 'Magazine' : 'Journal'}
+                </span>
               </div>
             </div>
+            
+            <!-- Content -->
+            <div class="p-6">
+              <h2 class="text-xl font-semibold mb-3 text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors line-clamp-2">
+                {pub.title}
+              </h2>
+              <p class="text-gray-600 dark:text-gray-300 mb-4 line-clamp-3 leading-relaxed text-sm">
+                {pub.description}
+              </p>
+              
+              <div class="flex flex-wrap items-center gap-3 text-sm text-gray-500 dark:text-gray-400 mb-4">
+                <span class="flex items-center gap-1">
+                  <Icon name="tabler:file-text" class="w-4 h-4" />
+                  PDF • {formatFileSize(pub.size)}
+                </span>
+                <span class="flex items-center gap-1">
+                  <Icon name="tabler:calendar" class="w-4 h-4" />
+                  {formatDate(pub.date)}
+                </span>
+                {pub.session && (
+                  <span class="flex items-center gap-1">
+                    <Icon name="tabler:calendar-event" class="w-4 h-4" />
+                    {getSessionDisplayName(pub.session)}
+                  </span>
+                )}
+              </div>
+              
+              <div class="flex flex-col sm:flex-row gap-2">
+                <a 
+                  href={`/viewer/${encodeURIComponent(pub.file)}`}
+                  class="view-pdf-btn flex-1 px-4 py-2.5 bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 text-white rounded-lg transition-colors text-center font-medium flex items-center justify-center gap-2"
+                  data-pdf-file={pub.file}
+                >
+                  <Icon name="tabler:eye" class="w-4 h-4" />
+                  <span>View</span>
+                </a>
+                <a 
+                  href={`/documents/publications/${pub.file}`}
+                  class="px-4 py-2.5 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors font-medium flex items-center justify-center gap-2 rounded-lg"
+                  download
+                >
+                  <Icon name="tabler:download" class="w-4 h-4" />
+                  <span class="hidden sm:inline">Download</span>
+                  <span class="sm:hidden">Get</span>
+                </a>
+              </div>
+            </div>
+          </article>
+        ))}
+      </div>
+    ) : (
+      <!-- Empty State -->
+      <div class="text-center py-16">
+        <Icon name="tabler:file-off" class="w-16 h-16 text-gray-400 dark:text-gray-500 mx-auto mb-4" />
+        <h3 class="text-xl font-semibold text-gray-700 dark:text-gray-300 mb-2">
+          No Publications Found
+        </h3>
+        <p class="text-gray-500 dark:text-gray-400">
+          Publications will appear here once they are added.
+        </p>
+      </div>
+    )}
 
-          </div>
-          
-          <!-- Content -->
-          <div class="p-6">
-            <h2 class="text-xl font-semibold mb-3 text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
-              {pub.title}
-            </h2>
-            <p class="text-gray-600 dark:text-gray-300 mb-4 line-clamp-3 leading-relaxed">
-              {pub.description}
-            </p>
-            
-            <div class="flex flex-wrap items-center gap-3 text-sm text-gray-500 dark:text-gray-400 mb-4">
-              <span class="flex items-center gap-1">
-                <Icon name="tabler:file-text" class="w-4 h-4" />
-                PDF • {pub.size}
-              </span>
-              <span class="flex items-center gap-1">
-                <Icon name="tabler:calendar" class="w-4 h-4" />
-                {pub.date}
-              </span>
-            </div>
-            
-            <div class="flex flex-col sm:flex-row gap-2">
-              <a 
-                href={`/viewer/${encodeURIComponent(pub.file)}`}
-                class="view-pdf-btn flex-1 px-4 py-2.5 bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 text-white rounded-lg transition-colors text-center font-medium flex items-center justify-center gap-2"
-                data-pdf-file={pub.file}
-              >
-                <Icon name="tabler:eye" class="w-4 h-4" />
-                <span class="hidden sm:inline">View</span>
-                <span class="sm:hidden">View</span>
-              </a>
-              <a 
-                href={`/documents/publications/${pub.file}`}
-                class="px-4 py-2.5 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors font-medium flex items-center justify-center gap-2 rounded-lg"
-                download
-              >
-                <Icon name="tabler:download" class="w-4 h-4" />
-                <span class="hidden sm:inline">Download</span>
-                <span class="sm:hidden">Get</span>
-              </a>
-            </div>
-          </div>
-        </article>
-      ))}
+    <!-- Results Count -->
+    <div class="mt-8 text-center text-sm text-gray-500 dark:text-gray-400">
+      <span id="results-count">{publications.length}</span> publication{publications.length !== 1 ? 's' : ''} found
     </div>
   </main>
 </PageLayout>
 
 <style>
+  .line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  
   .line-clamp-3 {
     display: -webkit-box;
     -webkit-line-clamp: 3;
@@ -116,41 +233,78 @@ const publications = [
     overflow: hidden;
   }
   
-  /* Smooth transitions for theme switching */
-  * {
-    transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
-  }
-  
-  /* Responsive adjustments */
-  @media (max-width: 640px) {
-    .container {
-      padding-left: 1rem;
-      padding-right: 1rem;
-    }
-  }
-  
-  @media (max-width: 768px) {
-    .grid {
-      gap: 1rem;
-    }
+  .publication-card.hidden {
+    display: none;
   }
 </style>
 
 <script>
-  // Handle smooth navigation to PDF viewer
+  // Filter and search functionality
   document.addEventListener('DOMContentLoaded', function() {
+    const sessionFilter = document.getElementById('session-filter');
+    const typeFilter = document.getElementById('type-filter');
+    const searchInput = document.getElementById('search-input');
+    const publicationsGrid = document.getElementById('publications-grid');
+    const resultsCount = document.getElementById('results-count');
+    const publicationCards = document.querySelectorAll('.publication-card');
+
+    function filterPublications() {
+      const selectedSession = sessionFilter?.value || 'all';
+      const selectedType = typeFilter?.value || 'all';
+      const searchTerm = searchInput?.value.toLowerCase() || '';
+
+      let visibleCount = 0;
+
+      publicationCards.forEach(card => {
+        const cardSession = card.getAttribute('data-session') || '';
+        const cardType = card.getAttribute('data-type') || '';
+        const cardTitle = card.getAttribute('data-title') || '';
+        const cardDescription = card.getAttribute('data-description') || '';
+
+        // Session filter
+        const sessionMatch = selectedSession === 'all' || cardSession === selectedSession;
+        
+        // Type filter
+        const typeMatch = selectedType === 'all' || cardType === selectedType;
+        
+        // Search filter
+        const searchMatch = !searchTerm || 
+          cardTitle.includes(searchTerm) || 
+          cardDescription.includes(searchTerm);
+
+        if (sessionMatch && typeMatch && searchMatch) {
+          card.classList.remove('hidden');
+          visibleCount++;
+        } else {
+          card.classList.add('hidden');
+        }
+      });
+
+      // Update results count
+      if (resultsCount) {
+        resultsCount.textContent = visibleCount;
+      }
+    }
+
+    // Add event listeners
+    if (sessionFilter) {
+      sessionFilter.addEventListener('change', filterPublications);
+    }
+    if (typeFilter) {
+      typeFilter.addEventListener('change', filterPublications);
+    }
+    if (searchInput) {
+      searchInput.addEventListener('input', filterPublications);
+    }
+
+    // Handle smooth navigation to PDF viewer
     const viewButtons = document.querySelectorAll('.view-pdf-btn');
-    
     viewButtons.forEach(button => {
       button.addEventListener('click', function(e) {
         e.preventDefault();
-        
         const pdfFile = this.getAttribute('data-pdf-file');
         if (pdfFile) {
-          const url = `/viewer/${encodeURIComponent(pdfFile)}`;
-          
-          // Navigate immediately for better performance
-          window.location.href = url;
+          window.location.href = `/viewer/${encodeURIComponent(pdfFile)}`;
         }
       });
     });

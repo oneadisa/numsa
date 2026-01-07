@@ -3,6 +3,7 @@
     mainImage: /assets/images/campaigns/wcd.jpg
     title: World Condom Day
     serial: 9
+    session: "2023-24"
     caption: World Condom Day emphasizes the crucial role of condoms in sexual health by providing protection against sexually transmitted infections (STls) and unintended pregnancies.
 ---
 

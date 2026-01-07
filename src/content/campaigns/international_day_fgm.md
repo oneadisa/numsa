@@ -3,6 +3,7 @@
     mainImage: /assets/images/campaigns/fgm.jpg
     title: International Day of Zero Tolerance For Female Genital Mutilation
     serial: 4
+    session: "2023-24"
     caption: Female genital mutilation (FGM) is a deeply entrenched practice that has inflicted untold suffering on millions of women and girls around the world.
 
 ---

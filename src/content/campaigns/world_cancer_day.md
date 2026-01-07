@@ -14,6 +14,7 @@
     ]
     title: World Cancer Day
     serial: 3
+    session: "2023-24"
     caption: On World Cancer Day, we stand united in the global fight against this formidable adversary. 
 ---
 

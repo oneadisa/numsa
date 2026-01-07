@@ -13,52 +13,84 @@ export interface Props {
 
 const { item, contentType, layout = 'grid' } = Astro.props;
 
+// Determine if this is an excos/house/jc card
+const isExcosType = contentType === 'excos' || contentType === 'senators' || contentType === 'jc' || contentType === 'house';
+
 // Get the appropriate image for the item
 const imageSrc = item.image || item.mainImage;
-const image = imageSrc ? await findImage(imageSrc) as ImageMetadata | undefined : undefined;
+let image: ImageMetadata | string | undefined = undefined;
+
+// For excos/house/jc, use default avatar if no image specified
+if (isExcosType) {
+  if (!imageSrc || imageSrc.trim() === '') {
+    // No image source provided - use default avatar
+    image = '/assets/images/default_avatar.jpg';
+  } else {
+    // Try to find the image
+    const foundImage = await findImage(imageSrc) as ImageMetadata | string | undefined | null;
+
+    if (!foundImage || foundImage === null) {
+      // Image not found - use default avatar
+      image = '/assets/images/default_avatar.jpg';
+    } else {
+      // Use the found image
+      image = foundImage;
+    }
+  }
+} else {
+  // For non-excos types, use findImage normally
+  image = imageSrc ? await findImage(imageSrc) as ImageMetadata | string | undefined : undefined;
+}
 
 // Determine if we should show image based on layout and content type
-const showImage = image && (layout === 'grid' || layout === 'cards' || contentType === 'campaigns' || contentType === 'outreaches');
+const showImage = image && (layout === 'grid' || layout === 'cards' || contentType === 'campaigns' || contentType === 'outreaches' || isExcosType);
 
 // Get appropriate title
 const displayTitle = item.title || item.position || 'Untitled';
 
-// Get appropriate excerpt
-const displayExcerpt = item.excerpt || item.caption || item.bio || '';
-
 // Determine if this is a clickable item
 const isClickable = item.link && item.link !== '#';
+
+// Get appropriate excerpt
+// For excos, don't show excerpt in cards since bio is shown on detail page
+const isExcosCard = isExcosType;
+const displayExcerpt = isExcosCard ? '' : (item.excerpt || item.caption || item.bio || '');
+
+// Use portrait aspect ratio for excos/house/jc (to show full faces), landscape for others
+// Using 4:5 ratio (less extreme than 3:4) to reduce blank space while still showing faces
+const imageAspectRatio = isExcosCard ? '4:5' : '16:9';
+const imageHeight = isExcosCard ? (layout === 'cards' ? 500 : 800) : (layout === 'cards' ? 300 : 600);
 ---
 
-<article class={`content-item layout-${layout} ${isClickable ? 'clickable' : ''}`}>
+<article class={`content-item layout-${layout} ${isClickable ? 'clickable' : ''}`} data-session={item.session || ''}>
   {showImage && (
     <div class="image-container">
       {isClickable ? (
         <a href={item.link} class="image-link group">
-          <div class="image-wrapper">
+          <div class={`image-wrapper ${isExcosCard ? 'portrait' : 'landscape'}`}>
             <Image
               src={image}
               class="content-image"
               width={layout === 'cards' ? 400 : 900}
-              height={layout === 'cards' ? 300 : 600}
+              height={imageHeight}
               sizes={layout === 'cards' ? '400px' : '(max-width: 900px) 400px, 900px'}
               alt={displayTitle}
-              aspectRatio="16:9"
+              aspectRatio={imageAspectRatio}
               loading="lazy"
               decoding="async"
             />
           </div>
         </a>
       ) : (
-        <div class="image-wrapper">
+        <div class={`image-wrapper ${isExcosCard ? 'portrait' : 'landscape'}`}>
           <Image
             src={image}
             class="content-image"
             width={layout === 'cards' ? 400 : 900}
-            height={layout === 'cards' ? 300 : 600}
+            height={imageHeight}
             sizes={layout === 'cards' ? '400px' : '(max-width: 900px) 400px, 900px'}
             alt={displayTitle}
-            aspectRatio="16:9"
+            aspectRatio={imageAspectRatio}
             loading="lazy"
             decoding="async"
           />
@@ -88,7 +120,7 @@ const isClickable = item.link && item.link !== '#';
       {item.date && (
         <span class="meta-item">
           <Icon name="tabler:clock" class="meta-icon" />
-          <time datetime={item.date}>{item.date}</time>
+          <time datetime={item.date}>{String(item.date).trim().replace(/\s+0$/, '')}</time>
         </span>
       )}
       
@@ -99,10 +131,10 @@ const isClickable = item.link && item.link !== '#';
         </span>
       )}
       
-      {item.level && contentType === 'excos' && (
+      {item.name && (contentType === 'excos' || contentType === 'house' || contentType === 'jc' || contentType === 'senators') && (
         <span class="meta-item">
-                          <Icon name="tabler:school" class="meta-icon" />
-          <span>{item.level} Level</span>
+          <Icon name="tabler:user" class="meta-icon" />
+          <span>{item.name}</span>
         </span>
       )}
       
@@ -113,11 +145,11 @@ const isClickable = item.link && item.link !== '#';
 
 <style>
   .content-item {
-    @apply bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm hover:shadow-lg dark:hover:shadow-xl transition-all duration-300 overflow-hidden;
+    @apply bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 transition-all duration-200 overflow-hidden;
   }
   
   .content-item.clickable:hover {
-    @apply transform -translate-y-1;
+    @apply shadow-md;
   }
   
   .image-container {
@@ -125,15 +157,37 @@ const isClickable = item.link && item.link !== '#';
   }
   
   .image-wrapper {
-    @apply relative pb-[56.25%] md:pb-[75%] md:h-72 lg:pb-[56.25%] overflow-hidden bg-gray-400 dark:bg-slate-700;
+    @apply relative overflow-hidden bg-gray-400 dark:bg-slate-700;
+  }
+  
+  /* Portrait aspect ratio for excos/house/jc cards (4:5 ratio = 125%) */
+  .image-wrapper.portrait {
+    @apply pb-[125%];
+  }
+  
+  /* Landscape aspect ratio for other content (16:9 ratio) */
+  .image-wrapper.landscape {
+    @apply pb-[56.25%];
   }
   
   .content-image {
-    @apply absolute inset-0 object-cover w-full h-full rounded-t-xl;
+    @apply absolute inset-0 w-full h-full;
+  }
+  
+  /* For portrait images (excos/house/jc), prioritize showing faces at the top and ensure full coverage */
+  .image-wrapper.portrait .content-image {
+    @apply object-cover object-top;
+    min-height: 100%;
+    min-width: 100%;
+  }
+  
+  /* For landscape images, use center positioning */
+  .image-wrapper.landscape .content-image {
+    @apply object-cover object-center;
   }
   
   .image-link:hover .content-image {
-    @apply scale-105 transition-transform duration-300;
+    @apply opacity-90 transition-opacity duration-200;
   }
   
   .content {
@@ -145,11 +199,11 @@ const isClickable = item.link && item.link !== '#';
   }
   
   .title-link {
-    @apply hover:text-primary dark:hover:text-blue-700 transition ease-in duration-200;
+    @apply hover:text-gray-900 dark:hover:text-gray-100 transition-colors duration-200;
   }
   
   .excerpt {
-    @apply text-gray-600 dark:text-gray-300 mb-4 line-clamp-3 leading-relaxed;
+    @apply text-gray-600 dark:text-gray-400 mb-4 line-clamp-2 leading-relaxed text-sm;
   }
   
   .meta {

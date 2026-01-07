@@ -3,6 +3,7 @@
     mainImage: /assets/images/campaigns/w_t_d.jpg
     title: World Tuberculosis Day
     serial: 13
+    session: "2023-24"
     caption: On World Tuberculosis Day, it’s crucial to highlight several key points...
     
 ---

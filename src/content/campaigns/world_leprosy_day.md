@@ -13,4 +13,5 @@
       "/assets/images/campaigns/wld/wld10.jpg"]
     title: World Leprosy Day
     serial: 1
+    session: "2023-24"
 ---

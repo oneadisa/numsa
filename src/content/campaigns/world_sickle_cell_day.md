@@ -3,6 +3,7 @@
     mainImage: /assets/images/campaigns/wssd.png
     title: World Sickle Cell Day
     serial: 26
+    session: "2023-24"
    #  category: Campaigns
     caption: NUMSA World Sickle Cell Day 2024
 

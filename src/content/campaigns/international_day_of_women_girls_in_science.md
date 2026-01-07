@@ -3,6 +3,7 @@
     mainImage: /assets/images/campaigns/idws.jpg
     title: International Day Of Women & Girls In Sciences
     serial: 2
+    session: "2023-24"
     caption: On this International Day of Women and Girls in Sciences, we proudly celebrate the remarkable achievements and contributions of women in science within the Nile University Medical Students Association. 
 ---
 

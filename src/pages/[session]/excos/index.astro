@@ -1,0 +1,62 @@
+---
+import type { GetStaticPaths } from 'astro';
+import Layout from '../../../layouts/PageLayout.astro';
+import ContentList from '../../../components/numsa/ContentList.astro';
+import Headline from '../../../components/blog/Headline.astro';
+import { blogListRobots } from '../../../utils/blog';
+import { formatContent, getAvailableSessions, getSessionDisplayName } from '../../../utils/numsa';
+
+export const prerender = true;
+
+export const getStaticPaths = (async () => {
+  const sessions = getAvailableSessions();
+  const paths = [];
+
+  // Use wildcard pattern to match all sessions at once (Vite requires static glob patterns)
+  const allModules = import.meta.glob('/src/content/sessions/*/excos/*.json', { eager: true, import: 'default' });
+
+  for (const session of sessions) {
+    // Filter modules for this specific session
+    const sessionModules = Object.entries(allModules).filter(([path]) =>
+      path.includes(`/sessions/${session}/excos/`)
+    );
+
+    const posts = sessionModules.map(([path, data]) => ({
+      id: path.split('/').pop()?.replace('.json', '') || '',
+      slug: path.split('/').pop()?.replace('.json', '') || '',
+      data: data as any,
+    }));
+    const formattedPosts = formatContent(posts, 'excos', session);
+
+    paths.push({
+      params: { session },
+      props: { posts: formattedPosts, session },
+    });
+  }
+
+  return paths;
+}) satisfies GetStaticPaths;
+
+const { posts, session } = Astro.props;
+
+const metadata = {
+  title: `Executive Council - ${getSessionDisplayName(session)}`,
+  robots: {
+    index: blogListRobots?.index,
+    follow: blogListRobots?.follow,
+  },
+  openGraph: {
+    type: 'numsa',
+  },
+};
+---
+
+<Layout metadata={metadata}>
+  <section class="px-6 sm:px-6 py-12 sm:py-16 lg:py-20 mx-auto max-w-4xl">
+    <Headline subtitle={`Meet the executive council members of the ${getSessionDisplayName(session)}`}>
+      Executive Council
+    </Headline>
+    <ContentList items={posts} contentType="excos" />
+  </section>
+</Layout>
+

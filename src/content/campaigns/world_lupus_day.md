@@ -4,6 +4,7 @@
     otherImages: ["/assets/images/campaigns/wlud/wlud2.png","/assets/images/campaigns/wlud/wlud3.png","/assets/images/campaigns/wlud/wlud4.png", "/assets/images/campaigns/wlud/wlud5.png", "/assets/images/campaigns/wlud/wlud6.png", "/assets/images/campaigns/wlud/wlud7.png", "/assets/images/campaigns/wlud/wlud8.png", "/assets/images/campaigns/wlud/wlud9.png"]
     title: World Lupus Day
     serial: 21
+    session: "2023-24"
     caption: COMMEMORATION OF WORLD LUPUS DAY, MAY 10TH 2024 - By Emmanuel Oranwusi
 ---
 

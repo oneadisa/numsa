@@ -3,6 +3,7 @@
     mainImage: /assets/images/campaigns/wld.jpg
     title: World Liver Day
     serial: 16
+    session: "2023-24"
     caption: The Liver, Body's Multifunctional Powerhouse
 ---
 

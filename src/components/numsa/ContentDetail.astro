@@ -12,79 +12,103 @@ export interface Props {
 
 const { item, contentType } = Astro.props;
 
+// Determine if this is an executive council member, house member, or legislative commission
+const isExcosType = contentType === 'excos' || contentType === 'senators' || contentType === 'jc' || contentType === 'house';
+
 // Get the appropriate image for the item
 const imageSrc = item.image || item.mainImage;
-const image = imageSrc ? await findImage(imageSrc) as ImageMetadata | undefined : undefined;
+let image: ImageMetadata | string | undefined = undefined;
+
+// For excos/house/jc, use default avatar if no image specified
+if (isExcosType) {
+  if (!imageSrc || imageSrc.trim() === '') {
+    // No image source provided - use default avatar
+    image = '/assets/images/default_avatar.jpg';
+  } else {
+    // Try to find the image
+    const foundImage = await findImage(imageSrc) as ImageMetadata | string | undefined | null;
+
+    if (!foundImage || foundImage === null) {
+      // Image not found - use default avatar
+      image = '/assets/images/default_avatar.jpg';
+    } else {
+      // Use the found image
+      image = foundImage;
+    }
+  }
+} else {
+  // For non-excos types, use findImage normally
+  image = imageSrc ? await findImage(imageSrc) as ImageMetadata | string | undefined : undefined;
+}
 
 // Get appropriate title
 const displayTitle = item.title || item.position || 'Untitled';
 
-// Get appropriate excerpt
-const displayExcerpt = item.excerpt || item.caption || item.bio || '';
+// Use the already defined isExcosType
+const isExcos = isExcosType;
 
-// Determine if this is an executive council member
-const isExcos = contentType === 'excos' || contentType === 'senators' || contentType === 'jc';
+// Get appropriate excerpt
+// For excos, don't show excerpt in header since bio is shown in content-body
+const displayExcerpt = isExcos ? '' : (item.excerpt || item.caption || item.bio || '');
+
+// Check if this is Emmanuel Oranwusi (2023/24 President) - only he should have the BIO button
+const isEmmanuelOranwusi = item.session === '2023-24' && item.position === 'The President' && item.name === 'Emmanuel Oranwusi';
 ---
 
 <section class="py-0.5 sm:py-4 lg:py-5 mx-auto">
   <article>
     <header class={image ? '' : ''}>
-      <div class="flex justify-between flex-col sm:flex-row max-w-3xl mx-auto mt-0 mb-2 px-4 sm:px-6 sm:items-center">
-        <div class="meta-info">
-          {item.date && (
-            <span class="meta-item">
-              <Icon name="tabler:clock" class="meta-icon" />
-              <time datetime={item.date}>{item.date}</time>
-            </span>
-          )}
-          
-          {item.author && (
-            <span class="meta-item">
-              <Icon name="tabler:user" class="meta-icon" />
-              <span>{item.author}</span>
-            </span>
-          )}
-          
-          {item.level && isExcos && (
-            <span class="meta-item">
-              <Icon name="tabler:school" class="meta-icon" />
-              <span>{item.level} Level</span>
-            </span>
-          )}
-          
-          {item.serial && (
-            <span class="meta-item">
-              <Icon name="tabler:hash" class="meta-icon" />
-              <span>#{item.serial}</span>
-            </span>
-          )}
+      {(item.date || item.author) && (
+        <div class="flex justify-between flex-col sm:flex-row max-w-3xl mx-auto mt-0 mb-2 px-4 sm:px-6 sm:items-center">
+          <div class="meta-info">
+            {item.date && (
+              <span class="meta-item">
+                <Icon name="tabler:clock" class="meta-icon" />
+                <time datetime={item.date}>{item.date}</time>
+              </span>
+            )}
+            
+            {item.author && (
+              <span class="meta-item">
+                <Icon name="tabler:user" class="meta-icon" />
+                <span>{item.author}</span>
+              </span>
+            )}
+          </div>
         </div>
-      </div>
+      )}
 
       <h1 class="main-title">
         {displayTitle}
       </h1>
 
-      {displayExcerpt && (
-        <p class="excerpt">
-          {displayExcerpt}
-        </p>
-      )}
-
       {image && (
-        <div class="image-container">
+        <div class={`image-container ${isExcos ? 'portrait' : 'landscape'}`}>
           <Image
             src={image}
             class="main-image"
-            widths={[400, 900]}
-            sizes="(max-width: 900px) 350px, 900px"
+            widths={[400, 800, 1200]}
+            sizes="(max-width: 900px) 100vw, 900px"
             alt={displayTitle}
-            width={350}
-            height={500}
+            width={isExcos ? 600 : 900}
+            height={isExcos ? 750 : 600}
             loading="eager"
             decoding="async"
+            layout="constrained"
+            aspectRatio={isExcos ? '4:5' : '3:2'}
           />
+          {isExcos && item.name && (
+            <p class="person-name">
+              {item.name}
+            </p>
+          )}
         </div>
+      )}
+
+      {!isExcos && displayExcerpt && (
+        <p class="excerpt">
+          {displayExcerpt}
+        </p>
       )}
     </header>
 
@@ -134,9 +158,14 @@ const isExcos = contentType === 'excos' || contentType === 'senators' || content
       ) : isExcos && item.position === 'The President' ? (
         <div class="president-bio">
           <div class="bio-content" set:html={item.bio || ''} />
-          <div class="bio-link">
-            <a href="/bio/president" class="bio-button">BIO</a>
-          </div>
+          {isEmmanuelOranwusi && (
+            <div class="bio-link">
+              <a href="/bio/president" class="bio-button">
+                Read Full Bio
+                <Icon name="tabler:arrow-right" class="w-4 h-4" />
+              </a>
+            </div>
+          )}
         </div>
       ) : isExcos ? (
         <div class="bio-content" set:html={item.bio || ''} />
@@ -145,10 +174,12 @@ const isExcos = contentType === 'excos' || contentType === 'senators' || content
           {/* For campaigns, outreaches, and zoom conferences, render the markdown content */}
           <slot />
           
-          {/* Administration line for campaigns, outreaches, and zoom conferences */}
-          <div class="admin-line mt-12">
-            <p class="admin-text">NUMSA 23/24 Emmanuel Oranwusi (President) and Abdul-Azeez Ibrahim (Speaker) led administration.</p>
-          </div>
+          {/* Administration line - only for specific 2024-25 outreaches */}
+          {contentType === 'outreaches' && item.id && (item.id === 'menstrual_health_outreach' || item.id === 'pulse_health_initiative') && (
+            <div class="admin-line mt-12">
+              <p class="admin-text">NUMSA 23/24 Emmanuel Oranwusi (President) and Abdul-Azeez Ibrahim (Speaker) led administration.</p>
+            </div>
+          )}
         </div>
       )}
     </div>
@@ -180,12 +211,42 @@ const isExcos = contentType === 'excos' || contentType === 'senators' || content
     @apply max-w-3xl mx-auto px-4 sm:px-6 mb-12;
   }
   
+  .image-container.portrait {
+    @apply max-w-md;
+  }
+  
   .main-image {
-    @apply max-w-full mx-auto rounded-md bg-gray-400 dark:bg-slate-700;
+    @apply max-w-full mx-auto bg-gray-400 dark:bg-slate-700;
+  }
+  
+  /* For portrait images (excos/house/jc), prioritize showing faces at the top */
+  .image-container.portrait .main-image {
+    @apply object-cover object-top;
+  }
+  
+  /* For landscape images, use center positioning */
+  .image-container.landscape .main-image {
+    @apply object-cover object-center;
+  }
+  
+  .person-name {
+    @apply text-center mt-4 text-xl font-semibold text-gray-900 dark:text-white;
+  }
+  
+  .other-images-gallery {
+    @apply mb-12;
+  }
+  
+  .gallery-item {
+    @apply overflow-hidden shadow-md hover:shadow-lg transition-shadow;
+  }
+  
+  .gallery-image {
+    @apply w-full h-auto object-cover;
   }
   
   .content-body {
-    @apply mx-auto px-6 sm:px-6 max-w-3xl prose prose-lg lg:prose-xl dark:prose-invert dark:prose-headings:text-slate-300 prose-headings:font-heading prose-headings:leading-tight prose-headings:tracking-tight prose-headings:font-bold prose-a:text-primary dark:prose-a:text-blue-400 prose-img:rounded-md prose-img:shadow-lg mt-8 prose-headings:scroll-mt-[80px];
+    @apply mx-auto px-6 sm:px-6 max-w-3xl prose prose-lg lg:prose-xl dark:prose-invert dark:prose-headings:text-slate-300 prose-headings:font-heading prose-headings:leading-tight prose-headings:tracking-tight prose-headings:font-bold prose-a:text-primary dark:prose-a:text-blue-400 prose-img:shadow-lg mt-8 prose-headings:scroll-mt-[80px];
   }
   
   .section-title {
@@ -209,7 +270,7 @@ const isExcos = contentType === 'excos' || contentType === 'senators' || content
   }
   
   .bio-button {
-    @apply px-6 py-3 bg-blue-600 dark:bg-blue-500 text-white rounded-lg hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors;
+    @apply inline-flex items-center gap-2 px-8 py-3 border-2 border-gray-900 dark:border-gray-100 text-gray-900 dark:text-gray-100 font-semibold tracking-wide hover:bg-gray-900 hover:text-white dark:hover:bg-gray-100 dark:hover:text-gray-900 transition-all duration-200;
   }
   
   .markdown-content {

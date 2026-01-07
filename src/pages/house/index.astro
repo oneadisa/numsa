@@ -1,0 +1,52 @@
+---
+/**
+ * Root-level House page - shows ALL house members from ALL sessions
+ */
+import Layout from '../../layouts/PageLayout.astro';
+import ContentList from '../../components/numsa/ContentList.astro';
+import Headline from '../../components/blog/Headline.astro';
+import { blogListRobots } from '../../utils/blog';
+import { formatContent } from '../../utils/numsa';
+
+export const prerender = true;
+
+// Get ALL house members from ALL sessions using static glob pattern
+const allModules = import.meta.glob('/src/content/sessions/*/house/*.json', { eager: true, import: 'default' });
+
+// Map all house members with their session information
+const allHouse = Object.entries(allModules).map(([path, data]) => {
+  // Extract session from path: /src/content/sessions/2024-25/house/speaker.json
+  const sessionMatch = path.match(/\/sessions\/([^/]+)\//);
+  const session = sessionMatch ? sessionMatch[1] : '';
+
+  return {
+    id: path.split('/').pop()?.replace('.json', '') || '',
+    slug: path.split('/').pop()?.replace('.json', '') || '',
+    data: data as any,
+    session: session, // Include session info for display
+  };
+});
+
+// Format all posts without session filtering
+const formattedPosts = formatContent(allHouse, 'house');
+
+const metadata = {
+  title: 'House of Representatives - All Administrations',
+  robots: {
+    index: blogListRobots?.index,
+    follow: blogListRobots?.follow,
+  },
+  openGraph: {
+    type: 'numsa',
+  },
+};
+---
+
+<Layout metadata={metadata}>
+  <section class="px-6 sm:px-6 py-12 sm:py-16 lg:py-20 mx-auto max-w-4xl">
+    <Headline subtitle="Meet all house of representatives members across all administrations">
+      House of Representatives
+    </Headline>
+    <ContentList items={formattedPosts} contentType="house" />
+  </section>
+</Layout>

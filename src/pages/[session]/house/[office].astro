@@ -1,0 +1,84 @@
+---
+import type { GetStaticPaths } from 'astro';
+import merge from 'lodash.merge';
+import type { ImageMetadata } from 'astro';
+import Layout from '../../../layouts/PageLayout.astro';
+import ContentDetail from '../../../components/numsa/ContentDetail.astro';
+import { I18N } from '../../../utils/config';
+import { blogPostRobots } from '../../../utils/blog';
+import { findImage } from '../../../utils/images';
+import type { MetaData } from '../../../types';
+import Button from '../../../components/ui/Button.astro';
+import { Icon } from 'astro-icon/components';
+import { formatContent, getAvailableSessions } from '../../../utils/numsa';
+
+const { textDirection } = I18N;
+
+export const prerender = true;
+
+export const getStaticPaths = (async () => {
+  const sessions = getAvailableSessions();
+  const paths = [];
+
+  // Use wildcard pattern to match all sessions at once (Vite requires static glob patterns)
+  const allModules = import.meta.glob('/src/content/sessions/*/house/*.json', { eager: true, import: 'default' });
+
+  for (const session of sessions) {
+    // Filter modules for this specific session
+    const sessionModules = Object.entries(allModules).filter(([path]) =>
+      path.includes(`/sessions/${session}/house/`)
+    );
+
+    const posts = sessionModules.map(([path, data]) => ({
+      id: path.split('/').pop()?.replace('.json', '') || '',
+      slug: path.split('/').pop()?.replace('.json', '') || '',
+      data: data as any,
+    }));
+
+    for (const post of posts) {
+      paths.push({
+        params: { session, office: post.id },
+        props: { post, session },
+      });
+    }
+  }
+
+  return paths;
+}) satisfies GetStaticPaths;
+
+const { post, session } = Astro.props;
+const image = (await findImage(post.data.image)) as ImageMetadata | string | undefined;
+
+const metadata = merge(
+  {
+    title: post.data.position,
+    description: post.data.name,
+    robots: {
+      index: blogPostRobots?.index,
+      follow: blogPostRobots?.follow,
+    },
+    openGraph: {
+      type: 'article',
+      ...(image ? { images: [{ url: image, width: (image as ImageMetadata)?.width, height: (image as ImageMetadata)?.height }] } : {}),
+    },
+  },
+) as MetaData;
+
+const formattedPost = formatContent([post], 'house', session)[0];
+---
+
+<Layout metadata={metadata}>
+  <ContentDetail item={formattedPost} contentType="house" />
+  <div class="mx-auto px-3 sm:px-2 max-w-3xl pt-2 md:pt-4 pb-2 md:pb-3">
+    <Button variant="tertiary" class="px-3 md:px-3" href={`/${session}/house`}>
+      {
+        textDirection === 'rtl' ? (
+          <Icon name="tabler:chevron-right" class="w-5 h-5 mr-1 -ml-1.5 rtl:-mr-1.5 rtl:ml-1" />
+        ) : (
+          <Icon name="tabler:chevron-left" class="w-5 h-5 mr-1 -ml-1.5 rtl:-mr-1.5 rtl:ml-1" />
+        )
+      } Back to HOUSE
+    </Button>
+  </div>
+</Layout>
+

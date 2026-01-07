@@ -1,0 +1,52 @@
+---
+/**
+ * Root-level Executive Council page - shows ALL excos from ALL sessions
+ */
+import Layout from '../../layouts/PageLayout.astro';
+import ContentList from '../../components/numsa/ContentList.astro';
+import Headline from '../../components/blog/Headline.astro';
+import { blogListRobots } from '../../utils/blog';
+import { formatContent } from '../../utils/numsa';
+
+export const prerender = true;
+
+// Get ALL excos from ALL sessions using static glob pattern
+const allModules = import.meta.glob('/src/content/sessions/*/excos/*.json', { eager: true, import: 'default' });
+
+// Map all excos with their session information
+const allExcos = Object.entries(allModules).map(([path, data]) => {
+  // Extract session from path: /src/content/sessions/2024-25/excos/president.json
+  const sessionMatch = path.match(/\/sessions\/([^/]+)\//);
+  const session = sessionMatch ? sessionMatch[1] : '';
+
+  return {
+    id: path.split('/').pop()?.replace('.json', '') || '',
+    slug: path.split('/').pop()?.replace('.json', '') || '',
+    data: data as any,
+    session: session, // Include session info for display
+  };
+});
+
+// Format all posts without session filtering
+const formattedPosts = formatContent(allExcos, 'excos');
+
+const metadata = {
+  title: 'Executive Council - All Administrations',
+  robots: {
+    index: blogListRobots?.index,
+    follow: blogListRobots?.follow,
+  },
+  openGraph: {
+    type: 'numsa',
+  },
+};
+---
+
+<Layout metadata={metadata}>
+  <section class="px-6 sm:px-6 py-12 sm:py-16 lg:py-20 mx-auto max-w-4xl">
+    <Headline subtitle="Meet all executive council members across all administrations">
+      Executive Council
+    </Headline>
+    <ContentList items={formattedPosts} contentType="excos" />
+  </section>
+</Layout>

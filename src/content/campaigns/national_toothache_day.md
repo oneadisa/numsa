@@ -3,6 +3,7 @@
     mainImage: /assets/images/campaigns/n_t_d.jpg
     title: National Toothache Day
     serial: 6
+    session: "2023-24"
     caption:  It serves as a reminder of the importance of dental care and aims to raise awareness about dental issues and promote good oral health to prevent toothaches. The day Is not about celebrating toothaches but rather about educating people on how to prevent them.
 ---
 

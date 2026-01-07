@@ -3,6 +3,7 @@
     mainImage: /assets/images/campaigns/iwd.jpg
     title: International Women's Day
     serial: 10
+    session: "2023-24"
     caption: On International Women's Day, we take a moment to acknowledge the incredible impact of women in medicine. 
 ---
 

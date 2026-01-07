@@ -20,7 +20,7 @@ const layoutClasses = {
 
 <ul class={layoutClasses[layout]}>
   {items.map((item) => (
-    <li class="mb-12 md:mb-20">
+    <li class="mb-12 md:mb-20" data-session={item.session || ''}>
       <ContentItem item={item} contentType={contentType} layout={layout} />
     </li>
   ))}

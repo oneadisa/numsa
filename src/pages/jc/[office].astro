@@ -1,0 +1,48 @@
+---
+/**
+ * Root-level Legislative Commission member detail page - redirects to session-specific page
+ * This handles legacy URLs and provides backward compatibility
+ */
+import type { GetStaticPaths } from 'astro';
+
+export const prerender = true;
+
+export const getStaticPaths = (async () => {
+  // Get all JC members from ALL sessions to support all legacy URLs
+  // Converted YAML files to JSON for consistency with excos/house
+  const allModules = import.meta.glob('/src/content/sessions/*/jc/*.json');
+
+  // Create paths for all offices from all sessions
+  const offices = new Set<string>();
+  Object.keys(allModules).forEach(path => {
+    const office = path.split('/').pop()?.replace('.json', '');
+    if (office) offices.add(office);
+  });
+
+  const paths = Array.from(offices).map(office => {
+    // Find the most recent session for this office
+    const relevantPaths = Object.keys(allModules).filter(path =>
+      path.includes(`/${office}.json`)
+    );
+
+    // Sort by session (most recent first) - assuming session format like 2024-25, 2023-24
+    const sortedPaths = relevantPaths.sort().reverse();
+    const mostRecentPath = sortedPaths[0];
+    const sessionMatch = mostRecentPath?.match(/\/sessions\/([^/]+)\//);
+    const session = sessionMatch ? sessionMatch[1] : '2023-24'; // Default to 2023-24 since 2024-25 has no JC
+
+    return {
+      params: { office },
+      props: { session }
+    };
+  });
+
+  return paths;
+}) satisfies GetStaticPaths;
+
+const { office } = Astro.params;
+const { session } = Astro.props;
+
+// Redirect to the session-specific page
+return Astro.redirect(`/${session}/jc/${office}`, 301);
+---

@@ -3,6 +3,7 @@
     mainImage: /assets/images/campaigns/w_he_d.jpg
     title: World Hemophilia Day
     serial: 15
+    session: "2023-24"
     caption: Hemophilia is a genetic disorder that impairs the body's ability to clot blood properly, leading to prolonged bleeding episodes.
 ---
 

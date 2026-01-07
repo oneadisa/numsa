@@ -3,6 +3,7 @@
     mainImage: /assets/images/campaigns/m_h_a_m.png
     title: Men's Health Awareness Month
     serial: 23
+    session: "2023-24"
    #  category: Campaigns
     caption: Important Things to Note in Men’s Mental Health Awareness Month
 

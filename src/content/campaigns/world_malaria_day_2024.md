@@ -4,6 +4,7 @@
     otherImages: ["/assets/images/campaigns/wmd2/wmd_2.jpg","/assets/images/campaigns/wmd2/wmd_3.jpg","/assets/images/campaigns/wmd2/wmd_4.jpg", "/assets/images/campaigns/wmd2/wmd_5.jpg", "/assets/images/campaigns/wmd2/wmd_6.jpg"]
     title: World Malaria Day
     serial: 19
+    session: "2023-24"
 ---
 
 **WORLD MALARIA DAY**
