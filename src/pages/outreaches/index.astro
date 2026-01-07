@@ -58,31 +58,61 @@ const metadata = {
 </Layout>
 
 <script is:inline>
-  document.addEventListener('DOMContentLoaded', function() {
-    const filterSelect = document.getElementById('session-filter');
-    const outreachItems = document.querySelectorAll('#outreaches-container li[data-session]');
+  (function() {
+    function initFilter() {
+      const filterSelect = document.getElementById('session-filter');
+      if (!filterSelect || filterSelect.tagName !== 'SELECT') {
+        setTimeout(initFilter, 100);
+        return;
+      }
 
-    if (!filterSelect) return;
+      const container = document.getElementById('outreaches-container');
+      if (!container) {
+        setTimeout(initFilter, 100);
+        return;
+      }
 
-    function filterOutreaches(selectedSession) {
-      outreachItems.forEach(function(item) {
-        const itemSession = item.getAttribute('data-session') || '';
+      function filterOutreaches(selectedSession) {
+        // Query items fresh each time to ensure we get all items
+        const outreachItems = container.querySelectorAll('li[data-session]');
         
-        if (selectedSession === 'all' || itemSession === selectedSession) {
-          item.style.display = '';
-        } else {
-          item.style.display = 'none';
+        if (outreachItems.length === 0) {
+          // If no items found, retry after a short delay
+          setTimeout(function() {
+            filterOutreaches(selectedSession);
+          }, 100);
+          return;
         }
+
+        outreachItems.forEach(function(item) {
+          const itemSession = item.getAttribute('data-session') || '';
+          
+          if (selectedSession === 'all' || itemSession === selectedSession) {
+            item.style.display = '';
+            item.classList.remove('hidden');
+          } else {
+            item.style.display = 'none';
+            item.classList.add('hidden');
+          }
+        });
+      }
+
+      // Add event listener to select dropdown
+      filterSelect.addEventListener('change', function() {
+        const selectedSession = this.value || 'all';
+        filterOutreaches(selectedSession);
       });
+
+      // Initialize with 'all' selected after a short delay to ensure DOM is ready
+      setTimeout(function() {
+        filterOutreaches('all');
+      }, 100);
     }
 
-    // Add event listener to select dropdown
-    filterSelect.addEventListener('change', function() {
-      const selectedSession = this.value || 'all';
-      filterOutreaches(selectedSession);
-    });
-
-    // Initialize with 'all' selected
-    filterOutreaches('all');
-  });
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initFilter);
+    } else {
+      initFilter();
+    }
+  })();
 </script>
